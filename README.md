@@ -1,4 +1,6 @@
-<img style="margin: 0 auto; display: block;" src="./striven-editor.gif" alt="stirven-editor" />
+<div style="display: flex; justify-content: center">
+    <img src="./striven-editor.gif" alt="stirven-editor" />
+</div>
 
 
 ## Getting Started
