@@ -35,5 +35,5 @@ $ npm run dev
 Start the development server in ```demo``` and go to ```http://localhost:8080/``` to begin developing.
 
 ```sh 
-$ cd demo && npm serve
+$ cd demo && npm run serve
 ```
