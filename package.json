@@ -1,0 +1,24 @@
+{
+  "name": "striven-editor",
+  "version": "0.0.1",
+  "description": "The lightweight Striven WYSIWYG editor built with pure JavaScript.",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/business-by-miles/striven-editor.git"
+  },
+  "keywords": [
+    "Striven",
+    "Editor",
+    "WYSIWYG"
+  ],
+  "author": "Striven <https://striven.com/>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/business-by-miles/striven-editor/issues"
+  },
+  "homepage": "https://github.com/business-by-miles/striven-editor#readme"
+}
