@@ -8,6 +8,10 @@ Anyone can contribute to the Striven WYSIWYG editor. Please open an issue for an
 $ npm install
 ```
 
+```sh
+$ cd demo && npm install
+```
+
 ## Symlink Development Package
 
 Initialize ```striven-editor``` symlink.
