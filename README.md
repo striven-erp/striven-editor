@@ -1,4 +1,4 @@
-<h1 style="text-align: center">Striven Editor</h1>
+<h1 align="center">Striven Editor</h1>
 
 <p align="center">
     <img src="./striven-editor.gif" alt="stirven-editor" />
