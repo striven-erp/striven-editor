@@ -7,7 +7,7 @@
 ## Getting Started
 
 ```sh
-$ npm install striven-editor
+$ npm install striven-editor @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons
 ```
 
 ```js

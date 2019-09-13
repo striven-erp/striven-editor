@@ -79,7 +79,7 @@ const OPTIONGROUPS = {
     }
 };
 
-class StrivenEditor {
+export default class StrivenEditor {
     constructor(el, options) {
         this.range = new Range();
         this.files = [];
@@ -799,5 +799,3 @@ class StrivenEditor {
         }, 500);
     }
 }
-
-export default StrivenEditor;

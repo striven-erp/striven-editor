@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div ref="editor" style="width: 600px; height: 250px;"></div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import { dom } from '@fortawesome/fontawesome-svg-core';
+import StrivenEditor from 'striven-editor/src/striveneditor';
+dom.watch();
 export default {
   name: 'app',
-  components: {
-    HelloWorld
+  mounted() {
+    this.editor = new StrivenEditor(this.$refs.editor);
   }
 }
 </script>
@@ -21,8 +21,11 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 </style>

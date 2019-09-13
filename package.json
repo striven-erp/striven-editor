@@ -2,7 +2,7 @@
   "name": "striven-editor",
   "version": "0.0.1",
   "description": "The lightweight Striven WYSIWYG editor built with pure JavaScript.",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "build": "npx webpack --mode=\"production\"",
     "dev": "npx webpack -w"
@@ -24,6 +24,7 @@
   "homepage": "https://github.com/business-by-miles/striven-editor#readme",
   "devDependencies": {
     "@babel/core": "^7.6.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
     "babel-loader": "^8.0.6",
     "terser-webpack-plugin": "^2.0.1",

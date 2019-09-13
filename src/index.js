@@ -1,5 +1,4 @@
-import StrivenEditor from "./striveneditor";
+import StrivenEditor from './striveneditor';
 
-export default {
-    StrivenEditor
-}
+
+export default { StrivenEditor };
