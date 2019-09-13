@@ -19,7 +19,7 @@ $ npm link
 Symlink ```striven-editor``` in the development environment.
 
 ```sh
-$ cd demo && npm link striven-editor
+$ npm link striven-editor
 ```
 
 ## Start Webpack
@@ -27,7 +27,7 @@ $ cd demo && npm link striven-editor
 Run webpack in watch mode.
 
 ```sh
-$ npx webpack -w
+$ npm run dev
 ```
 
 ## Start Development Server
@@ -35,5 +35,5 @@ $ npx webpack -w
 Start the development server in ```demo``` and go to ```http://localhost:8080/``` to begin developing.
 
 ```sh 
-$ cd demo && npm start
+$ cd demo && npm serve
 ```
