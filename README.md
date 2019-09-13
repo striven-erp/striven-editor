@@ -1,5 +1,6 @@
-<img align="center" src="./striven-editor.gif" alt="stirven-editor" />
-
+<p align="center">
+    <img src="./striven-editor.gif" alt="stirven-editor" />
+</p>
 
 ## Getting Started
 
