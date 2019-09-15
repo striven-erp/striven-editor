@@ -1,0 +1,21 @@
+export default [
+    {email: 'hunite@striven.com', value: 'Henry Unite', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/thumb-a0a620e4-9312-460a-a7bf-dc15a9628916-06242019.jpg'},
+    {email: 'ssharma@striven.com', value: 'Sanjog Sharma', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/thumb-7a724594-91af-40ad-bb82-5f05293c49e5-07292016.jpg'},
+    {email: 'pshrestha@striven.com', value: 'Pash Shrestha', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/thumb-31c0d485-c011-4c62-997c-e0f87ac04382-04132018.jpeg'},
+    {email: 'ppanjwani@striven.com', value: 'Pinky Panjwani', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/thumb-9e112e35-fd10-450c-bc3f-57501eaabb55-04202018.jpg'},
+    {email: 'wrossi@striven.com', value: 'Wayne Rossi', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/24.jpg'},
+    {email: 'mdilks@striven.com', value: 'Mike Dilks', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/thumb-b90f3728-f20a-4257-a681-aa8a13f4c4ca-03152017.jpg'},
+    {email: 'ebutler@striven.com', value: 'Eric Butler', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/thumb-0beb20b7-1ae4-49dd-884f-0043a1b74e95-05092017.jpg'},
+    {email: 'aforgarasi@striven.com', value: 'Arpad Fogarasi', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/34dd2337-3da2-499c-9a6f-d75f4278bbe1-07022014-thumb-10410195_10203353025880861_3082143350639878227_n.jpg'},
+    {email: 'pgoel@striven.com', value: 'Pawan Goel', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/thumb-b74faa60-9041-4a2c-9fcd-58dd45af70ad-04152019.jpeg'},
+    {email: 'vmanickam@striven.com', value: 'Vinothkumar Manickam', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/thumb-fcfea1cf-7acd-4ba2-9339-0f50fcd0c50d-04152019.jpg'},
+    {email: 'ashow@striven.com', value: 'Aloke Show', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/thumb-d9b83e52-a5f8-41f8-8fea-a2b15f0231f9-12032018.jpg'},
+    {email: 'cmiles@milestechnologies.com', value: 'Chris Miles', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/38b23789-5707-47c9-805d-27a377e3edf9-02252014-thumb-2014-02-25_23-22-27.png'},
+    {email: 'wzane@striven.com', value: 'Will Zane', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/34a217e5-2ea9-43e6-98a7-430a0992ee4a-06302014-thumb-Will%20Z.jpg'},
+    {email: 'tpeterson@striven.com', value: 'Trinadee Peterson', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/thumb-27cf162b-b458-4ff6-81bf-77d8d1bf0dfd-04052019.jpg'},
+    {email: 'jbailey@striven.com', value: 'Jimmy Bailey', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/thumb-f0b8ee32-f9e5-47a6-bea7-bda6b04d51d4-05212019.jpg'},
+    {email: 'bkinney@striven.com', value: 'Brian Kinney', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/thumb-0ff3ff01-4f07-4170-b292-ad5511f93ae8-07052017.JPG'},
+    {email: 'cfestino@striven.com', value: 'Cindy Festino', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/thumb-e9f97844-1eb3-4894-97cd-c11edf9801cd-05312018.jpeg'},
+    {email: 'shammer@striven.com', value: 'Scott Hammer', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/thumb-0f5fa940-aa83-4dcc-893b-ce4950fb4e65-07072018.jpg' },
+    {email: 'lgluyas@striven.com', value: 'Laura Gluyas', avatar: 'https://share.striven.com//pimg/477CD4FD/Employee/thumb-0d3bc8f9-0d7a-40b3-9a53-20342c3cbbf5-01312019.png'}
+]
