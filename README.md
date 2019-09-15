@@ -33,7 +33,18 @@ const editor = new StrivenEditor(editorEl, { toolbarHide: true, toolbarBottom: t
 To fetch meta data from links that are pasted or inserted into the editor, you must set up a back end utility to fetch the data and send it back to your client. For a node server, we recommend using [metascraper](https://metascraper.js.org/#/) on your server. See the example below for setting this up with express.
 
 ```js
+const got = require('got');
 const app = require('express')();
+const bodyParser = require('body-parser');
+const metascraper = require('metascraper')([
+    require('metascraper-description')(),
+    require('metascraper-image')(),
+    require('metascraper-title')(),
+    require('metascraper-url')()
+]);
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/meta', (req, res) => {
     const targetUrl = req.body.targetUrl;
