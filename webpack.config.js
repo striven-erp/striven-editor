@@ -9,7 +9,9 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: '[name].js'
+        filename: '[name].js',
+        library: 'striveneditor',
+        libraryTarget: 'umd2'
     },
     module: {
         rules: [
@@ -20,7 +22,7 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         presets: ['@babel/preset-env'],
-                        plugins: ['@babel/plugin-transform-modules-commonjs']
+                        plugins: ['@babel/plugin-transform-modules-umd']
                     }
                 }
             }
@@ -30,6 +32,6 @@ module.exports = {
         minimize: true,
         minimizer: [new TerserPlugin({
             exclude: 'index'
-        })],
+        })]
     }
 };

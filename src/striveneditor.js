@@ -1,4 +1,5 @@
 // Font Awesome Imports
+import { dom } from '@fortawesome/fontawesome-svg-core';
 import { library as faLib } from "@fortawesome/fontawesome-svg-core";
 import { faFont } from "@fortawesome/free-solid-svg-icons/faFont";
 import { faBold } from "@fortawesome/free-solid-svg-icons/faBold";
@@ -35,6 +36,7 @@ faLib.add(faPaperclip);
 faLib.add(faLink);
 faLib.add(faImage);
 faLib.add(faPaperPlane);
+dom.watch();
 
 const EXTENSIONS = [
     ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf", ".tif", ".jpeg",

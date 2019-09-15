@@ -5,9 +5,8 @@
 </template>
 
 <script>
-import { dom } from '@fortawesome/fontawesome-svg-core';
-import StrivenEditor from 'striven-editor/src/striveneditor';
-dom.watch();
+import { StrivenEditor } from 'striven-editor';
+
 export default {
   name: 'app',
   mounted() {
