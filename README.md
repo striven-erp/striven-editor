@@ -28,6 +28,47 @@ import StrivenEditor from 'striven-editor';
 const editor = new StrivenEditor(editorEl, { toolbarHide: true, toolbarBottom: true });
 ```
 
+## Fetching Meta Data on Link Insertions
+
+To fetch meta data from links that are pasted or inserted into the editor, you must set up a back end utility to fetch the data and send it back to your client. For a node server, we recommend using [metascraper](https://metascraper.js.org/#/) on your server. See the example below for setting this up with express.
+
+```js
+const app = require('express')();
+
+app.post('/meta', (req, res) => {
+    const targetUrl = req.body.targetUrl;
+    if(targetUrl) {
+        (async () => {
+            const { body: html, url } = await got(targetUrl);
+            const metadata = await metascraper({ html, url });
+            res.send(metadata);
+        })()
+    } else {
+        res.sendStatus(400);
+    }
+})
+
+app.listen(8080, () => console.log('Server is on.'));
+```
+
+Your editor should look something like this.
+
+```js
+const editor = new StrivenEditor(editorEl, { metaUrl: 'http://localhost:8080/meta' });
+```
+
+### Meta Data POST Request
+
+Here is an example of what the editor uses for the client to make a ```POST``` request to the server.
+
+```js
+fetch(this.options.metaUrl, {
+    method: "POST",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ targetUrl: url })
+}).then((res) => res.json())
+```
+
 ## Editor Options
 
 |Option|Type|Default|Description|
