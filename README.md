@@ -9,13 +9,13 @@
 ### Install Dependencies
 
 ```sh
-$ npm install striven-editor @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons
+$ npm install striven-editor
 ```
 
 ### Initialize Editor
 
 ```js
-import StrivenEditor from 'striven-editor';
+import { StrivenEditor } from 'striven-editor';
 
 const editor = new StrivenEditor(editorEl);
 ```
