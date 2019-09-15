@@ -8,7 +8,8 @@
   "scripts": {
     "build": "npx webpack --mode=\"production\"",
     "dev": "npx webpack -w",
-    "meta-server": "node metaserver"
+    "meta-server": "node metaserver",
+    "gh-pages": "cd demo && npm run build && cd .. && node gh-pages"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "gh-pages": "^2.1.1",
     "got": "^9.6.0",
     "metascraper": "^5.7.4",
     "metascraper-description": "^5.7.4",
