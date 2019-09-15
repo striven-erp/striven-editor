@@ -41,3 +41,15 @@ Start the development server in ```demo``` and go to ```http://localhost:8080/``
 ```sh 
 $ cd demo && npm run serve
 ```
+
+## Testing with Meta Data Extraction
+
+Start the metadata server.
+
+```npm run meta-server```
+
+Pass the ```metaUrl``` to the editor.
+
+```js
+this.editor = new StrivenEditor(this.$refs.editor, { metaUrl: 'http://localhost:4200/meta' })
+```
