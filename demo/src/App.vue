@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <div ref="editor" style="width: 600px; height: 250px;"></div>
+    <h1>Striven Editor</h1>
+    <div ref="editor" class="editor"></div>
+    <div id="footer">
+      <a href="https://github.com/business-by-miles/striven-editor">Find this on GitHub</a>
+    </div>
   </div>
 </template>
 
@@ -16,15 +20,34 @@ export default {
 </script>
 
 <style>
+html {
+  background-color: #f7f6f6;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 20vh;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+.editor {
+  width: 600px;
+  height: 250px;
+  background-color: #fff;
+}
+
+#footer {
+  margin: 25px 0;
+}
+
+#footer a {
+  color: inherit;
+  text-decoration: none;
 }
 </style>
