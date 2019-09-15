@@ -330,7 +330,7 @@ export default class StrivenEditor {
             ) {
                 convertImage(e.clipboardData.files[0]).then(res => {
                     document.execCommand("insertImage", true, res);
-                    this.attachFile(dataURLtoFile(res, "pastedimage"));
+                    this.options.uploadOnPaste && this.attachFile(dataURLtoFile(res, "pastedimage"));
                     this.overflow();
                 });
             }

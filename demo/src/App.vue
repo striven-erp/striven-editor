@@ -14,7 +14,7 @@ import { StrivenEditor } from 'striven-editor';
 export default {
   name: 'app',
   mounted() {
-    this.editor = new StrivenEditor(this.$refs.editor, { metaUrl: 'http://localhost:4200/meta' });
+    this.editor = new StrivenEditor(this.$refs.editor, { metaUrl: 'http://localhost:4200/meta', uploadOnPaste: true });
   }
 }
 </script>
