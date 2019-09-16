@@ -6,6 +6,7 @@
   "description": "The lightweight Striven WYSIWYG editor built with pure JavaScript.",
   "main": "./dist",
   "scripts": {
+    "start": "cd demo && npm run serve",
     "build": "npx webpack --mode=\"production\"",
     "dev": "npx webpack -w",
     "meta-server": "node metaserver",
