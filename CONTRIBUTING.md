@@ -39,14 +39,16 @@ $ npm run dev
 Start the development server in ```demo``` and go to ```http://localhost:8080/``` to begin developing.
 
 ```sh 
-$ cd demo && npm run serve
+$ npm start
 ```
 
 ## Testing with Meta Data Extraction
 
 Start the metadata server.
 
-```npm run meta-server```
+```sh
+$ npm run meta-server
+```
 
 Pass the ```metaUrl``` to the editor.
 
