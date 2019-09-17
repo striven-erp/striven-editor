@@ -153,7 +153,8 @@ export default class StrivenEditor {
                 setTimeout(() => {
                     if (
                         document.activeElement !== this.body &&
-                        document.activeElement !== this.linkMenu.querySelector('input')
+                        document.activeElement !== this.linkMenu.querySelector('input') &&
+                        document.activeElement !== this.imageMenu.querySelector('input')
                     ) {
                         this.toolbarSlideDown();
                     }
@@ -226,7 +227,16 @@ export default class StrivenEditor {
                         }
                         break;
                     case "image":
-                        console.log("image");
+                        if (this.imageMenu.dataset.active === "true") {
+                            this.imageMenu.dataset.active = "false";
+                            this.imageMenu.style.display = "none";
+                        } else {
+                            this.imageMenu.dataset.active = "true";
+                            this.imageMenu.style.display = "block";
+
+                            this.range = this.getRange();
+                            this.imageMenu.querySelector('input').focus();
+                        }
                         break;
                     default:
                         document.execCommand(command, true);
@@ -296,7 +306,7 @@ export default class StrivenEditor {
         this.editor.appendChild(this.toolbar);
         this.editor.appendChild(this.body);
         this.editor.appendChild(this.linkMenu);
-        // this.editor.appendChild(this.imageMenu);
+        this.editor.appendChild(this.imageMenu);
         this.editor.appendChild(this.metaDataSection);
         this.editor.appendChild(this.filesSection);
 
@@ -509,19 +519,97 @@ export default class StrivenEditor {
         const imageMenuForm = document.createElement("div");
         const imageMenuButton = document.createElement("button");
         const imageMenuFormLabel = document.createElement("p");
-        const imageMenuFormInput = document.createElement("input");
+        const imageMenuFormSourceInput = document.createElement("input");
 
         imageMenu.id = "image-menu";
         imageMenuButton.textContent = "Insert Image";
         imageMenuFormLabel.textContent = "Image URL";
-        imageMenuFormInput.type = "text";
+        imageMenuFormSourceInput.type = "text";
         imageMenuFormLabel.style.margin = "8px 10px 8px 0";
         imageMenuFormLabel.style.fontSize = "14px";
         imageMenuButton.style.cursor = "pointer";
 
-        imageMenuForm.appendChild(imageMenuFormLabel);
-        imageMenuForm.appendChild(imageMenuFormInput);
+        imageMenu.dataset.active = "false";
+        imageMenu.style.display = "none";
+        imageMenu.style.position = "absolute";
+        imageMenu.style.right = "10px";
+        imageMenu.style.bottom = "10px";
+        imageMenu.style.backgroundColor = "#fff";
+        imageMenu.style.border = "2px solid #ddd";
+        imageMenu.style.padding = "10px 20px";
+        imageMenu.style.zIndex = "1000";
 
+        imageMenuFormLabel.style.width = "100%";
+        imageMenuFormLabel.style.textAlign = "right";
+        imageMenuFormLabel.style.marginRight = "10px";
+
+        imageMenuFormSourceInput.style.outline = "none";
+        imageMenuFormSourceInput.style.padding = "0 5px";
+        imageMenuFormSourceInput.placeholder = "Insert a Link";
+
+        imageMenuForm.style.display = "flex";
+        imageMenuForm.style.justifyContent = "space-between";
+        imageMenuForm.style.margin = "5px 0";
+
+        imageMenuButton.style.float = "right";
+        imageMenuButton.style.padding = "6px 12px";
+        imageMenuButton.style.border = "1px solid #4cae4c";
+        imageMenuButton.style.backgroundColor = "#5cb85c";
+        imageMenuButton.style.fontSize = "14px";
+        imageMenuButton.style.color = "#fff";
+        imageMenuButton.style.outline = "none";
+
+        imageMenuButton.onmouseenter = () =>
+            (imageMenuButton.style.backgroundColor = "#4cae4c");
+        imageMenuButton.onmouseleave = () =>
+            (imageMenuButton.style.backgroundColor = "#5cb85c");
+
+        imageMenuForm.appendChild(imageMenuFormLabel);
+        imageMenuForm.appendChild(imageMenuFormSourceInput);
+
+        // Height Input Form
+        const imageMenuHeightForm = imageMenuForm.cloneNode(true);
+        const imageMenuHeightFormInput = imageMenuHeightForm.querySelector('input');
+        const imageMenuHeightFormLabel = imageMenuHeightForm.querySelector('p');
+
+        imageMenuHeightFormInput.placeholder = "Image Height";
+        imageMenuHeightFormLabel.textContent = "Height";
+
+        // Width Input Form
+        const imageMenuWidthForm = imageMenuForm.cloneNode(true);
+        const imageMenuWidthFormInput = imageMenuWidthForm.querySelector('input');
+        const imageMenuWidthFormLabel = imageMenuWidthForm.querySelector('p');
+
+        imageMenuWidthFormInput.placeholder = "Image Height";
+        imageMenuWidthFormLabel.textContent = "Width";
+
+        imageMenuButton.onclick = e => {
+            const linkValue = imageMenuFormSourceInput.value;
+            const heightValue = imageMenuHeightFormInput.value;
+            const widthValue = imageMenuWidthFormInput.value;
+
+            if (linkValue) {
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(this.range);
+                document.execCommand("insertImage", true, linkValue);
+
+                const imageTags = this.body.querySelectorAll("img");
+                imageTags[imageTags.length - 1].style.height = `${heightValue}px`;
+                imageTags[imageTags.length - 1].style.width = `${widthValue}px`;
+
+                imageMenuHeightFormInput.value = "";
+                imageMenuWidthFormInput.value = "";
+                imageMenuFormSourceInput.value = "";
+                this.toolbar.querySelector("#toolbar-image").onclick();
+            } else {
+                this.body.focus();
+                this.imageMenu.dataset.active = "false";
+                e.target.parentElement.style.display = "none";
+            }
+        };
+
+        imageMenu.appendChild(imageMenuHeightForm);
+        imageMenu.appendChild(imageMenuWidthForm);
         imageMenu.appendChild(imageMenuForm);
         imageMenu.appendChild(imageMenuButton);
 
