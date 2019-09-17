@@ -6,7 +6,7 @@
 
 ## Getting Started
 
-### Install Dependencies
+### Install Package
 
 ```sh
 $ npm install striven-editor
