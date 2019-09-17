@@ -20,6 +20,7 @@ export default {
     const that = this;
     const editorOptions = {
       metaUrl: 'http://localhost:4200/meta',
+      onToolbarSend: () => console.log(this.editor.getContent()),
       uploadOnPaste: false,
       toolbarBottom: false,
       toolbarHide: true

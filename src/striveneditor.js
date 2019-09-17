@@ -118,23 +118,6 @@ export default class StrivenEditor {
         this.editor.style.position = "relative";
         this.editor.style.fontFamily = "Arial";
 
-        this.toolbar.style.display = "flex";
-        this.toolbar.style.justifyContent = "space-between";
-        this.toolbar.style.alignItems = "center";
-        this.toolbar.style.flexWrap = "wrap";
-        this.toolbar.style.minHeight = this.options.toolbarHide ? "0" : "40px";
-
-        this.toolbarOptionsGroup.style.margin = "0 10px";
-        this.toolbarOptionsGroup.style.display = this.options.toolbarHide ? "none" : "flex";
-
-        this.body.contentEditable = "true";
-        this.body.style.outline = "none";
-        this.body.style.padding = "10px 20px";
-
-        this.body.style.height = this.editor.style.height;
-        this.body.style.minHeight = this.editor.style.minHeight;
-        this.body.style.maxHeight = this.editor.style.maxHeight;
-
         this.editor.style.minHeight = "auto";
         this.editor.style.maxHeight = "auto";
         this.editor.style.maxWidth = "100%";
@@ -163,29 +146,6 @@ export default class StrivenEditor {
                 }, 2000);
             };
         }
-
-        this.toolbarSend.style.display = "none";
-        this.toolbarSend.style.color = "#fff";
-        this.toolbarSend.style.backgroundColor = "#5cb85c";
-        this.toolbarSend.style.minHeight = this.options.toolbarHide
-            ? "40px"
-            : this.toolbar.style.minHeight;
-        this.toolbarSend.style.width = "50px";
-        this.toolbarSend.style.textAlign = "center";
-        this.toolbarSend.style.justifyContent = "center";
-        this.toolbarSend.style.alignContent = "center";
-        this.toolbarSend.style.alignItems = "center";
-        this.toolbarSend.style.cursor = "pointer";
-        this.toolbarSend.style.border = "1px solid #4cae4c";
-        this.toolbarSend.style.alignSelf = "flex-end";
-        this.options.onToolbarSend && (this.toolbarSend.onclick = () => this.options.onToolbarSend());
-        this.options.onToolbarSend && !this.options.toolbarHide && (this.toolbarSend.style.display = "flex");
-
-        this.toolbarSend.onmouseenter = () =>
-            (this.toolbarSend.style.backgroundColor = "#4cae4c");
-
-        this.toolbarSend.onmouseleave = () =>
-            (this.toolbarSend.style.backgroundColor = "#5cb85c");
 
         // Toolbar Options
         this.toolbarOptions.forEach(optionEl => {
@@ -357,7 +317,15 @@ export default class StrivenEditor {
         const groups = Object.keys(this.optionGroups);
 
         toolbar.classList.add("toolbar");
+        toolbar.style.display = "flex";
+        toolbar.style.justifyContent = "space-between";
+        toolbar.style.alignItems = "center";
+        toolbar.style.flexWrap = "wrap";
+        toolbar.style.minHeight = this.options.toolbarHide ? "0" : "40px";
+
         this.toolbarOptionsGroup.classList.add("toolbar-options");
+        this.toolbarOptionsGroup.style.margin = "0 10px";
+        this.toolbarOptionsGroup.style.display = this.options.toolbarHide ? "none" : "flex";
 
         //iterate groups
         groups.forEach((group) => {
@@ -405,6 +373,30 @@ export default class StrivenEditor {
         toolbarSendIcon.classList.add(this.options.fontPack);
         toolbarSendIcon.classList.add("fa-paper-plane");
 
+        toolbarSend.style.display = "none";
+        toolbarSend.style.color = "#fff";
+        toolbarSend.style.backgroundColor = "#5cb85c";
+        toolbarSend.style.minHeight = this.options.toolbarHide
+            ? "40px"
+            : this.toolbar.style.minHeight;
+        toolbarSend.style.width = "50px";
+        toolbarSend.style.textAlign = "center";
+        toolbarSend.style.justifyContent = "center";
+        toolbarSend.style.alignContent = "center";
+        toolbarSend.style.alignItems = "center";
+        toolbarSend.style.cursor = "pointer";
+        toolbarSend.style.border = "1px solid #4cae4c";
+        toolbarSend.style.alignSelf = "flex-end";
+        this.options.onToolbarSend && (toolbarSend.onclick = () => this.options.onToolbarSend());
+        this.options.onToolbarSend && !this.options.toolbarHide && (toolbarSend.style.display = "flex");
+
+        toolbarSend.onmouseenter = () =>
+            (toolbarSend.style.backgroundColor = "#4cae4c");
+
+        toolbarSend.onmouseleave = () =>
+            (toolbarSend.style.backgroundColor = "#5cb85c");
+
+
         toolbarSend.appendChild(toolbarSendIcon);
         toolbar.appendChild(toolbarSend);
 
@@ -419,6 +411,14 @@ export default class StrivenEditor {
     initBody() {
         const body = document.createElement("div");
         body.classList.add("body");
+
+        body.contentEditable = "true";
+        body.style.outline = "none";
+        body.style.padding = "10px 20px";
+
+        body.style.height = this.editor.style.height;
+        body.style.minHeight = this.editor.style.minHeight;
+        body.style.maxHeight = this.editor.style.maxHeight;
 
         return body;
     }
@@ -920,11 +920,13 @@ export default class StrivenEditor {
     }
 
     openLinkMenu() {
+        this.closeImageMenu();
         this.linkMenu.dataset.active = "true";
         this.linkMenu.style.display = "block";
     }
 
     openImageMenu() {
+        this.closeLinkMenu();
         this.imageMenu.dataset.active = "true";
         this.imageMenu.style.display = "block";
     }
