@@ -1,17 +1,17 @@
 <template>
-  <div id="app">
+  <div id="app" style="font-family: Segoe UI; color: #2c3e50; margin-top: 20vh; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 0 1rem;">
     <h1>Striven Editor</h1>
-    <div ref="editor" class="editor" style="min-height: 300px; width: 600px;"></div>
+    <div ref="editor" class="editor" style="margin: 20px 0; background-color: #fff; min-height: 300px; width: 600px;"></div>
     <div id="footer">
-      <a href="https://github.com/business-by-miles/striven-editor">Find this on GitHub</a>
+      <a style="color: inherit; text-decoration: none;" href="https://github.com/business-by-miles/striven-editor">Find this on GitHub</a>
     </div>
   </div>
 </template>
 
 <script>
 import Tribute from 'tributejs';
-// import { StrivenEditor } from '@striven-erp/striven-editor';
-import { StrivenEditor } from 'striven-editor';
+import { StrivenEditor } from '@striven-erp/striven-editor';
+// import { StrivenEditor } from 'striven-editor';
 import USERS from './users';
 
 export default {
@@ -20,7 +20,7 @@ export default {
     const that = this;
     const editorOptions = {
       metaUrl: 'http://localhost:4200/meta',
-      onToolbarSend: () => console.log(this.editor.getContent()),
+      // onToolbarSend: () => console.log(this.editor.getContent()),
       uploadOnPaste: false,
       toolbarBottom: false,
       toolbarHide: true
@@ -28,41 +28,41 @@ export default {
 
     this.editor = new StrivenEditor(this.$refs.editor, editorOptions);
     
-    const tributeOptions = {
-      trigger: "@",
-      values: (text, cb) => cb(USERS),
-      selectTemplate: function(item) {
-        const { value } = item.original;
-        return `@${value.replace(" ", "").toLowerCase()}`;
-      },
-      menuItemTemplate: function(item) {
-        const { avatar, value } = item.original;
-        return `<span class="menu-item">${
-          avatar ? `<img src="${avatar}" />` : ""
-        }<p>${value}</p></span>`;
-      },
-      lookup: "value",
-      fillAttr: "value",
-      allowSpaces: true
-    };
-    const tribute = new Tribute(tributeOptions);
-    tribute.attach(this.editor.body);
+    // const tributeOptions = {
+    //   trigger: "@",
+    //   values: (text, cb) => cb(USERS),
+    //   selectTemplate: function(item) {
+    //     const { value } = item.original;
+    //     return `@${value.replace(" ", "").toLowerCase()}`;
+    //   },
+    //   menuItemTemplate: function(item) {
+    //     const { avatar, value } = item.original;
+    //     return `<span class="menu-item">${
+    //       avatar ? `<img src="${avatar}" />` : ""
+    //     }<p>${value}</p></span>`;
+    //   },
+    //   lookup: "value",
+    //   fillAttr: "value",
+    //   allowSpaces: true
+    // };
+    // const tribute = new Tribute(tributeOptions);
+    // tribute.attach(this.editor.body);
 
-    this.editor.body.addEventListener("tribute-replaced", function(e) {
-      const { value } = e.detail.item.original;
-      let content = that.editor.getContent();
-      const mention = `<span class="striven-mention new-mention" contenteditable="false" data-mention="${value}">${value}</span>`;
-      content = content.replace(
-        "@" + value.replace(" ", "").toLowerCase(),
-        mention
-      );
-      that.editor.body.innerHTML = content;
-      const newMention = that.editor.body.querySelector(".new-mention");
-      const range = that.editor.getRange();
-      range.selectNode(newMention);
-      range.collapse();
-      newMention.classList.remove("new-mention");
-    });
+    // this.editor.body.addEventListener("tribute-replaced", function(e) {
+    //   const { value } = e.detail.item.original;
+    //   let content = that.editor.getContent();
+    //   const mention = `<span class="striven-mention new-mention" contenteditable="false" data-mention="${value}">${value}</span>`;
+    //   content = content.replace(
+    //     "@" + value.replace(" ", "").toLowerCase(),
+    //     mention
+    //   );
+    //   that.editor.body.innerHTML = content;
+    //   const newMention = that.editor.body.querySelector(".new-mention");
+    //   const range = that.editor.getRange();
+    //   range.selectNode(newMention);
+    //   range.collapse();
+    //   newMention.classList.remove("new-mention");
+    // });
   }
 }
 </script>
@@ -74,12 +74,7 @@ export default {
   box-align: border-box;
 }
 
-html {
-  background-color: #f7f6f6;
-}
-
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
@@ -89,11 +84,6 @@ html {
   align-items: center;
   flex-direction: column;
   padding: 0 1rem;
-}
-
-.editor {
-  margin: 20px 0;
-  background-color: #fff;
 }
 
 #footer {
