@@ -4,10 +4,12 @@
     <img src="./striven-editor.gif" alt="stirven-editor" />
 </p>
 
+<p align="center">
 ![npm](https://img.shields.io/npm/v/@striven-erp/striven-editor)
 ![GitHub issues](https://img.shields.io/github/issues/striven-erp/striven-editor)
 ![GitHub top language](https://img.shields.io/github/languages/top/striven-erp/striven-editor)
 ![GitHub file size in bytes](https://img.shields.io/github/size/striven-erp/striven-editor/dist/striveneditor.js)
+</p>
 
 ## Getting Started
 
