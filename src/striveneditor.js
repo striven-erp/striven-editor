@@ -98,9 +98,6 @@ export default class StrivenEditor {
             };
         }
 
-        // MANUAL OVERIDE FOR OPEN SOURCE LAUNCH
-        this.options.minimal = false;
-
         this.initEditor(el);
         this.initResponsive();
         this.initOverflow();
@@ -111,6 +108,7 @@ export default class StrivenEditor {
         this.toolbar = this.initToolbar();
         this.body = this.initBody();
         this.linkMenu = this.initLinkMenu();
+        this.imageMenu = this.initImageMenu();
         this.metaDataSection = this.initMetaDataSection();
         this.filesSection = this.initFilesSection();
 
@@ -155,82 +153,13 @@ export default class StrivenEditor {
                 setTimeout(() => {
                     if (
                         document.activeElement !== this.body &&
-                        document.activeElement !== linkMenuInput
+                        document.activeElement !== this.linkMenu.querySelector('input')
                     ) {
                         this.toolbarSlideDown();
                     }
                 }, 2000);
             };
         }
-
-        this.linkMenu.dataset.active = "false";
-        this.linkMenu.style.display = "none";
-        this.linkMenu.style.position = "absolute";
-        this.linkMenu.style.right = "10px";
-        this.linkMenu.style.bottom = "10px";
-        this.linkMenu.style.backgroundColor = "#fff";
-        this.linkMenu.style.border = "2px solid #ddd";
-        this.linkMenu.style.padding = "10px 20px";
-        this.linkMenu.style.zIndex = "1000";
-
-        const linkMenuContent = this.linkMenu.querySelector("div");
-        const linkMenuLabel = linkMenuContent.querySelector("p");
-        linkMenuLabel.style.width = "100%";
-        linkMenuLabel.style.textAlign = "right";
-        linkMenuLabel.style.marginRight = "10px";
-
-        const linkMenuInput = linkMenuContent.querySelector("input");
-        linkMenuInput.style.outline = "none";
-        linkMenuInput.style.padding = "0 5px";
-        linkMenuInput.placeholder = "Insert a Link";
-
-        linkMenuContent.style.display = "flex";
-        linkMenuContent.style.justifyContent = "space-between";
-        linkMenuContent.style.margin = "5px 0";
-
-        const linkMenuButton = this.linkMenu.querySelector("button");
-        linkMenuButton.style.float = "right";
-        linkMenuButton.style.padding = "6px 12px";
-        linkMenuButton.style.border = "1px solid #4cae4c";
-        linkMenuButton.style.backgroundColor = "#5cb85c";
-        linkMenuButton.style.fontSize = "14px";
-        linkMenuButton.style.color = "#fff";
-        linkMenuButton.style.outline = "none";
-
-        linkMenuButton.onmouseenter = () =>
-            (linkMenuButton.style.backgroundColor = "#4cae4c");
-        linkMenuButton.onmouseleave = () =>
-            (linkMenuButton.style.backgroundColor = "#5cb85c");
-
-        linkMenuButton.onclick = e => {
-            const linkValue = linkMenuInput.value;
-
-            if (linkValue) {
-                window.getSelection().removeAllRanges();
-                window.getSelection().addRange(this.range);
-                document.execCommand("createLink", true, linkValue);
-
-                if (this.options.metaUrl && this.validURL(linkValue)) {
-                    this.getMeta(linkValue).then(res => {
-                        const { url, image, title, description } = res;
-                        url &&
-                            image &&
-                            title &&
-                            this.createMetaDataElement(url, image, title, description);
-                    });
-                }
-
-                const bodyLinks = this.body.querySelectorAll("a");
-                bodyLinks[bodyLinks.length - 1].contentEditable = "false";
-
-                linkMenuInput.value = "";
-                this.toolbar.querySelector("#toolbar-link").onclick();
-            } else {
-                this.body.focus();
-                this.linkMenu.dataset.active = "false";
-                e.target.parentElement.style.display = "none";
-            }
-        };
 
         this.toolbarSend.style.display = "none";
         this.toolbarSend.style.color = "#fff";
@@ -293,8 +222,11 @@ export default class StrivenEditor {
                             this.linkMenu.style.display = "block";
 
                             this.range = this.getRange();
-                            linkMenuInput.focus();
+                            this.linkMenu.querySelector('input').focus();
                         }
+                        break;
+                    case "image":
+                        console.log("image");
                         break;
                     default:
                         document.execCommand(command, true);
@@ -364,6 +296,7 @@ export default class StrivenEditor {
         this.editor.appendChild(this.toolbar);
         this.editor.appendChild(this.body);
         this.editor.appendChild(this.linkMenu);
+        // this.editor.appendChild(this.imageMenu);
         this.editor.appendChild(this.metaDataSection);
         this.editor.appendChild(this.filesSection);
 
@@ -497,6 +430,71 @@ export default class StrivenEditor {
         linkMenuFormLabel.style.fontSize = "14px";
         linkMenuButton.style.cursor = "pointer";
 
+        linkMenu.dataset.active = "false";
+        linkMenu.style.display = "none";
+        linkMenu.style.position = "absolute";
+        linkMenu.style.right = "10px";
+        linkMenu.style.bottom = "10px";
+        linkMenu.style.backgroundColor = "#fff";
+        linkMenu.style.border = "2px solid #ddd";
+        linkMenu.style.padding = "10px 20px";
+        linkMenu.style.zIndex = "1000";
+
+        linkMenuFormLabel.style.width = "100%";
+        linkMenuFormLabel.style.textAlign = "right";
+        linkMenuFormLabel.style.marginRight = "10px";
+
+        linkMenuFormInput.style.outline = "none";
+        linkMenuFormInput.style.padding = "0 5px";
+        linkMenuFormInput.placeholder = "Insert a Link";
+
+        linkMenuForm.style.display = "flex";
+        linkMenuForm.style.justifyContent = "space-between";
+        linkMenuForm.style.margin = "5px 0";
+
+        linkMenuButton.style.float = "right";
+        linkMenuButton.style.padding = "6px 12px";
+        linkMenuButton.style.border = "1px solid #4cae4c";
+        linkMenuButton.style.backgroundColor = "#5cb85c";
+        linkMenuButton.style.fontSize = "14px";
+        linkMenuButton.style.color = "#fff";
+        linkMenuButton.style.outline = "none";
+
+        linkMenuButton.onmouseenter = () =>
+            (linkMenuButton.style.backgroundColor = "#4cae4c");
+        linkMenuButton.onmouseleave = () =>
+            (linkMenuButton.style.backgroundColor = "#5cb85c");
+
+        linkMenuButton.onclick = e => {
+            const linkValue = linkMenuFormInput.value;
+
+            if (linkValue) {
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(this.range);
+                document.execCommand("createLink", true, linkValue);
+
+                if (this.options.metaUrl && this.validURL(linkValue)) {
+                    this.getMeta(linkValue).then(res => {
+                        const { url, image, title, description } = res;
+                        url &&
+                            image &&
+                            title &&
+                            this.createMetaDataElement(url, image, title, description);
+                    });
+                }
+
+                const bodyLinks = this.body.querySelectorAll("a");
+                bodyLinks[bodyLinks.length - 1].contentEditable = "false";
+
+                linkMenuFormInput.value = "";
+                this.toolbar.querySelector("#toolbar-link").onclick();
+            } else {
+                this.body.focus();
+                this.linkMenu.dataset.active = "false";
+                e.target.parentElement.style.display = "none";
+            }
+        };
+
         linkMenuForm.appendChild(linkMenuFormLabel);
         linkMenuForm.appendChild(linkMenuFormInput);
 
@@ -504,6 +502,30 @@ export default class StrivenEditor {
         linkMenu.appendChild(linkMenuButton);
 
         return linkMenu;
+    }
+
+    initImageMenu() {
+        const imageMenu = document.createElement("div");
+        const imageMenuForm = document.createElement("div");
+        const imageMenuButton = document.createElement("button");
+        const imageMenuFormLabel = document.createElement("p");
+        const imageMenuFormInput = document.createElement("input");
+
+        imageMenu.id = "image-menu";
+        imageMenuButton.textContent = "Insert Image";
+        imageMenuFormLabel.textContent = "Image URL";
+        imageMenuFormInput.type = "text";
+        imageMenuFormLabel.style.margin = "8px 10px 8px 0";
+        imageMenuFormLabel.style.fontSize = "14px";
+        imageMenuButton.style.cursor = "pointer";
+
+        imageMenuForm.appendChild(imageMenuFormLabel);
+        imageMenuForm.appendChild(imageMenuFormInput);
+
+        imageMenu.appendChild(imageMenuForm);
+        imageMenu.appendChild(imageMenuButton);
+
+        return imageMenu;
     }
 
     initMetaDataSection() {
