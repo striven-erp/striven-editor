@@ -808,6 +808,9 @@ export default class StrivenEditor {
 
             setResponsive();
             window.onresize = () => {
+                this.toolbarGroups.forEach(group => group.style.padding = "0");
+                this.closeLinkMenu();
+                this.closeImageMenu();
                 setResponsive();
             }
         } else {
