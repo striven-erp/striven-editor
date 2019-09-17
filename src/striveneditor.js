@@ -543,7 +543,7 @@ export default class StrivenEditor {
 
     createFileElement(name, size) {
         const fileEl = document.createElement("div");
-        const fileNameEl = document.createElement("h6");
+        const fileNameEl = document.createElement("h4");
         const fileSizeEl = document.createElement("p");
         const removeFileEl = document.createElement("p");
 
@@ -563,6 +563,7 @@ export default class StrivenEditor {
         fileSizeEl.style.fontSize = "12px";
         fileSizeEl.style.margin = "2px 0";
 
+        removeFileEl.style.margin = "0";
         removeFileEl.style.userSelect = "none";
         removeFileEl.style.color = "black";
         removeFileEl.style.position = "absolute";
@@ -591,7 +592,7 @@ export default class StrivenEditor {
         const metaLinkEl = document.createElement("a");
         const metaImageEl = document.createElement("img");
         const metaDataEl = document.createElement("div");
-        const metaDataTitleEl = document.createElement("h6");
+        const metaDataTitleEl = document.createElement("h4");
         const metaDataDescriptionEl = document.createElement("p");
         const removeMetaDataEl = document.createElement("span");
 

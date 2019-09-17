@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <h1>Striven Editor</h1>
-    <div ref="editor" class="editor"></div>
+    <div ref="editor" class="editor" style="min-height: 300px; width:600px;"></div>
     <div id="footer">
       <a href="https://github.com/business-by-miles/striven-editor">Find this on GitHub</a>
     </div>
@@ -17,7 +17,15 @@ export default {
   name: 'app',
   mounted() {
     const that = this;
-    this.editor = new StrivenEditor(this.$refs.editor, { metaUrl: 'http://localhost:4200/meta', uploadOnPaste: true });
+    const editorOptions = {
+      metaUrl: 'http://localhost:4200/meta',
+      uploadOnPaste: false,
+      onToolbarSend: () => console.log(this.editor.getContent()),
+      toolbarBottom: true,
+      toolbarHide: true
+    }
+
+    this.editor = new StrivenEditor(this.$refs.editor, editorOptions);
     
     const tributeOptions = {
       trigger: "@",
@@ -59,12 +67,18 @@ export default {
 </script>
 
 <style>
+/* * { */
+  /* margin: 0; */
+  /* padding: 0; */
+  /* box-align: border-box; */
+/* } */
+
 html {
   background-color: #f7f6f6;
 }
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
@@ -76,8 +90,7 @@ html {
 }
 
 .editor {
-  width: 600px;
-  height: 250px;
+  margin: 20px 0;
   background-color: #fff;
 }
 
@@ -91,44 +104,44 @@ html {
 }
 
 .tribute-container ul {
-    list-style: none;
-  }
-  
-  .highlight > .menu-item {
-    display: flex;
-    justify-content: space-between;
-    font-family: "Montserrat", sans-serif;
-    border: 1px solid grey;
-    padding: 5px;
-    background-color: #f6f6f6;
-    width: 15rem;
-  }
-  
-  .menu-item {
-    display: flex;
-    justify-content: space-between;
-    font-family: "Montserrat", sans-serif;
-    border: 1px solid grey;
-    padding: 5px;
-    background-color: #fff;
-    width: 15rem;
-  }
-  
-  .menu-item img {
-    border-radius: 1rem;
-    height: 2rem;
-    width: 2rem;
-  }
-  
-  .menu-item p {
-    margin: 0 1rem;
-    text-align: center;
-  }
-  
-  .striven-mention {
-    background-color: lightblue;
-    color: blue;
-    padding: 1px 5px;
-    border-radius: 5%;
-  }
+  list-style: none;
+}
+
+.highlight > .menu-item {
+  display: flex;
+  justify-content: space-between;
+  font-family: "Montserrat", sans-serif;
+  border: 1px solid grey;
+  padding: 5px;
+  background-color: #f6f6f6;
+  width: 15rem;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  font-family: "Montserrat", sans-serif;
+  border: 1px solid grey;
+  padding: 5px;
+  background-color: #fff;
+  width: 15rem;
+}
+
+.menu-item img {
+  border-radius: 1rem;
+  height: 2rem;
+  width: 2rem;
+}
+
+.menu-item p {
+  margin: 0 1rem;
+  text-align: center;
+}
+
+.striven-mention {
+  background-color: lightblue;
+  color: blue;
+  padding: 1px 5px;
+  border-radius: 5%;
+}
 </style>
