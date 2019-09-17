@@ -377,7 +377,7 @@ export default class StrivenEditor {
     toolbarSlideUp() {
         const that = this;
 
-        let height = 0;
+        let height = this.toolbar.offsetHeight;
         let id = setInterval(frame, 5);
 
         function frame() {
