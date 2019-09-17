@@ -10,8 +10,8 @@
 
 <script>
 import Tribute from 'tributejs';
-import { StrivenEditor } from '@striven-erp/striven-editor';
-// import { StrivenEditor } from 'striven-editor';
+// import { StrivenEditor } from '@striven-erp/striven-editor';
+import { StrivenEditor } from 'striven-editor';
 import USERS from './users';
 
 export default {
@@ -20,8 +20,8 @@ export default {
     const that = this;
     const editorOptions = {
       metaUrl: 'http://localhost:4200/meta',
-      // onToolbarSend: () => console.log(this.editor.getContent()),
-      uploadOnPaste: false,
+      onToolbarSend: () => console.log(this.editor.getContent()),
+      uploadOnPaste: true,
       toolbarBottom: false,
       toolbarHide: true
     }

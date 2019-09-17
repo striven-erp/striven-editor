@@ -115,7 +115,6 @@ export default class StrivenEditor {
         this.editor.style.border = "2px solid #ddd";
         this.editor.style.display = "flex";
         this.editor.style.flexDirection = "column";
-        this.editor.style.position = "relative";
         this.editor.style.fontFamily = "Arial";
 
         this.editor.style.minHeight = "auto";
@@ -322,6 +321,7 @@ export default class StrivenEditor {
         toolbar.style.alignItems = "center";
         toolbar.style.flexWrap = "wrap";
         toolbar.style.minHeight = this.options.toolbarHide ? "0" : "40px";
+        toolbar.style.position = "relative";
 
         this.toolbarOptionsGroup.classList.add("toolbar-options");
         this.toolbarOptionsGroup.style.margin = "0 10px";
@@ -764,7 +764,7 @@ export default class StrivenEditor {
                     group.style.display = isResponsive ? "none" : "block";
                     group.style.position = isResponsive ? "absolute" : "relative";
                     group.style.bottom = isResponsive ? "5px" : "inherit";
-                    group.style.right = isResponsive ? "5px" : "inherit";
+                    group.style.right = isResponsive ? `5px` : "inherit";
                     group.style.backgroundColor = isResponsive ? "#fff" : "inherit";
                     group.style.border = isResponsive ? "2px solid #ddd" : "none";
                 });
@@ -799,7 +799,10 @@ export default class StrivenEditor {
                     menu.style.userSelect = "none";
 
                     menu.style.display = isResponsive ? "block" : "none";
-                    menu.onclick = e => toggleMenu();
+                    menu.onclick = e => {
+                        toggleMenu()
+                        that.body.focus();
+                    };
                 });
             }
 
