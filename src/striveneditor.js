@@ -114,6 +114,7 @@ export default class StrivenEditor {
 
         this.editor.style.border = "2px solid #ddd";
         this.editor.style.display = "flex";
+        this.editor.style.position = "relative";
         this.editor.style.flexDirection = "column";
         this.editor.style.fontFamily = "Arial";
 
