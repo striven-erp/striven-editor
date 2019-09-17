@@ -21,7 +21,7 @@ export default {
       metaUrl: 'http://localhost:4200/meta',
       uploadOnPaste: false,
       toolbarBottom: true,
-      toolbarHide: false
+      toolbarHide: true
     }
 
     this.editor = new StrivenEditor(this.$refs.editor, editorOptions);

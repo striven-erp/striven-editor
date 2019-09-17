@@ -154,7 +154,9 @@ export default class StrivenEditor {
                     if (
                         document.activeElement !== this.body &&
                         document.activeElement !== this.linkMenu.querySelector('input') &&
-                        document.activeElement !== this.imageMenu.querySelector('input')
+                        document.activeElement !== this.imageMenu.querySelectorAll('input')[0] &&
+                        document.activeElement !== this.imageMenu.querySelectorAll('input')[1] &&
+                        document.activeElement !== this.imageMenu.querySelectorAll('input')[2]
                     ) {
                         this.toolbarSlideDown();
                     }
