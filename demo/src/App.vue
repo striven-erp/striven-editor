@@ -10,6 +10,7 @@
 
 <script>
 import Tribute from 'tributejs';
+// import { StrivenEditor } from '@striven-erp/striven-editor';
 import { StrivenEditor } from 'striven-editor';
 import USERS from './users';
 

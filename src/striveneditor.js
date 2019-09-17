@@ -920,22 +920,22 @@ export default class StrivenEditor {
     }
 
     openLinkMenu() {
-        this.linkMenu.dataset.open = "true";
+        this.linkMenu.dataset.active = "true";
         this.linkMenu.style.display = "block";
     }
 
     openImageMenu() {
-        this.imageMenu.dataset.open = "true";
+        this.imageMenu.dataset.active = "true";
         this.imageMenu.style.display = "block";
     }
 
     closeLinkMenu() {
-        this.linkMenu.dataset.open = "false";
+        this.linkMenu.dataset.active = "false";
         this.linkMenu.style.display = "none";
     }
 
     closeImageMenu() {
-        this.imageMenu.dataset.open = "false";
+        this.imageMenu.dataset.active = "false";
         this.imageMenu.style.display = "none";
     }
 }
