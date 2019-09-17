@@ -20,7 +20,7 @@ export default {
     const editorOptions = {
       metaUrl: 'http://localhost:4200/meta',
       uploadOnPaste: false,
-      toolbarBottom: true,
+      toolbarBottom: false,
       toolbarHide: true
     }
 
