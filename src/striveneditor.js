@@ -216,11 +216,9 @@ export default class StrivenEditor {
                         break;
                     case "link":
                         if (this.linkMenu.dataset.active === "true") {
-                            this.linkMenu.dataset.active = "false";
-                            this.linkMenu.style.display = "none";
+                            this.closeLinkMenu();
                         } else {
-                            this.linkMenu.dataset.active = "true";
-                            this.linkMenu.style.display = "block";
+                            this.openLinkMenu();
 
                             this.range = this.getRange();
                             this.linkMenu.querySelector('input').focus();
@@ -228,11 +226,9 @@ export default class StrivenEditor {
                         break;
                     case "image":
                         if (this.imageMenu.dataset.active === "true") {
-                            this.imageMenu.dataset.active = "false";
-                            this.imageMenu.style.display = "none";
+                            this.closeImageMenu();
                         } else {
-                            this.imageMenu.dataset.active = "true";
-                            this.imageMenu.style.display = "block";
+                            this.openImageMenu();
 
                             this.range = this.getRange();
                             this.imageMenu.querySelector('input').focus();
@@ -500,8 +496,7 @@ export default class StrivenEditor {
                 this.toolbar.querySelector("#toolbar-link").onclick();
             } else {
                 this.body.focus();
-                this.linkMenu.dataset.active = "false";
-                e.target.parentElement.style.display = "none";
+                this.closeLinkMenu();
             }
         };
 
@@ -603,8 +598,7 @@ export default class StrivenEditor {
                 this.toolbar.querySelector("#toolbar-image").onclick();
             } else {
                 this.body.focus();
-                this.imageMenu.dataset.active = "false";
-                e.target.parentElement.style.display = "none";
+                this.closeImageMenu();
             }
         };
 
@@ -813,7 +807,9 @@ export default class StrivenEditor {
             }
 
             setResponsive();
-            window.onresize = () => setResponsive();
+            window.onresize = () => {
+                setResponsive();
+            }
         } else {
             this.toolbarMenus.forEach(menu => (menu.style.display = "none"));
             this.toolbar.querySelector("#toolbar-strikethrough").style.display = "none";
@@ -916,5 +912,25 @@ export default class StrivenEditor {
             this.body.style.backgroundColor = "inherit";
             setTimeout(() => this.body.style.transition = "none", 500);
         }, 500);
+    }
+
+    openLinkMenu() {
+        this.linkMenu.dataset.open = "true";
+        this.linkMenu.style.display = "block";
+    }
+
+    openImageMenu() {
+        this.imageMenu.dataset.open = "true";
+        this.imageMenu.style.display = "block";
+    }
+
+    closeLinkMenu() {
+        this.linkMenu.dataset.open = "false";
+        this.linkMenu.style.display = "none";
+    }
+
+    closeImageMenu() {
+        this.imageMenu.dataset.open = "false";
+        this.imageMenu.style.display = "none";
     }
 }
