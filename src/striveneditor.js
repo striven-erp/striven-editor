@@ -99,7 +99,7 @@ export default class StrivenEditor {
         }
 
         // MANUAL OVERIDE FOR OPEN SOURCE LAUNCH
-        this.options.minimal = true;
+        this.options.minimal = false;
 
         this.initEditor(el);
         this.initResponsive();
@@ -429,6 +429,7 @@ export default class StrivenEditor {
             toolbarMenuIcon.classList.add(this.options.fontPack);
             toolbarMenuIcon.classList.add(this.optionGroups[group].menu);
 
+            toolbarMenu.appendChild(toolbarMenuIcon);
             this.toolbarOptionsGroup.appendChild(toolbarMenu);
 
             // add group to toolbarOptions
@@ -492,7 +493,9 @@ export default class StrivenEditor {
         linkMenuButton.textContent = "Insert Link";
         linkMenuFormLabel.textContent = "Web Address";
         linkMenuFormInput.type = "text";
-        linkMenuFormLabel.style.margin = "16px 10px 16px 0";
+        linkMenuFormLabel.style.margin = "8px 10px 8px 0";
+        linkMenuFormLabel.style.fontSize = "14px";
+        linkMenuButton.style.cursor = "pointer";
 
         linkMenuForm.appendChild(linkMenuFormLabel);
         linkMenuForm.appendChild(linkMenuFormInput);
@@ -657,7 +660,7 @@ export default class StrivenEditor {
                     group.style.bottom = isResponsive ? "5px" : "inherit";
                     group.style.right = isResponsive ? "5px" : "inherit";
                     group.style.backgroundColor = isResponsive ? "#fff" : "inherit";
-                    group.style.border = isResponsive ? "2px solid black" : "none";
+                    group.style.border = isResponsive ? "2px solid #ddd" : "none";
                 });
 
                 that.toolbarMenus.forEach(menu => {
@@ -667,6 +670,7 @@ export default class StrivenEditor {
                         );
 
                         if (selectedGroup.dataset.open === "false") {
+                            // close opened groups
                             that.toolbarGroups.forEach(group => {
                                 if (group.dataset.open === "true") {
                                     group.style.display = "none";
@@ -674,7 +678,9 @@ export default class StrivenEditor {
                                 }
                             });
 
+                            // open group
                             selectedGroup.style.display = "block";
+                            selectedGroup.style.padding = "5px";
                             selectedGroup.dataset.open = "true";
                         } else {
                             selectedGroup.style.display = "none";

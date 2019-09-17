@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <h1>Striven Editor</h1>
-    <div ref="editor" class="editor" style="min-height: 300px; width:600px;"></div>
+    <div ref="editor" class="editor" style="min-height: 300px; width: 600px;"></div>
     <div id="footer">
       <a href="https://github.com/business-by-miles/striven-editor">Find this on GitHub</a>
     </div>
@@ -21,7 +21,7 @@ export default {
       metaUrl: 'http://localhost:4200/meta',
       uploadOnPaste: false,
       toolbarBottom: true,
-      toolbarHide: true
+      toolbarHide: false
     }
 
     this.editor = new StrivenEditor(this.$refs.editor, editorOptions);
@@ -86,6 +86,7 @@ html {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  padding: 0 1rem;
 }
 
 .editor {
