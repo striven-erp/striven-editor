@@ -66,11 +66,11 @@ export default {
 </script>
 
 <style>
-/* * { */
-  /* margin: 0; */
-  /* padding: 0; */
-  /* box-align: border-box; */
-/* } */
+* {
+  margin: 0;
+  padding: 0;
+  box-align: border-box;
+}
 
 html {
   background-color: #f7f6f6;

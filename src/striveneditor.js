@@ -492,6 +492,7 @@ export default class StrivenEditor {
         linkMenuButton.textContent = "Insert Link";
         linkMenuFormLabel.textContent = "Web Address";
         linkMenuFormInput.type = "text";
+        linkMenuFormLabel.style.margin = "16px 10px 16px 0";
 
         linkMenuForm.appendChild(linkMenuFormLabel);
         linkMenuForm.appendChild(linkMenuFormInput);
