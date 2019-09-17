@@ -11,6 +11,7 @@
   "dependencies": {
     "@striven-erp/striven-editor": "^1.0.0",
     "core-js": "^2.6.5",
+    "tributejs": "^3.7.3",
     "vue": "^2.6.10"
   },
   "devDependencies": {

@@ -139,7 +139,7 @@ export default class StrivenEditor {
                         document.activeElement !== this.linkMenu.querySelector('input') &&
                         document.activeElement !== this.imageMenu.querySelectorAll('input')[0] &&
                         document.activeElement !== this.imageMenu.querySelectorAll('input')[1] &&
-                        document.activeElement !== this.imageMenu.querySelectorAll('input')[2]
+                        document.activeElement !== this.imageMenu.querySelectorAll('input')[2] 
                     ) {
                         this.toolbarSlideDown();
                     }
@@ -282,7 +282,7 @@ export default class StrivenEditor {
         let id = setInterval(frame, 5);
 
         function frame() {
-            if (height === 40) {
+            if (height >= 40) {
                 that.options.onToolbarSend && (that.toolbarSend.style.display = "flex");
                 that.toolbarOptionsGroup.style.display = "flex";
                 clearInterval(id);
