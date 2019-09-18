@@ -6,15 +6,17 @@
       <button
         ref="sendButton" 
         style="
+        color: #fff;
         border: none; 
         cursor: pointer; 
         align-self: flex-end; 
-        height: 4rem; 
-        width: 4rem; 
+        height: 3rem; 
+        width: 4rem;
+        border-radius: 4%;
         background-color: #5cb85c; 
         margin: 0 5px;
         outline: none;">
-        <i style="color: #fff; font-size: 25px;" class="fas fa-paper-plane" />
+        <!-- <i style="color: #fff; font-size: 25px;" class="fas fa-paper-plane" /> -->
       </button>
     </div>
     <div id="footer">
@@ -26,14 +28,14 @@
 <script>
 // import Tribute from 'tributejs';
 // import { StrivenEditor } from '@striven-erp/striven-editor';
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons/faPaperPlane";
-import { dom } from '@fortawesome/fontawesome-svg-core';
-import { library as faLib } from "@fortawesome/fontawesome-svg-core";
+// import { faPaperPlane } from "@fortawesome/free-solid-svg-icons/faPaperPlane";
+// import { dom } from '@fortawesome/fontawesome-svg-core';
+// import { library as faLib } from "@fortawesome/fontawesome-svg-core";
 import { StrivenEditor } from 'striven-editor';
 import USERS from './users';
 
-faLib.add(faPaperPlane);
-dom.watch();
+// faLib.add(faPaperPlane);
+// dom.watch();
 
 export default {
   name: 'app',
@@ -51,6 +53,11 @@ export default {
     this.editor = new StrivenEditor(this.$refs.editor, editorOptions);
     
     this.$refs.sendButton.onclick = () => console.log(this.editor.getContent())
+
+    /* CREATE A NEW BRANCH */
+    const paperPlane = document.createElement("span");
+    paperPlane.innerHTML = "<svg width=\"25\" height=\"25\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path fill=\"#fff\" d=\"M1764 11q33 24 27 64l-256 1536q-5 29-32 45-14 8-31 8-11 0-24-5l-453-185-242 295q-18 23-49 23-13 0-22-4-19-7-30.5-23.5t-11.5-36.5v-349l864-1059-1069 925-395-162q-37-14-40-55-2-40 32-59l1664-960q15-9 32-9 20 0 36 11z\"/></svg>";
+    this.$refs.sendButton.appendChild(paperPlane);
 
     // const tributeOptions = {
     //   trigger: "@",
