@@ -6,6 +6,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2019-09-18
+### Added
+- Option to change the toolbar options fill color
+
+### Changed
+- Added a new milestone!
+
+### Removed
+- FontAwesome SVG Imports
+
+## [1.1.0] - 2019-09-18
+### Added
+- Full size toolbar options
+- NPM Package
+
+### Changed
+- GitHub Pages!
+
+### Removed
+- [Tributejs](https://github.com/zurb/tribute) is **not** a dependency.
+
 ## [1.0.0] - 2019-09-13
 ### Added
 - Minimal Striven Editor
@@ -16,14 +37,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Nothing! This is an init.
-
-## [1.1.0] - 2019-09-13
-### Added
-- Full size toolbar options
-- NPM Package
-
-### Changed
-- GitHub Pages!
-
-### Removed
-- [Tributejs](https://github.com/zurb/tribute) is **not** a dependency.
