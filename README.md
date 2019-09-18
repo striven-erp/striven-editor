@@ -113,5 +113,7 @@ fetch(this.options.metaUrl, {
 |closeImageMenu|None|Closes the ```insertImage``` menu|
 |overflow|None|Manually update the editor to handle overflow content <br /> ```overflowX``` ```overflowY```|
 |getMeta(```String```)|```Promise```|Returns a promise containing data from ```POST``` request to ```metaURl``` using the passed url as ```targetUrl``` <br /> ```const { url, title, image, description } = res```|
+|toolbarSlideUp|None|Manually trigger the toolbar open animation|
+|toolbarSlideDown|None|Manually trigger the toolbar close animation|
 
 
