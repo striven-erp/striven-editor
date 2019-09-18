@@ -1,6 +1,6 @@
 <template>
   <div id="app" style="font-family: Segoe UI; color: #2c3e50; margin-top: 20vh; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 0 1rem;">
-    <h1>Striven Editor</h1>
+    <!-- <h1>Striven Editor</h1> -->
     <div style="display: flex; padding: 1rem; width: 100%; justify-content: center;">
       <div ref="editor" class="editor" style="margin-top: 20px; background-color: #fff; min-height: 300px; width: 600px;"></div>
       <button
@@ -35,8 +35,8 @@
 // faLib.add(faPaperPlane);
 // dom.watch();
 
-import { StrivenEditor } from 'striven-editor';
-// import { StrivenEditor } from '@striven-erp/striven-editor';
+// import { StrivenEditor } from 'striven-editor';
+import { StrivenEditor } from '@striven-erp/striven-editor';
 
 export default {
   name: 'app',
@@ -63,6 +63,8 @@ export default {
     paperPlane.innerHTML = `${svg}${path}</svg>`;
 
     this.$refs.sendButton.append(paperPlane);
+    this.$refs.sendButton.onmouseenter = () => this.$refs.sendButton.style.backgroundColor = "#4cae4c";
+    this.$refs.sendButton.onmouseleave = () => this.$refs.sendButton.style.backgroundColor = "#5cb85c";
 
     // const tributeOptions = {
     //   trigger: "@",
