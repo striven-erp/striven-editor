@@ -107,3 +107,10 @@ fetch(this.options.metaUrl, {
 |getContent|```String```|Returns an HTML String of the editor's contents|
 |getRange|```Range```|Get the current range of the window at index ```0```|
 |attachFile(```File```)|None|Attaches given file to the editor|
+|openLinkMenu()|None|Opens the ```insertLink``` menu|
+|closeLinkMenu()|None|Closes the ```insertLink``` menu|
+|openImageMenu()|None|Opens the ```insertImage``` menu|
+|closeImageMenu()|None|Closes the ```insertImage``` menu|
+|overflow()|None|Manually update the editor to handle overflow content <br /> ```overflowX``` ```overflowY```|
+|getMeta(```String```)|```Promise```|Returns a promise containing data from ```POST``` request to ```metaURl``` using the passed url as ```targetUrl``` <br /> ```const { url, title, image, description } = res```|
+
