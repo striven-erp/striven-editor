@@ -1,8 +1,8 @@
 {
-  "name": "striven-editor",
+  "name": "@striven-erp/striven-editor",
   "sideEffects": false,
   "private": false,
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "The lightweight Striven WYSIWYG editor built with pure JavaScript.",
   "main": "./dist",
   "scripts": {
@@ -48,7 +48,6 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.22",
-    "@fortawesome/free-solid-svg-icons": "^5.10.2",
-    "tributejs": "^3.7.3"
+    "@fortawesome/free-solid-svg-icons": "^5.10.2"
   }
 }

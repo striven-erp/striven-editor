@@ -4,9 +4,16 @@
     <img src="./striven-editor.gif" alt="stirven-editor" />
 </p>
 
+<p align="center">
+<img src="https://img.shields.io/npm/v/@striven-erp/striven-editor" alt="version">
+<img src="https://img.shields.io/github/issues/striven-erp/striven-editor" alt="GitHub issus">
+<img src="https://img.shields.io/github/languages/top/striven-erp/striven-editor" alt="GitHub top language">
+<img src="https://img.shields.io/github/size/striven-erp/striven-editor/dist/striveneditor.js" alt="GitHub file size in bytes">
+</p>
+
 ## Getting Started
 
-### Install Dependencies
+### Install Package
 
 ```sh
 $ npm install striven-editor

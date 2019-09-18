@@ -98,9 +98,6 @@ export default class StrivenEditor {
             };
         }
 
-        // MANUAL OVERIDE FOR OPEN SOURCE LAUNCH
-        this.options.minimal = true;
-
         this.initEditor(el);
         this.initResponsive();
         this.initOverflow();
@@ -111,31 +108,15 @@ export default class StrivenEditor {
         this.toolbar = this.initToolbar();
         this.body = this.initBody();
         this.linkMenu = this.initLinkMenu();
+        this.imageMenu = this.initImageMenu();
         this.metaDataSection = this.initMetaDataSection();
         this.filesSection = this.initFilesSection();
 
         this.editor.style.border = "2px solid #ddd";
         this.editor.style.display = "flex";
-        this.editor.style.flexDirection = "column";
         this.editor.style.position = "relative";
+        this.editor.style.flexDirection = "column";
         this.editor.style.fontFamily = "Arial";
-
-        this.toolbar.style.display = "flex";
-        this.toolbar.style.justifyContent = "space-between";
-        this.toolbar.style.alignItems = "center";
-        this.toolbar.style.flexWrap = "wrap";
-        this.toolbar.style.minHeight = this.options.toolbarHide ? "0" : "40px";
-
-        this.toolbarOptionsGroup.style.margin = "0 10px";
-        this.toolbarOptionsGroup.style.display = this.options.toolbarHide ? "none" : "flex";
-
-        this.body.contentEditable = "true";
-        this.body.style.outline = "none";
-        this.body.style.padding = "10px 20px";
-
-        this.body.style.height = this.editor.style.height;
-        this.body.style.minHeight = this.editor.style.minHeight;
-        this.body.style.maxHeight = this.editor.style.maxHeight;
 
         this.editor.style.minHeight = "auto";
         this.editor.style.maxHeight = "auto";
@@ -155,105 +136,16 @@ export default class StrivenEditor {
                 setTimeout(() => {
                     if (
                         document.activeElement !== this.body &&
-                        document.activeElement !== linkMenuInput
+                        document.activeElement !== this.linkMenu.querySelector('input') &&
+                        document.activeElement !== this.imageMenu.querySelectorAll('input')[0] &&
+                        document.activeElement !== this.imageMenu.querySelectorAll('input')[1] &&
+                        document.activeElement !== this.imageMenu.querySelectorAll('input')[2] 
                     ) {
                         this.toolbarSlideDown();
                     }
                 }, 2000);
             };
         }
-
-        this.linkMenu.dataset.active = "false";
-        this.linkMenu.style.display = "none";
-        this.linkMenu.style.position = "absolute";
-        this.linkMenu.style.right = "10px";
-        this.linkMenu.style.bottom = "10px";
-        this.linkMenu.style.backgroundColor = "#fff";
-        this.linkMenu.style.border = "2px solid #ddd";
-        this.linkMenu.style.padding = "10px 20px";
-        this.linkMenu.style.zIndex = "1000";
-
-        const linkMenuContent = this.linkMenu.querySelector("div");
-        const linkMenuLabel = linkMenuContent.querySelector("p");
-        linkMenuLabel.style.width = "100%";
-        linkMenuLabel.style.textAlign = "right";
-        linkMenuLabel.style.marginRight = "10px";
-
-        const linkMenuInput = linkMenuContent.querySelector("input");
-        linkMenuInput.style.outline = "none";
-        linkMenuInput.style.padding = "0 5px";
-        linkMenuInput.placeholder = "Insert a Link";
-
-        linkMenuContent.style.display = "flex";
-        linkMenuContent.style.justifyContent = "space-between";
-        linkMenuContent.style.margin = "5px 0";
-
-        const linkMenuButton = this.linkMenu.querySelector("button");
-        linkMenuButton.style.float = "right";
-        linkMenuButton.style.padding = "6px 12px";
-        linkMenuButton.style.border = "1px solid #4cae4c";
-        linkMenuButton.style.backgroundColor = "#5cb85c";
-        linkMenuButton.style.fontSize = "14px";
-        linkMenuButton.style.color = "#fff";
-        linkMenuButton.style.outline = "none";
-
-        linkMenuButton.onmouseenter = () =>
-            (linkMenuButton.style.backgroundColor = "#4cae4c");
-        linkMenuButton.onmouseleave = () =>
-            (linkMenuButton.style.backgroundColor = "#5cb85c");
-
-        linkMenuButton.onclick = e => {
-            const linkValue = linkMenuInput.value;
-
-            if (linkValue) {
-                window.getSelection().removeAllRanges();
-                window.getSelection().addRange(this.range);
-                document.execCommand("createLink", true, linkValue);
-
-                if (this.options.metaUrl && this.validURL(linkValue)) {
-                    this.getMeta(linkValue).then(res => {
-                        const { url, image, title, description } = res;
-                        url &&
-                            image &&
-                            title &&
-                            this.createMetaDataElement(url, image, title, description);
-                    });
-                }
-
-                const bodyLinks = this.body.querySelectorAll("a");
-                bodyLinks[bodyLinks.length - 1].contentEditable = "false";
-
-                linkMenuInput.value = "";
-                this.toolbar.querySelector("#toolbar-link").onclick();
-            } else {
-                this.body.focus();
-                this.linkMenu.dataset.active = "false";
-                e.target.parentElement.style.display = "none";
-            }
-        };
-
-        this.toolbarSend.style.display = "none";
-        this.toolbarSend.style.color = "#fff";
-        this.toolbarSend.style.backgroundColor = "#5cb85c";
-        this.toolbarSend.style.minHeight = this.options.toolbarHide
-            ? "40px"
-            : this.toolbar.style.minHeight;
-        this.toolbarSend.style.width = "50px";
-        this.toolbarSend.style.textAlign = "center";
-        this.toolbarSend.style.justifyContent = "center";
-        this.toolbarSend.style.alignContent = "center";
-        this.toolbarSend.style.alignItems = "center";
-        this.toolbarSend.style.cursor = "pointer";
-        this.toolbarSend.style.border = "1px solid #4cae4c";
-        this.toolbarSend.style.alignSelf = "flex-end";
-        this.options.onToolbarSend && (this.toolbarSend.onclick = () => this.options.onToolbarSend());
-        this.options.onToolbarSend && !this.options.toolbarHide && (this.toolbarSend.style.display = "flex");
-
-        this.toolbarSend.onmouseenter = () =>
-            (this.toolbarSend.style.backgroundColor = "#4cae4c");
-
-        this.toolbarSend.onmouseleave = () =>
-            (this.toolbarSend.style.backgroundColor = "#5cb85c");
 
         // Toolbar Options
         this.toolbarOptions.forEach(optionEl => {
@@ -286,14 +178,22 @@ export default class StrivenEditor {
                         break;
                     case "link":
                         if (this.linkMenu.dataset.active === "true") {
-                            this.linkMenu.dataset.active = "false";
-                            this.linkMenu.style.display = "none";
+                            this.closeLinkMenu();
                         } else {
-                            this.linkMenu.dataset.active = "true";
-                            this.linkMenu.style.display = "block";
+                            this.openLinkMenu();
 
                             this.range = this.getRange();
-                            linkMenuInput.focus();
+                            this.linkMenu.querySelector('input').focus();
+                        }
+                        break;
+                    case "image":
+                        if (this.imageMenu.dataset.active === "true") {
+                            this.closeImageMenu();
+                        } else {
+                            this.openImageMenu();
+
+                            this.range = this.getRange();
+                            this.imageMenu.querySelector('input').focus();
                         }
                         break;
                     default:
@@ -364,6 +264,7 @@ export default class StrivenEditor {
         this.editor.appendChild(this.toolbar);
         this.editor.appendChild(this.body);
         this.editor.appendChild(this.linkMenu);
+        this.editor.appendChild(this.imageMenu);
         this.editor.appendChild(this.metaDataSection);
         this.editor.appendChild(this.filesSection);
 
@@ -377,11 +278,11 @@ export default class StrivenEditor {
     toolbarSlideUp() {
         const that = this;
 
-        let height = 0;
+        let height = this.toolbar.offsetHeight;
         let id = setInterval(frame, 5);
 
         function frame() {
-            if (height === 40) {
+            if (height >= 40) {
                 that.options.onToolbarSend && (that.toolbarSend.style.display = "flex");
                 that.toolbarOptionsGroup.style.display = "flex";
                 clearInterval(id);
@@ -416,7 +317,16 @@ export default class StrivenEditor {
         const groups = Object.keys(this.optionGroups);
 
         toolbar.classList.add("toolbar");
+        toolbar.style.display = "flex";
+        toolbar.style.justifyContent = "space-between";
+        toolbar.style.alignItems = "center";
+        toolbar.style.flexWrap = "wrap";
+        toolbar.style.minHeight = this.options.toolbarHide ? "0" : "40px";
+        toolbar.style.position = "relative";
+
         this.toolbarOptionsGroup.classList.add("toolbar-options");
+        this.toolbarOptionsGroup.style.margin = "0 10px";
+        this.toolbarOptionsGroup.style.display = this.options.toolbarHide ? "none" : "flex";
 
         //iterate groups
         groups.forEach((group) => {
@@ -429,6 +339,7 @@ export default class StrivenEditor {
             toolbarMenuIcon.classList.add(this.options.fontPack);
             toolbarMenuIcon.classList.add(this.optionGroups[group].menu);
 
+            toolbarMenu.appendChild(toolbarMenuIcon);
             this.toolbarOptionsGroup.appendChild(toolbarMenu);
 
             // add group to toolbarOptions
@@ -463,6 +374,30 @@ export default class StrivenEditor {
         toolbarSendIcon.classList.add(this.options.fontPack);
         toolbarSendIcon.classList.add("fa-paper-plane");
 
+        toolbarSend.style.display = "none";
+        toolbarSend.style.color = "#fff";
+        toolbarSend.style.backgroundColor = "#5cb85c";
+        toolbarSend.style.minHeight = this.options.toolbarHide
+            ? "40px"
+            : this.toolbar.style.minHeight;
+        toolbarSend.style.width = "50px";
+        toolbarSend.style.textAlign = "center";
+        toolbarSend.style.justifyContent = "center";
+        toolbarSend.style.alignContent = "center";
+        toolbarSend.style.alignItems = "center";
+        toolbarSend.style.cursor = "pointer";
+        toolbarSend.style.border = "1px solid #4cae4c";
+        toolbarSend.style.alignSelf = "flex-end";
+        this.options.onToolbarSend && (toolbarSend.onclick = () => this.options.onToolbarSend());
+        this.options.onToolbarSend && !this.options.toolbarHide && (toolbarSend.style.display = "flex");
+
+        toolbarSend.onmouseenter = () =>
+            (toolbarSend.style.backgroundColor = "#4cae4c");
+
+        toolbarSend.onmouseleave = () =>
+            (toolbarSend.style.backgroundColor = "#5cb85c");
+
+
         toolbarSend.appendChild(toolbarSendIcon);
         toolbar.appendChild(toolbarSend);
 
@@ -478,6 +413,14 @@ export default class StrivenEditor {
         const body = document.createElement("div");
         body.classList.add("body");
 
+        body.contentEditable = "true";
+        body.style.outline = "none";
+        body.style.padding = "10px 20px";
+
+        body.style.height = this.editor.style.height;
+        body.style.minHeight = this.editor.style.minHeight;
+        body.style.maxHeight = this.editor.style.maxHeight;
+
         return body;
     }
 
@@ -492,6 +435,73 @@ export default class StrivenEditor {
         linkMenuButton.textContent = "Insert Link";
         linkMenuFormLabel.textContent = "Web Address";
         linkMenuFormInput.type = "text";
+        linkMenuFormLabel.style.margin = "8px 10px 8px 0";
+        linkMenuFormLabel.style.fontSize = "14px";
+        linkMenuButton.style.cursor = "pointer";
+
+        linkMenu.dataset.active = "false";
+        linkMenu.style.display = "none";
+        linkMenu.style.position = "absolute";
+        linkMenu.style.right = "10px";
+        linkMenu.style.bottom = "10px";
+        linkMenu.style.backgroundColor = "#fff";
+        linkMenu.style.border = "2px solid #ddd";
+        linkMenu.style.padding = "10px 20px";
+        linkMenu.style.zIndex = "1000";
+
+        linkMenuFormLabel.style.width = "100%";
+        linkMenuFormLabel.style.textAlign = "right";
+        linkMenuFormLabel.style.marginRight = "10px";
+
+        linkMenuFormInput.style.outline = "none";
+        linkMenuFormInput.style.padding = "0 5px";
+        linkMenuFormInput.placeholder = "Insert a Link";
+
+        linkMenuForm.style.display = "flex";
+        linkMenuForm.style.justifyContent = "space-between";
+        linkMenuForm.style.margin = "5px 0";
+
+        linkMenuButton.style.float = "right";
+        linkMenuButton.style.padding = "6px 12px";
+        linkMenuButton.style.border = "1px solid #4cae4c";
+        linkMenuButton.style.backgroundColor = "#5cb85c";
+        linkMenuButton.style.fontSize = "14px";
+        linkMenuButton.style.color = "#fff";
+        linkMenuButton.style.outline = "none";
+
+        linkMenuButton.onmouseenter = () =>
+            (linkMenuButton.style.backgroundColor = "#4cae4c");
+        linkMenuButton.onmouseleave = () =>
+            (linkMenuButton.style.backgroundColor = "#5cb85c");
+
+        linkMenuButton.onclick = e => {
+            const linkValue = linkMenuFormInput.value;
+
+            if (linkValue) {
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(this.range);
+                document.execCommand("createLink", true, linkValue);
+
+                if (this.options.metaUrl && this.validURL(linkValue)) {
+                    this.getMeta(linkValue).then(res => {
+                        const { url, image, title, description } = res;
+                        url &&
+                            image &&
+                            title &&
+                            this.createMetaDataElement(url, image, title, description);
+                    });
+                }
+
+                const bodyLinks = this.body.querySelectorAll("a");
+                bodyLinks[bodyLinks.length - 1].contentEditable = "false";
+
+                linkMenuFormInput.value = "";
+                this.toolbar.querySelector("#toolbar-link").onclick();
+            } else {
+                this.body.focus();
+                this.closeLinkMenu();
+            }
+        };
 
         linkMenuForm.appendChild(linkMenuFormLabel);
         linkMenuForm.appendChild(linkMenuFormInput);
@@ -500,6 +510,107 @@ export default class StrivenEditor {
         linkMenu.appendChild(linkMenuButton);
 
         return linkMenu;
+    }
+
+    initImageMenu() {
+        const imageMenu = document.createElement("div");
+        const imageMenuForm = document.createElement("div");
+        const imageMenuButton = document.createElement("button");
+        const imageMenuFormLabel = document.createElement("p");
+        const imageMenuFormSourceInput = document.createElement("input");
+
+        imageMenu.id = "image-menu";
+        imageMenuButton.textContent = "Insert Image";
+        imageMenuFormLabel.textContent = "Image URL";
+        imageMenuFormSourceInput.type = "text";
+        imageMenuFormLabel.style.margin = "8px 10px 8px 0";
+        imageMenuFormLabel.style.fontSize = "14px";
+        imageMenuButton.style.cursor = "pointer";
+
+        imageMenu.dataset.active = "false";
+        imageMenu.style.display = "none";
+        imageMenu.style.position = "absolute";
+        imageMenu.style.right = "10px";
+        imageMenu.style.bottom = "10px";
+        imageMenu.style.backgroundColor = "#fff";
+        imageMenu.style.border = "2px solid #ddd";
+        imageMenu.style.padding = "10px 20px";
+        imageMenu.style.zIndex = "1000";
+
+        imageMenuFormLabel.style.width = "100%";
+        imageMenuFormLabel.style.textAlign = "right";
+        imageMenuFormLabel.style.marginRight = "10px";
+
+        imageMenuFormSourceInput.style.outline = "none";
+        imageMenuFormSourceInput.style.padding = "0 5px";
+        imageMenuFormSourceInput.placeholder = "Insert a Link";
+
+        imageMenuForm.style.display = "flex";
+        imageMenuForm.style.justifyContent = "space-between";
+        imageMenuForm.style.margin = "5px 0";
+
+        imageMenuButton.style.float = "right";
+        imageMenuButton.style.padding = "6px 12px";
+        imageMenuButton.style.border = "1px solid #4cae4c";
+        imageMenuButton.style.backgroundColor = "#5cb85c";
+        imageMenuButton.style.fontSize = "14px";
+        imageMenuButton.style.color = "#fff";
+        imageMenuButton.style.outline = "none";
+
+        imageMenuButton.onmouseenter = () =>
+            (imageMenuButton.style.backgroundColor = "#4cae4c");
+        imageMenuButton.onmouseleave = () =>
+            (imageMenuButton.style.backgroundColor = "#5cb85c");
+
+        imageMenuForm.appendChild(imageMenuFormLabel);
+        imageMenuForm.appendChild(imageMenuFormSourceInput);
+
+        // Height Input Form
+        const imageMenuHeightForm = imageMenuForm.cloneNode(true);
+        const imageMenuHeightFormInput = imageMenuHeightForm.querySelector('input');
+        const imageMenuHeightFormLabel = imageMenuHeightForm.querySelector('p');
+
+        imageMenuHeightFormInput.placeholder = "Image Height";
+        imageMenuHeightFormLabel.textContent = "Height";
+
+        // Width Input Form
+        const imageMenuWidthForm = imageMenuForm.cloneNode(true);
+        const imageMenuWidthFormInput = imageMenuWidthForm.querySelector('input');
+        const imageMenuWidthFormLabel = imageMenuWidthForm.querySelector('p');
+
+        imageMenuWidthFormInput.placeholder = "Image Height";
+        imageMenuWidthFormLabel.textContent = "Width";
+
+        imageMenuButton.onclick = e => {
+            const linkValue = imageMenuFormSourceInput.value;
+            const heightValue = imageMenuHeightFormInput.value;
+            const widthValue = imageMenuWidthFormInput.value;
+
+            if (linkValue) {
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(this.range);
+                document.execCommand("insertImage", true, linkValue);
+
+                const imageTags = this.body.querySelectorAll("img");
+                imageTags[imageTags.length - 1].style.height = `${heightValue}px`;
+                imageTags[imageTags.length - 1].style.width = `${widthValue}px`;
+
+                imageMenuHeightFormInput.value = "";
+                imageMenuWidthFormInput.value = "";
+                imageMenuFormSourceInput.value = "";
+                this.toolbar.querySelector("#toolbar-image").onclick();
+            } else {
+                this.body.focus();
+                this.closeImageMenu();
+            }
+        };
+
+        imageMenu.appendChild(imageMenuHeightForm);
+        imageMenu.appendChild(imageMenuWidthForm);
+        imageMenu.appendChild(imageMenuForm);
+        imageMenu.appendChild(imageMenuButton);
+
+        return imageMenu;
     }
 
     initMetaDataSection() {
@@ -543,7 +654,7 @@ export default class StrivenEditor {
 
     createFileElement(name, size) {
         const fileEl = document.createElement("div");
-        const fileNameEl = document.createElement("h6");
+        const fileNameEl = document.createElement("h4");
         const fileSizeEl = document.createElement("p");
         const removeFileEl = document.createElement("p");
 
@@ -563,6 +674,7 @@ export default class StrivenEditor {
         fileSizeEl.style.fontSize = "12px";
         fileSizeEl.style.margin = "2px 0";
 
+        removeFileEl.style.margin = "0";
         removeFileEl.style.userSelect = "none";
         removeFileEl.style.color = "black";
         removeFileEl.style.position = "absolute";
@@ -591,7 +703,7 @@ export default class StrivenEditor {
         const metaLinkEl = document.createElement("a");
         const metaImageEl = document.createElement("img");
         const metaDataEl = document.createElement("div");
-        const metaDataTitleEl = document.createElement("h6");
+        const metaDataTitleEl = document.createElement("h4");
         const metaDataDescriptionEl = document.createElement("p");
         const removeMetaDataEl = document.createElement("span");
 
@@ -653,9 +765,9 @@ export default class StrivenEditor {
                     group.style.display = isResponsive ? "none" : "block";
                     group.style.position = isResponsive ? "absolute" : "relative";
                     group.style.bottom = isResponsive ? "5px" : "inherit";
-                    group.style.right = isResponsive ? "5px" : "inherit";
+                    group.style.right = isResponsive ? `5px` : "inherit";
                     group.style.backgroundColor = isResponsive ? "#fff" : "inherit";
-                    group.style.border = isResponsive ? "2px solid black" : "none";
+                    group.style.border = isResponsive ? "2px solid #ddd" : "none";
                 });
 
                 that.toolbarMenus.forEach(menu => {
@@ -665,6 +777,7 @@ export default class StrivenEditor {
                         );
 
                         if (selectedGroup.dataset.open === "false") {
+                            // close opened groups
                             that.toolbarGroups.forEach(group => {
                                 if (group.dataset.open === "true") {
                                     group.style.display = "none";
@@ -672,7 +785,9 @@ export default class StrivenEditor {
                                 }
                             });
 
+                            // open group
                             selectedGroup.style.display = "block";
+                            selectedGroup.style.padding = "5px";
                             selectedGroup.dataset.open = "true";
                         } else {
                             selectedGroup.style.display = "none";
@@ -685,7 +800,10 @@ export default class StrivenEditor {
                     menu.style.userSelect = "none";
 
                     menu.style.display = isResponsive ? "block" : "none";
-                    menu.onclick = e => toggleMenu();
+                    menu.onclick = e => {
+                        toggleMenu()
+                        that.body.focus();
+                    };
                 });
             }
 
@@ -695,7 +813,12 @@ export default class StrivenEditor {
             }
 
             setResponsive();
-            window.onresize = () => setResponsive();
+            window.onresize = () => {
+                this.toolbarGroups.forEach(group => group.style.padding = "0");
+                this.closeLinkMenu();
+                this.closeImageMenu();
+                setResponsive();
+            }
         } else {
             this.toolbarMenus.forEach(menu => (menu.style.display = "none"));
             this.toolbar.querySelector("#toolbar-strikethrough").style.display = "none";
@@ -798,5 +921,27 @@ export default class StrivenEditor {
             this.body.style.backgroundColor = "inherit";
             setTimeout(() => this.body.style.transition = "none", 500);
         }, 500);
+    }
+
+    openLinkMenu() {
+        this.closeImageMenu();
+        this.linkMenu.dataset.active = "true";
+        this.linkMenu.style.display = "block";
+    }
+
+    openImageMenu() {
+        this.closeLinkMenu();
+        this.imageMenu.dataset.active = "true";
+        this.imageMenu.style.display = "block";
+    }
+
+    closeLinkMenu() {
+        this.linkMenu.dataset.active = "false";
+        this.linkMenu.style.display = "none";
+    }
+
+    closeImageMenu() {
+        this.imageMenu.dataset.active = "false";
+        this.imageMenu.style.display = "none";
     }
 }
