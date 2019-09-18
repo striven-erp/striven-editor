@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <h1>Striven Editor</h1>
-    <div ref="editor" class="editor"></div>
+    <div ref="editor" style="width: 600px; height: 250px; background-color: #fff;"></div>
     <div id="footer">
       <a href="https://github.com/business-by-miles/striven-editor">Find this on GitHub</a>
     </div>
@@ -73,12 +73,6 @@ html {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-}
-
-.editor {
-  width: 600px;
-  height: 250px;
-  background-color: #fff;
 }
 
 #footer {

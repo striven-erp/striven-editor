@@ -27,7 +27,7 @@ app.post('/meta', (req, res) => {
             const { body: html, url } = await got(targetUrl);
             const metadata = await metascraper({ html, url });
 
-            console.log('Sending meta data: \n', metaData);
+            console.log('Sending meta data: \n', metadata);
             res.send(metadata);
         })()
     } else {
