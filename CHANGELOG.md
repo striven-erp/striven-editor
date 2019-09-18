@@ -16,3 +16,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Nothing! This is an init.
+
+## [1.1.0] - 2019-09-13
+### Added
+- Full size toolbar options
+- NPM Package
+
+### Changed
+- GitHub Pages!
+
+### Removed
+- [Tributejs](https://github.com/zurb/tribute) is **not** a dependency.
