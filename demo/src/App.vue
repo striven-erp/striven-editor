@@ -19,9 +19,9 @@
         <!-- <i style="color: #fff; font-size: 25px;" class="fas fa-paper-plane" /> -->
       </button>
     </div>
-    <div id="footer">
-      <a style="color: inherit; text-decoration: none;" href="https://github.com/business-by-miles/striven-editor">Find this on GitHub</a>
-    </div>
+    <!-- <div id="footer"> -->
+      <!-- <a style="color: inherit; text-decoration: none;" href="https://github.com/business-by-miles/striven-editor">Find this on GitHub</a> -->
+    <!-- </div> -->
   </div>
 </template>
 
