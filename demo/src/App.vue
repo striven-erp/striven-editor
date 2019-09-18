@@ -1,7 +1,22 @@
 <template>
   <div id="app" style="font-family: Segoe UI; color: #2c3e50; margin-top: 20vh; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 0 1rem;">
     <h1>Striven Editor</h1>
-    <div ref="editor" class="editor" style="margin: 20px 0; background-color: #fff; min-height: 300px; width: 600px;"></div>
+    <div style="display: flex; padding: 1rem; width: 100%; justify-content: center;">
+      <div ref="editor" class="editor" style="margin-top: 20px; background-color: #fff; min-height: 300px; width: 600px;"></div>
+      <button
+        ref="sendButton" 
+        style="
+        border: none; 
+        cursor: pointer; 
+        align-self: flex-end; 
+        height: 4rem; 
+        width: 4rem; 
+        background-color: #5cb85c; 
+        margin: 0 5px;
+        outline: none;">
+        <i style="color: #fff; font-size: 25px;" class="fas fa-paper-plane" />
+      </button>
+    </div>
     <div id="footer">
       <a style="color: inherit; text-decoration: none;" href="https://github.com/business-by-miles/striven-editor">Find this on GitHub</a>
     </div>
@@ -11,8 +26,14 @@
 <script>
 // import Tribute from 'tributejs';
 // import { StrivenEditor } from '@striven-erp/striven-editor';
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons/faPaperPlane";
+import { dom } from '@fortawesome/fontawesome-svg-core';
+import { library as faLib } from "@fortawesome/fontawesome-svg-core";
 import { StrivenEditor } from 'striven-editor';
 import USERS from './users';
+
+faLib.add(faPaperPlane);
+dom.watch();
 
 export default {
   name: 'app',
@@ -20,7 +41,8 @@ export default {
     const that = this;
     const editorOptions = {
       metaUrl: 'http://localhost:4200/meta',
-      onToolbarSend: () => console.log(this.editor.getContent()),
+      // onToolbarSend: () => console.log(this.editor.getContent()),
+      minimal: true,
       uploadOnPaste: true,
       toolbarBottom: true,
       toolbarHide: true
@@ -28,6 +50,8 @@ export default {
 
     this.editor = new StrivenEditor(this.$refs.editor, editorOptions);
     
+    this.$refs.sendButton.onclick = () => console.log(this.editor.getContent())
+
     // const tributeOptions = {
     //   trigger: "@",
     //   values: (text, cb) => cb(USERS),
