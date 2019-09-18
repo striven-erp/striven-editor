@@ -53,7 +53,8 @@ export default {
         "insertOrderedList",
         "bold",
         "indent",
-        "link"
+        "link",
+        { name: 'a custom option' }
       ]
     }
 

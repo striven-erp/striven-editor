@@ -53,9 +53,9 @@ const OPTIONGROUPS = {
         },
         group: [
             { bold: { viewBox: "0 0 1792 1792", d: "M747 1521q74 32 140 32 376 0 376-335 0-114-41-180-27-44-61.5-74t-67.5-46.5-80.5-25-84-10.5-94.5-2q-73 0-101 10 0 53-.5 159t-.5 158q0 8-1 67.5t-.5 96.5 4.5 83.5 12 66.5zm-14-746q42 7 109 7 82 0 143-13t110-44.5 74.5-89.5 25.5-142q0-70-29-122.5t-79-82-108-43.5-124-14q-50 0-130 13 0 50 4 151t4 152q0 27-.5 80t-.5 79q0 46 1 69zm-541 889l2-94q15-4 85-16t106-27q7-12 12.5-27t8.5-33.5 5.5-32.5 3-37.5.5-34v-65.5q0-982-22-1025-4-8-22-14.5t-44.5-11-49.5-7-48.5-4.5-30.5-3l-4-83q98-2 340-11.5t373-9.5q23 0 68 .5t68 .5q70 0 136.5 13t128.5 42 108 71 74 104.5 28 137.5q0 52-16.5 95.5t-39 72-64.5 57.5-73 45-84 40q154 35 256.5 134t102.5 248q0 100-35 179.5t-93.5 130.5-138 85.5-163.5 48.5-176 14q-44 0-132-3t-132-3q-106 0-307 11t-231 12z" } },
-            { italic: { viewBox: "0 0 1792 1792", d: "M384 1662l17-85q22-7 61.5-16.5t72-19 59.5-23.5q28-35 41-101 1-7 62-289t114-543.5 52-296.5v-25q-24-13-54.5-18.5t-69.5-8-58-5.5l19-103q33 2 120 6.5t149.5 7 120.5 2.5q48 0 98.5-2.5t121-7 98.5-6.5q-5 39-19 89-30 10-101.5 28.5t-108.5 33.5q-8 19-14 42.5t-9 40-7.5 45.5-6.5 42q-27 148-87.5 419.5t-77.5 355.5q-2 9-13 58t-20 90-16 83.5-6 57.5l1 18q17 4 185 31-3 44-16 99-11 0-32.5 1.5t-32.5 1.5q-29 0-87-10t-86-10q-138-2-206-2-51 0-143 9t-121 11z"} },
-            { underline: { viewBox: "0 0 1792 1792", d: "M176 223q-37-2-45-4l-3-88q13-1 40-1 60 0 112 4 132 7 166 7 86 0 168-3 116-4 146-5 56 0 86-2l-1 14 2 64v9q-60 9-124 9-60 0-79 25-13 14-13 132 0 13 .5 32.5t.5 25.5l1 229 14 280q6 124 51 202 35 59 96 92 88 47 177 47 104 0 191-28 56-18 99-51 48-36 65-64 36-56 53-114 21-73 21-229 0-79-3.5-128t-11-122.5-13.5-159.5l-4-59q-5-67-24-88-34-35-77-34l-100 2-14-3 2-86h84l205 10q76 3 196-10l18 2q6 38 6 51 0 7-4 31-45 12-84 13-73 11-79 17-15 15-15 41 0 7 1.5 27t1.5 31q8 19 22 396 6 195-15 304-15 76-41 122-38 65-112 123-75 57-182 89-109 33-255 33-167 0-284-46-119-47-179-122-61-76-83-195-16-80-16-237v-333q0-188-17-213-25-36-147-39zm1488 1409v-64q0-14-9-23t-23-9h-1472q-14 0-23 9t-9 23v64q0 14 9 23t23 9h1472q14 0 23-9t9-23z"} },
-            { strikethrough: { viewBox: "0 0 1792 1792", d: "M1760 896q14 0 23 9t9 23v64q0 14-9 23t-23 9h-1728q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h1728zm-1277-64q-28-35-51-80-48-98-48-188 0-181 134-309 133-127 393-127 50 0 167 19 66 12 177 48 10 38 21 118 14 123 14 183 0 18-5 45l-12 3-84-6-14-2q-50-149-103-205-88-91-210-91-114 0-182 59-67 58-67 146 0 73 66 140t279 129q69 20 173 66 58 28 95 52h-743zm507 256h411q7 39 7 92 0 111-41 212-23 56-71 104-37 35-109 81-80 48-153 66-80 21-203 21-114 0-195-23l-140-40q-57-16-72-28-8-8-8-22v-13q0-108-2-156-1-30 0-68l2-37v-44l102-2q15 34 30 71t22.5 56 12.5 27q35 57 80 94 43 36 105 57 59 22 132 22 64 0 139-27 77-26 122-86 47-61 47-129 0-84-81-157-34-29-137-71z"} }
+            { italic: { viewBox: "0 0 1792 1792", d: "M384 1662l17-85q22-7 61.5-16.5t72-19 59.5-23.5q28-35 41-101 1-7 62-289t114-543.5 52-296.5v-25q-24-13-54.5-18.5t-69.5-8-58-5.5l19-103q33 2 120 6.5t149.5 7 120.5 2.5q48 0 98.5-2.5t121-7 98.5-6.5q-5 39-19 89-30 10-101.5 28.5t-108.5 33.5q-8 19-14 42.5t-9 40-7.5 45.5-6.5 42q-27 148-87.5 419.5t-77.5 355.5q-2 9-13 58t-20 90-16 83.5-6 57.5l1 18q17 4 185 31-3 44-16 99-11 0-32.5 1.5t-32.5 1.5q-29 0-87-10t-86-10q-138-2-206-2-51 0-143 9t-121 11z" } },
+            { underline: { viewBox: "0 0 1792 1792", d: "M176 223q-37-2-45-4l-3-88q13-1 40-1 60 0 112 4 132 7 166 7 86 0 168-3 116-4 146-5 56 0 86-2l-1 14 2 64v9q-60 9-124 9-60 0-79 25-13 14-13 132 0 13 .5 32.5t.5 25.5l1 229 14 280q6 124 51 202 35 59 96 92 88 47 177 47 104 0 191-28 56-18 99-51 48-36 65-64 36-56 53-114 21-73 21-229 0-79-3.5-128t-11-122.5-13.5-159.5l-4-59q-5-67-24-88-34-35-77-34l-100 2-14-3 2-86h84l205 10q76 3 196-10l18 2q6 38 6 51 0 7-4 31-45 12-84 13-73 11-79 17-15 15-15 41 0 7 1.5 27t1.5 31q8 19 22 396 6 195-15 304-15 76-41 122-38 65-112 123-75 57-182 89-109 33-255 33-167 0-284-46-119-47-179-122-61-76-83-195-16-80-16-237v-333q0-188-17-213-25-36-147-39zm1488 1409v-64q0-14-9-23t-23-9h-1472q-14 0-23 9t-9 23v64q0 14 9 23t23 9h1472q14 0 23-9t9-23z" } },
+            { strikethrough: { viewBox: "0 0 1792 1792", d: "M1760 896q14 0 23 9t9 23v64q0 14-9 23t-23 9h-1728q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h1728zm-1277-64q-28-35-51-80-48-98-48-188 0-181 134-309 133-127 393-127 50 0 167 19 66 12 177 48 10 38 21 118 14 123 14 183 0 18-5 45l-12 3-84-6-14-2q-50-149-103-205-88-91-210-91-114 0-182 59-67 58-67 146 0 73 66 140t279 129q69 20 173 66 58 28 95 52h-743zm507 256h411q7 39 7 92 0 111-41 212-23 56-71 104-37 35-109 81-80 48-153 66-80 21-203 21-114 0-195-23l-140-40q-57-16-72-28-8-8-8-22v-13q0-108-2-156-1-30 0-68l2-37v-44l102-2q15 34 30 71t22.5 56 12.5 27q35 57 80 94 43 36 105 57 59 22 132 22 64 0 139-27 77-26 122-86 47-61 47-129 0-84-81-157-34-29-137-71z" } }
         ]
     },
     listOptions: {
@@ -329,7 +329,7 @@ export default class StrivenEditor {
 
             this.options.toolbarOptions.forEach((option) => {
                 const toolbarOption = this.optionGroups[group].group.filter(group => group[option])[0];
-                if(toolbarOption) {
+                if (toolbarOption) {
                     const svgData = toolbarOption[option];
                     const optionSpan = this.constructSVG(svgData);
 
@@ -362,6 +362,39 @@ export default class StrivenEditor {
         })
 
         toolbar.appendChild(this.toolbarOptionsGroup);
+
+        // toolbar group for custom options
+        const customOptions = this.options.toolbarOptions.filter(option => typeof option === "object");
+        if (customOptions.length > 0) {
+            this.customToolbarMenu = document.createElement("div");
+
+            this.customToolbarMenu.classList.add("toolbar-menu");
+            this.customToolbarMenu.id = `menu-custom`;
+
+            const customSVGViewBox = "0 0 1792 1792";
+            const customSVGD = "M1088 1248v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68zm0-512v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68zm0-512v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68z";
+
+            this.customToolbarMenu.appendChild(this.constructSVG({ viewBox: customSVGViewBox, d: customSVGD }));
+            this.toolbarOptionsGroup.appendChild(this.customToolbarMenu);
+
+            this.customToolbarGroup = document.createElement("div");
+
+            this.customToolbarGroup.classList.add("toolbar-group");
+            this.customToolbarGroup.id = "group-custom";
+
+            customOptions.forEach((customOption) => {
+                // const svgData = toolbarOption[option];
+                // const optionSpan = this.constructSVG(svgData);
+
+                const optionSpan = document.createElement("span");
+                optionSpan.id = `toolbar-customOption`;
+                optionSpan.style.margin = "0 10px";
+
+                this.customToolbarGroup.appendChild(optionSpan);
+            })
+
+            toolbar.appendChild(this.customToolbarGroup);
+        }
 
         //add toolbar-send
         const toolbarSend = document.createElement("div");
@@ -404,9 +437,12 @@ export default class StrivenEditor {
         this.toolbarMenus = [...toolbar.getElementsByClassName("toolbar-menu")];
         this.toolbarSend = toolbar.querySelector("#toolbar-send");
 
+        this.toolbarMenus.push(this.customToolbarMenu);
+        this.toolbarGroups.push(this.customToolbarGroup);
+
         // Remove menu that has no options enabled
         this.toolbarGroups.forEach((group) => {
-            if(group.children.length < 1) {
+            if (group.children.length < 1) {
                 const groupName = group.id.split("-")[1];
                 const menu = this.toolbarMenus.filter((menu) => menu.id.split("-")[1] === groupName)[0];
                 menu.remove();
@@ -825,7 +861,7 @@ export default class StrivenEditor {
         icon.innerHTML = `${svg}${path}</svg>`;
 
         return icon;
-    }   
+    }
 
     initResponsive() {
         const that = this;
@@ -843,6 +879,7 @@ export default class StrivenEditor {
                     group.style.right = isResponsive ? `5px` : "inherit";
                     group.style.backgroundColor = isResponsive ? "#fff" : "inherit";
                     group.style.border = isResponsive ? "2px solid #ddd" : "none";
+
                 });
 
                 that.toolbarMenus.forEach(menu => {
