@@ -98,6 +98,7 @@ fetch(this.options.metaUrl, {
 |metaUrl|```String```|```null```|An endpoint to make a ```POST``` request for a urls metadata. <br /> See [Fetching Metadata](#meta-data-post-request)|
 |extensions|```Array``` of ```String```|```[ ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf",".tif", ".jpeg", ".jpg", ".gif", ".bmp", ".txt", ".csv", ".png", ".msg", ".wav", ".mp3", ".mp4", ".zip", ".rtf", ".eps", ".ai", ".psd", ".avi", ".mov", ".wmv", ".cfg", ".wss", ".vsd", ".vsdx", ".tsd", ".lic" ]```|An array of file extensions allowed for upload|
 |uploadOnPaste|```Boolean```|```false```|Enable uploading images on paste.|
+|toolbarOptionFillColor|```String```|```#333```|Fill color for the toolbar option SVGs|
 
 ## Editor Methods
 

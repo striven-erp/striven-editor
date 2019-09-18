@@ -770,7 +770,7 @@ export default class StrivenEditor {
 
     constructSVG(svgData) {
         const { viewBox, d } = svgData;
-        const fillColor = this.options.toolbarOptionFillColor;
+        const fillColor = (this.options.toolbarOptionFillColor ? this.options.toolbarOptionFillColor : "#333");
         const xmlns = "http://www.w3.org/2000/svg";
         const height = "16";
         const width = "16";
