@@ -92,6 +92,21 @@ const OPTIONGROUPS = {
         ]
     }
 };
+const DEFAULTOPTIONS = [
+    "bold",
+    "italic",
+    "underline",
+    "strikethrough",
+    "insertOrderedList",
+    "insertUnorderedList",
+    "indent",
+    "justifyLeft",
+    "justifyCenter",
+    "justifyRight",
+    "attachment",
+    "link",
+    "image"
+]
 
 export default class StrivenEditor {
     constructor(el, options) {
@@ -103,10 +118,12 @@ export default class StrivenEditor {
             this.options = options;
             options.fontPack || (this.options.fontPack = FONTPACK);
             options.extensions || (this.options.extensions = EXTENSIONS);
+            options.toolbarOptions || (this.options.toolbarOptions = DEFAULTOPTIONS)
         } else {
             this.options = {
                 fontPack: FONTPACK,
-                extensions: EXTENSIONS
+                extensions: EXTENSIONS,
+                DEFAULTOPTIONS
             };
         }
 
@@ -312,16 +329,18 @@ export default class StrivenEditor {
 
             this.optionGroups[group].group.forEach((option) => {
                 const toolbarCommand = Object.keys(option)[0];
-                const optionSpan = this.constructSVG(option[toolbarCommand]);
-                // const optionIcon = document.createElement("i");
+                if(this.options.toolbarOptions.includes(toolbarCommand)){
+                    const optionSpan = this.constructSVG(option[toolbarCommand]);
+                    // const optionIcon = document.createElement("i");
 
-                optionSpan.id = `toolbar-${toolbarCommand}`;
-                optionSpan.style.margin = "0 10px";
-                // optionIcon.classList.add(this.options.fontPack);
-                // optionIcon.classList.add(option[toolbarCommand]);
+                    optionSpan.id = `toolbar-${toolbarCommand}`;
+                    optionSpan.style.margin = "0 10px";
+                    // optionIcon.classList.add(this.options.fontPack);
+                    // optionIcon.classList.add(option[toolbarCommand]);
 
-                // optionSpan.appendChild(optionIcon);
-                toolbarGroup.appendChild(optionSpan);
+                    // optionSpan.appendChild(optionIcon);
+                    toolbarGroup.appendChild(optionSpan);
+                }
             })
 
             this.toolbarOptionsGroup.appendChild(toolbarGroup);
@@ -782,7 +801,7 @@ export default class StrivenEditor {
         icon.innerHTML = `${svg}${path}</svg>`;
 
         return icon;
-    }
+    }   
 
     initResponsive() {
         const that = this;
@@ -975,5 +994,9 @@ export default class StrivenEditor {
     closeImageMenu() {
         this.imageMenu.dataset.active = "false";
         this.imageMenu.style.display = "none";
+    }
+
+    setContent(html) {
+        this.body.innerHTML = html;
     }
 }
