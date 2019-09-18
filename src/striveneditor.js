@@ -327,23 +327,38 @@ export default class StrivenEditor {
             toolbarGroup.classList.add("toolbar-group");
             toolbarGroup.id = `group-${group}`;
 
-            this.optionGroups[group].group.forEach((option) => {
-                const toolbarCommand = Object.keys(option)[0];
-                if(this.options.toolbarOptions.includes(toolbarCommand)){
-                    const optionSpan = this.constructSVG(option[toolbarCommand]);
-                    // const optionIcon = document.createElement("i");
+            this.options.toolbarOptions.forEach((option) => {
+                const toolbarOption = this.optionGroups[group].group.filter(group => group[option])[0];
+                if(toolbarOption) {
+                    const svgData = toolbarOption[option];
+                    const optionSpan = this.constructSVG(svgData);
 
-                    optionSpan.id = `toolbar-${toolbarCommand}`;
+                    optionSpan.id = `toolbar-${option}`;
                     optionSpan.style.margin = "0 10px";
-                    // optionIcon.classList.add(this.options.fontPack);
-                    // optionIcon.classList.add(option[toolbarCommand]);
 
-                    // optionSpan.appendChild(optionIcon);
                     toolbarGroup.appendChild(optionSpan);
                 }
             })
 
             this.toolbarOptionsGroup.appendChild(toolbarGroup);
+
+            // this.optionGroups[group].group.forEach((option) => {
+            //     const toolbarCommand = Object.keys(option)[0];
+            //     if(this.options.toolbarOptions.includes(toolbarCommand)){
+            //         const optionSpan = this.constructSVG(option[toolbarCommand]);
+            //         // const optionIcon = document.createElement("i");
+
+            //         optionSpan.id = `toolbar-${toolbarCommand}`;
+            //         optionSpan.style.margin = "0 10px";
+            //         // optionIcon.classList.add(this.options.fontPack);
+            //         // optionIcon.classList.add(option[toolbarCommand]);
+
+            //         // optionSpan.appendChild(optionIcon);
+            //         toolbarGroup.appendChild(optionSpan);
+            //     }
+            // })
+
+            // this.toolbarOptionsGroup.appendChild(toolbarGroup);
         })
 
         toolbar.appendChild(this.toolbarOptionsGroup);
@@ -388,6 +403,15 @@ export default class StrivenEditor {
         this.toolbarGroups = [...toolbar.getElementsByClassName("toolbar-group")];
         this.toolbarMenus = [...toolbar.getElementsByClassName("toolbar-menu")];
         this.toolbarSend = toolbar.querySelector("#toolbar-send");
+
+        // Remove menu that has no options enabled
+        this.toolbarGroups.forEach((group) => {
+            if(group.children.length < 1) {
+                const groupName = group.id.split("-")[1];
+                const menu = this.toolbarMenus.filter((menu) => menu.id.split("-")[1] === groupName)[0];
+                menu.remove();
+            }
+        })
 
         return toolbar;
     }

@@ -49,11 +49,12 @@ export default {
       uploadOnPaste: true,
       toolbarBottom: true,
       toolbarHide: true,
-      // toolbarOptions: [
-        // "bold",
-        // "indent",
-        // "link"
-      // ]
+      toolbarOptions: [
+        "insertOrderedList",
+        "bold",
+        "indent",
+        "link"
+      ]
     }
 
     this.editor = new StrivenEditor(this.$refs.editor, editorOptions);

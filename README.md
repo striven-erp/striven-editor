@@ -87,6 +87,32 @@ fetch(this.options.metaUrl, {
 }).then((res) => res.json())
 ```
 
+## Toolbar Options
+
+Specify which options to display in the toolbar and allow for use in the editor.
+
+```js
+const editor = new StrivenEditor(editorEl, { toolbarOptions: ["bold", "italic", "underline"] })
+```
+
+### List of Toolbar Options
+
+* bold
+* italic
+* underline
+* strikethrough
+* insertOrderedList
+* insertUnorderedList
+* indent
+* justifyLeft
+* justifyCenter
+* justifyRight
+* attachment
+* link
+* image
+
+### Passing Custom Options
+
 ## Editor Options
 
 |Option|Type|Default|Description|
