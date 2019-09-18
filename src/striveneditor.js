@@ -122,6 +122,7 @@ export default class StrivenEditor {
         this.editor.style.maxHeight = "auto";
         this.editor.style.maxWidth = "100%";
 
+        // Toolbar Hide
         if (this.options.toolbarHide) {
             this.toolbarSend.style.display = "none";
             this.toolbarOptionsGroup.style.display = "none";
@@ -139,7 +140,7 @@ export default class StrivenEditor {
                         document.activeElement !== this.linkMenu.querySelector('input') &&
                         document.activeElement !== this.imageMenu.querySelectorAll('input')[0] &&
                         document.activeElement !== this.imageMenu.querySelectorAll('input')[1] &&
-                        document.activeElement !== this.imageMenu.querySelectorAll('input')[2] 
+                        document.activeElement !== this.imageMenu.querySelectorAll('input')[2]
                     ) {
                         this.toolbarSlideDown();
                     }
@@ -202,58 +203,6 @@ export default class StrivenEditor {
                 }
             };
         });
-
-        // Paste Handler
-        this.body.onpaste = e => {
-            function dataURLtoFile(dataurl, filename) {
-                var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-                    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-                while (n--) {
-                    u8arr[n] = bstr.charCodeAt(n);
-                }
-
-                const file = new File([u8arr], filename, { type: mime });
-                return new File([u8arr], `${file.name}.${file.type.split('/').pop()}`, { type: file.type });
-            }
-
-            const convertImage = file =>
-                new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = error => reject(error);
-                });
-
-            if (
-                e.clipboardData.files.length > 0 &&
-                e.clipboardData.files[0].type.includes("image")
-            ) {
-                convertImage(e.clipboardData.files[0]).then(res => {
-                    document.execCommand("insertImage", true, res);
-                    this.options.uploadOnPaste && this.attachFile(dataURLtoFile(res, "pastedimage"));
-                    this.overflow();
-                });
-            }
-
-            if (
-                e.clipboardData.items.length > 0 &&
-                e.clipboardData.items[0].type === "text/plain"
-            ) {
-                e.clipboardData.items[0].getAsString(string => {
-                    if (this.options.metaUrl && this.validURL(string)) {
-                        this.getMeta(string).then(res => {
-                            const { url, title, image, description } = res;
-                            url &&
-                                title &&
-                                image &&
-                                this.createMetaDataElement(url, image, title, description);
-                        });
-                    }
-                });
-            }
-
-            this.overflow();
-        };
 
         // Get Content from Editor
         this.editor.getcontent = () => this.getContent();
@@ -420,6 +369,58 @@ export default class StrivenEditor {
         body.style.height = this.editor.style.height;
         body.style.minHeight = this.editor.style.minHeight;
         body.style.maxHeight = this.editor.style.maxHeight;
+
+        // Paste Handler
+        body.onpaste = e => {
+            function dataURLtoFile(dataurl, filename) {
+                var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+                while (n--) {
+                    u8arr[n] = bstr.charCodeAt(n);
+                }
+
+                const file = new File([u8arr], filename, { type: mime });
+                return new File([u8arr], `${file.name}.${file.type.split('/').pop()}`, { type: file.type });
+            }
+
+            const convertImage = file =>
+                new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = error => reject(error);
+                });
+
+            if (
+                e.clipboardData.files.length > 0 &&
+                e.clipboardData.files[0].type.includes("image")
+            ) {
+                convertImage(e.clipboardData.files[0]).then(res => {
+                    document.execCommand("insertImage", true, res);
+                    this.options.uploadOnPaste && this.attachFile(dataURLtoFile(res, "pastedimage"));
+                    this.overflow();
+                });
+            }
+
+            if (
+                e.clipboardData.items.length > 0 &&
+                e.clipboardData.items[0].type === "text/plain"
+            ) {
+                e.clipboardData.items[0].getAsString(string => {
+                    if (this.options.metaUrl && this.validURL(string)) {
+                        this.getMeta(string).then(res => {
+                            const { url, title, image, description } = res;
+                            url &&
+                                title &&
+                                image &&
+                                this.createMetaDataElement(url, image, title, description);
+                        });
+                    }
+                });
+            }
+
+            this.overflow();
+        };
 
         return body;
     }
