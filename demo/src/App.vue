@@ -27,24 +27,25 @@
 
 <script>
 // import Tribute from 'tributejs';
-// import { StrivenEditor } from '@striven-erp/striven-editor';
 // import { faPaperPlane } from "@fortawesome/free-solid-svg-icons/faPaperPlane";
 // import { dom } from '@fortawesome/fontawesome-svg-core';
 // import { library as faLib } from "@fortawesome/fontawesome-svg-core";
-import { StrivenEditor } from 'striven-editor';
-import USERS from './users';
+// import USERS from './users';
 
 // faLib.add(faPaperPlane);
 // dom.watch();
 
+import { StrivenEditor } from 'striven-editor';
+// import { StrivenEditor } from '@striven-erp/striven-editor';
+
 export default {
   name: 'app',
   mounted() {
-    const that = this;
+    // const that = this;
     const editorOptions = {
       metaUrl: 'http://localhost:4200/meta',
       // onToolbarSend: () => console.log(this.editor.getContent()),
-      minimal: true,
+      minimal: false,
       uploadOnPaste: true,
       toolbarBottom: true,
       toolbarHide: true
@@ -54,10 +55,14 @@ export default {
     
     this.$refs.sendButton.onclick = () => console.log(this.editor.getContent())
 
-    /* CREATE A NEW BRANCH */
-    const paperPlane = document.createElement("span");
-    paperPlane.innerHTML = "<svg width=\"25\" height=\"25\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path fill=\"#fff\" d=\"M1764 11q33 24 27 64l-256 1536q-5 29-32 45-14 8-31 8-11 0-24-5l-453-185-242 295q-18 23-49 23-13 0-22-4-19-7-30.5-23.5t-11.5-36.5v-349l864-1059-1069 925-395-162q-37-14-40-55-2-40 32-59l1664-960q15-9 32-9 20 0 36 11z\"/></svg>";
-    this.$refs.sendButton.appendChild(paperPlane);
+    // paperPlane.innerHTML = "<svg width=\"25\" height=\"25\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path fill=\"#fff\" d=\"M1764 11q33 24 27 64l-256 1536q-5 29-32 45-14 8-31 8-11 0-24-5l-453-185-242 295q-18 23-49 23-13 0-22-4-19-7-30.5-23.5t-11.5-36.5v-349l864-1059-1069 925-395-162q-37-14-40-55-2-40 32-59l1664-960q15-9 32-9 20 0 36 11z\"/></svg>";
+
+    const paperPlane = document.createElement('span');
+    const svg = "<svg width=\"25\" height=\"25\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\">";
+    const path = "<path fill=\"#fff\" d=\"M1764 11q33 24 27 64l-256 1536q-5 29-32 45-14 8-31 8-11 0-24-5l-453-185-242 295q-18 23-49 23-13 0-22-4-19-7-30.5-23.5t-11.5-36.5v-349l864-1059-1069 925-395-162q-37-14-40-55-2-40 32-59l1664-960q15-9 32-9 20 0 36 11z\"/>";
+    paperPlane.innerHTML = `${svg}${path}</svg>`;
+
+    this.$refs.sendButton.append(paperPlane);
 
     // const tributeOptions = {
     //   trigger: "@",
