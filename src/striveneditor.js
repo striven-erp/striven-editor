@@ -438,6 +438,7 @@ export default class StrivenEditor {
             const placeholderNode = document.createElement("p");
             placeholderNode.id = "placeholder-node";
             placeholderNode.style.color = "#5f6368";
+            placeholderNode.style.margin = "0";
             placeholderNode.textContent = this.options.placeholder;
 
             body.append(placeholderNode);
