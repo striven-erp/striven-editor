@@ -101,6 +101,7 @@ const editor = new StrivenEditor(editorEl, { toolbarOptions: ["bold", "italic", 
 * italic
 * underline
 * strikethrough
+* removeFormat
 * insertOrderedList
 * insertUnorderedList
 * indent
