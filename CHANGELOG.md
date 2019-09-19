@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2019-09-19
+### Added
+- Pass custom toolbar options with custom handlers
+- Pass an array of toolbar options
+
 ## [1.2.0] - 2019-09-18
 ### Added
 - Option to change the toolbar options fill color
