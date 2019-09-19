@@ -11,7 +11,7 @@
     "dev": "npx webpack -w",
     "meta-server": "node metaserver",
     "gh-pages": "cd demo && npm run build && cd .. && node gh-pages",
-    "publish": "npx webpack --mode=\"production\" && npm publish --access=public && console.log(\"DON'T FORGET TO UPDATE GITHUB RELEASE\")"
+    "publish": "npx webpack --mode=\"production\" && npm publish --access=public && echo DON'T FORGET TO UPDATE GITHUB RELEASE"
   },
   "repository": {
     "type": "git",
