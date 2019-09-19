@@ -486,7 +486,7 @@ export default class StrivenEditor {
             }
 
             // sanitize of html
-            if (this.options.sanitizeStyles && e.clipboardData.types.includes("text/html")) {
+            if (this.options.sanitizePaste && e.clipboardData.types.includes("text/html")) {
                 e.preventDefault();
 
                 let pastedHtmlItem;
