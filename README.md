@@ -154,6 +154,8 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |:-:|:-:|:-:|
 |getFiles|```Array``` of ```File```|Returns an Array of Files attached to the editor|
 |getContent|```String```|Returns an HTML String of the editor's contents|
+|setContent(```String```)|None|Set the editor ```innerHTML``` content by passing an HTML string|
+|clearContent|None|Clear the editor of its current contents|
 |getRange|```Range```|Get the current [Range](https://developer.mozilla.org/en-US/docs/Web/API/Range) of the window at index ```0```|
 |attachFile(```File```)|None|Attaches given file to the editor|
 |openLinkMenu|None|Opens the ```insertLink``` menu|
