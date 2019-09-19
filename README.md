@@ -148,6 +148,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |uploadOnPaste|```Boolean```|```false```|Enable uploading images on paste.|
 |toolbarOptionFillColor|```String```|```#333```|Fill color for the toolbar option SVGs|
 |placeholder|```String```|None|Default text to display when the editor is empty|
+|sanitizePaste|```Boolean```|```false```|Clean pasted text of any HTML styles|
 
 ## Editor Methods
 
