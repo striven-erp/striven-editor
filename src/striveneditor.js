@@ -486,6 +486,30 @@ export default class StrivenEditor {
                 });
             }
 
+            // sanitize of html
+            if (this.options.sanitizePaste && e.clipboardData.types.includes("text/html")) {
+                e.preventDefault();
+
+                let pastedHtmlItem;
+
+                for (let i = 0; i < e.clipboardData.items.length; i++) {
+                    const item = e.clipboardData.items[i];
+                    (item.type === "text/html") && (pastedHtmlItem = item);
+                }
+
+                if (pastedHtmlItem) {
+                    pastedHtmlItem.getAsString((htmlString) => {
+                        const dirtyNode = document.createElement("div");
+                        const cleanNode = document.createElement("div");
+
+                        dirtyNode.innerHTML = htmlString;
+                        cleanNode.append(document.createTextNode(dirtyNode.textContent));
+
+                        this.getRange().insertNode(cleanNode);
+                    })
+                }
+            }
+
             if (
                 e.clipboardData.items.length > 0 &&
                 e.clipboardData.items[0].type === "text/plain"
