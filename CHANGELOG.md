@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2019-09-19
+### Chaned
+- Bug fixes with toolbar options and menus
+
 ## [1.2.1] - 2019-09-19
 ### Added
 - Pass custom toolbar options with custom handlers

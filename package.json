@@ -2,7 +2,7 @@
   "name": "@striven-erp/striven-editor",
   "sideEffects": false,
   "private": false,
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "The lightweight Striven WYSIWYG editor built with pure JavaScript.",
   "main": "./dist",
   "scripts": {
@@ -11,7 +11,7 @@
     "dev": "npx webpack -w",
     "meta-server": "node metaserver",
     "gh-pages": "cd demo && npm run build && cd .. && node gh-pages",
-    "publish": "npx webpack --mode=\"production\" && npm publish --access=public && echo DON'T FORGET TO UPDATE GITHUB RELEASE"
+    "new-publish": "npx webpack --mode=\"production\" && npm publish --access=public && echo DON'T FORGET TO UPDATE GITHUB RELEASE"
   },
   "repository": {
     "type": "git",
