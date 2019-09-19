@@ -6,8 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.3] - 2019-09-19
+### Added
+- Clear formatting option
+- Sanitize pasted html
+
 ## [1.2.2] - 2019-09-19
-### Chaned
+### Changed
 - Bug fixes with toolbar options and menus
 
 ## [1.2.1] - 2019-09-19
