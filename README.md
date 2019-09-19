@@ -122,7 +122,7 @@ const customToolbarOption = {
     handler: () => this.editor.getRange().insertNode(document.createTextNode("hello world"))
 };
 
-const editor = new StrivenEditor(editorEl, { toolbarOptions: ["bold", "italic", "underline",      customToolbarOption] });
+const editor = new StrivenEditor(editorEl, { toolbarOptions: ["bold", "italic", "underline", customToolbarOption] });
 ```
 
 #### Finding SVG Data
