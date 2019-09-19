@@ -1,43 +1,3 @@
-// Font Awesome Imports
-// import { dom } from '@fortawesome/fontawesome-svg-core';
-// import { library as faLib } from "@fortawesome/fontawesome-svg-core";
-// import { faFont } from "@fortawesome/free-solid-svg-icons/faFont";
-// import { faBold } from "@fortawesome/free-solid-svg-icons/faBold";
-// import { faItalic } from "@fortawesome/free-solid-svg-icons/faItalic";
-// import { faUnderline } from "@fortawesome/free-solid-svg-icons/faUnderline";
-// import { faStrikethrough } from "@fortawesome/free-solid-svg-icons/faStrikethrough";
-// import { faList } from "@fortawesome/free-solid-svg-icons/faList";
-// import { faListOl } from "@fortawesome/free-solid-svg-icons/faListOl";
-// import { faListUl } from "@fortawesome/free-solid-svg-icons/faListUl";
-// import { faAlignJustify } from "@fortawesome/free-solid-svg-icons/faAlignJustify";
-// import { faIndent } from "@fortawesome/free-solid-svg-icons/faIndent";
-// import { faAlignLeft } from "@fortawesome/free-solid-svg-icons/faAlignLeft";
-// import { faAlignCenter } from "@fortawesome/free-solid-svg-icons/faAlignCenter";
-// import { faAlignRight } from "@fortawesome/free-solid-svg-icons/faAlignRight";
-// import { faPaperclip } from "@fortawesome/free-solid-svg-icons/faPaperclip";
-// import { faLink } from "@fortawesome/free-solid-svg-icons/faLink";
-// import { faImage } from "@fortawesome/free-solid-svg-icons/faImage";
-// import { faPaperPlane } from "@fortawesome/free-solid-svg-icons/faPaperPlane";
-
-// faLib.add(faFont);
-// faLib.add(faBold);
-// faLib.add(faItalic);
-// faLib.add(faUnderline);
-// faLib.add(faStrikethrough);
-// faLib.add(faList);
-// faLib.add(faListOl);
-// faLib.add(faListUl);
-// faLib.add(faAlignJustify);
-// faLib.add(faIndent);
-// faLib.add(faAlignLeft);
-// faLib.add(faAlignCenter);
-// faLib.add(faAlignRight);
-// faLib.add(faPaperclip);
-// faLib.add(faLink);
-// faLib.add(faImage);
-// faLib.add(faPaperPlane);
-// dom.watch();
-
 const EXTENSIONS = [
     ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf", ".tif", ".jpeg",
     ".jpg", ".gif", ".bmp", ".txt", ".csv", ".png", ".msg", ".wav", ".mp3",
@@ -472,7 +432,7 @@ export default class StrivenEditor {
         body.style.maxHeight = this.editor.style.maxHeight;
 
         // Placeholder logic
-        if(this.options.placeholder) {
+        if (this.options.placeholder) {
             const placeholderNode = document.createElement("p");
             placeholderNode.id = "placeholder-node";
             placeholderNode.style.color = "#5f6368";
@@ -902,14 +862,15 @@ export default class StrivenEditor {
             function responsiveGroups(isResponsive) {
 
                 that.toolbarGroups.forEach(group => {
-                    group.dataset.open = "false";
-                    group.style.display = isResponsive ? "none" : "block";
-                    group.style.position = isResponsive ? "absolute" : "relative";
-                    group.style.bottom = isResponsive ? "5px" : "inherit";
-                    group.style.right = isResponsive ? `5px` : "inherit";
-                    group.style.backgroundColor = isResponsive ? "#fff" : "inherit";
-                    group.style.border = isResponsive ? "2px solid #ddd" : "none";
-
+                    if (group) {
+                        group.dataset.open = "false";
+                        group.style.display = isResponsive ? "none" : "block";
+                        group.style.position = isResponsive ? "absolute" : "relative";
+                        group.style.bottom = isResponsive ? "5px" : "inherit";
+                        group.style.right = isResponsive ? `5px` : "inherit";
+                        group.style.backgroundColor = isResponsive ? "#fff" : "inherit";
+                        group.style.border = isResponsive ? "2px solid #ddd" : "none";
+                    }
                 });
 
                 that.toolbarMenus.forEach(menu => {
@@ -921,7 +882,7 @@ export default class StrivenEditor {
                         if (selectedGroup.dataset.open === "false") {
                             // close opened groups
                             that.toolbarGroups.forEach(group => {
-                                if (group.dataset.open === "true") {
+                                if (group && group.dataset.open === "true") {
                                     group.style.display = "none";
                                     group.dataset.open = "false";
                                 }
@@ -937,15 +898,17 @@ export default class StrivenEditor {
                         }
                     }
 
-                    menu.style.padding = "0 10px";
-                    menu.style.cursor = "pointer";
-                    menu.style.userSelect = "none";
+                    if (menu) {
+                        menu.style.padding = "0 10px";
+                        menu.style.cursor = "pointer";
+                        menu.style.userSelect = "none";
 
-                    menu.style.display = isResponsive ? "block" : "none";
-                    menu.onclick = e => {
-                        toggleMenu()
-                        that.body.focus();
-                    };
+                        menu.style.display = isResponsive ? "block" : "none";
+                        menu.onclick = e => {
+                            toggleMenu()
+                            that.body.focus();
+                        };
+                    }
                 });
             }
 
@@ -956,7 +919,7 @@ export default class StrivenEditor {
 
             setResponsive();
             window.onresize = () => {
-                this.toolbarGroups.forEach(group => group.style.padding = "0");
+                this.toolbarGroups.forEach(group => (group && (group.style.padding = "0")));
                 this.closeLinkMenu();
                 this.closeImageMenu();
                 setResponsive();
@@ -992,7 +955,7 @@ export default class StrivenEditor {
     }
 
     getContent() {
-        if(this.body.querySelector("#placeholder-node")){
+        if (this.body.querySelector("#placeholder-node")) {
             return "";
         } else {
             return this.body.innerHTML;
@@ -1100,7 +1063,7 @@ export default class StrivenEditor {
     }
 
     getTextContent() {
-        if(this.body.querySelector("#placeholder-node")){
+        if (this.body.querySelector("#placeholder-node")) {
             return "";
         } else {
             return this.body.textContent;
