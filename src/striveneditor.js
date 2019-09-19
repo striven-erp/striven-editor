@@ -1063,4 +1063,8 @@ export default class StrivenEditor {
     setContent(html) {
         this.body.innerHTML = html;
     }
+
+    clearContent() {
+        this.body.innerHTML = "";
+    }
 }
