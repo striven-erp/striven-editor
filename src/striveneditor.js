@@ -505,11 +505,14 @@ export default class StrivenEditor {
                         dirtyNode.innerHTML = htmlString;
                         cleanNode.append(document.createTextNode(dirtyNode.textContent));
 
-                        this.getRange().insertNode(cleanNode);
+                        const range = this.getRange();
+                        range.insertNode(cleanNode);
+                        range.collapse();
                     })
                 }
             }
 
+            // meta extraction on paste
             if (
                 e.clipboardData.items.length > 0 &&
                 e.clipboardData.items[0].type === "text/plain"
