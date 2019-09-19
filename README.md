@@ -147,6 +147,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |extensions|```Array``` of ```String```|```[ ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf",".tif", ".jpeg", ".jpg", ".gif", ".bmp", ".txt", ".csv", ".png", ".msg", ".wav", ".mp3", ".mp4", ".zip", ".rtf", ".eps", ".ai", ".psd", ".avi", ".mov", ".wmv", ".cfg", ".wss", ".vsd", ".vsdx", ".tsd", ".lic" ]```|An array of file extensions allowed for upload|
 |uploadOnPaste|```Boolean```|```false```|Enable uploading images on paste.|
 |toolbarOptionFillColor|```String```|```#333```|Fill color for the toolbar option SVGs|
+|placeholder|```String```|None|Default text to display when the editor is empty|
 
 ## Editor Methods
 
@@ -166,5 +167,4 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |getMeta(```String```)|```Promise```|Returns a promise containing data from ```POST``` request to ```metaURl``` using the passed url as ```targetUrl``` <br /> ```const { url, title, image, description } = res```|
 |toolbarSlideUp|None|Manually trigger the toolbar open animation|
 |toolbarSlideDown|None|Manually trigger the toolbar close animation|
-
-
+|getTextContent|```String```|Returns the text content of the editor with no HTML|

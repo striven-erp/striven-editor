@@ -156,12 +156,16 @@ export default class StrivenEditor {
             this.toolbarSend.style.display = "none";
             this.toolbarOptionsGroup.style.display = "none";
 
+            const bodyFocus = this.body.onfocus;
             this.body.onfocus = () => {
+                bodyFocus && bodyFocus();
                 this.overflow();
                 this.toolbarSlideUp();
             };
 
+            const bodyBlur = this.body.onblur;
             this.body.onblur = () => {
+                bodyBlur && bodyBlur();
                 this.overflow();
                 setTimeout(() => {
                     if (
@@ -466,6 +470,28 @@ export default class StrivenEditor {
         body.style.height = this.editor.style.height;
         body.style.minHeight = this.editor.style.minHeight;
         body.style.maxHeight = this.editor.style.maxHeight;
+
+        if(this.options.placeholder) {
+            const placeholderNode = document.createElement("p");
+            placeholderNode.id = "placeholder-node";
+            placeholderNode.style.color = "#5f6368";
+            placeholderNode.textContent = this.options.placeholder;
+
+            body.append(placeholderNode);
+
+            const bodyBlur = body.onblur;
+            const bodyFocus = body.onfocus;
+
+            body.onfocus = () => {
+                bodyFocus && bodyFocus();
+                (body.querySelector("#placeholder-node") === placeholderNode) && this.clearContent();
+            }
+
+            body.onblur = () => {
+                bodyBlur && bodyBlur();
+                (this.getTextContent() === "") && body.append(placeholderNode);
+            }
+        }
 
         // Paste Handler
         body.onpaste = e => {
@@ -965,7 +991,11 @@ export default class StrivenEditor {
     }
 
     getContent() {
-        return this.body.innerHTML;
+        if(this.body.querySelector("#placeholder-node")){
+            return "";
+        } else {
+            return this.body.innerHTML;
+        }
     }
 
     getRange() {
@@ -1066,5 +1096,13 @@ export default class StrivenEditor {
 
     clearContent() {
         this.body.innerHTML = "";
+    }
+
+    getTextContent() {
+        if(this.body.querySelector("#placeholder-node")){
+            return "";
+        } else {
+            return this.body.textContent;
+        }
     }
 }
