@@ -440,14 +440,13 @@ export default class StrivenEditor {
 
             body.append(placeholderNode);
 
-            const bodyBlur = body.onblur;
             const bodyFocus = body.onfocus;
-
             body.onfocus = () => {
                 bodyFocus && bodyFocus();
                 (body.querySelector("#placeholder-node") === placeholderNode) && this.clearContent();
             }
 
+            const bodyBlur = body.onblur;
             body.onblur = () => {
                 bodyBlur && bodyBlur();
                 (this.getTextContent() === "") && body.append(placeholderNode);
