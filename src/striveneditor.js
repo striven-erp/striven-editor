@@ -106,7 +106,7 @@ const DEFAULTOPTIONS = [
     "attachment",
     "link",
     "image"
-]
+];
 
 export default class StrivenEditor {
     constructor(el, options) {
@@ -185,6 +185,7 @@ export default class StrivenEditor {
             optionEl.style.userSelect = "none";
 
             // Execute Toolbar Commands
+            const optionElClick = optionEl.onclick;
             optionEl.onclick = e => {
                 this.body.focus();
 
@@ -230,6 +231,8 @@ export default class StrivenEditor {
                         document.execCommand(command, true);
                         break;
                 }
+
+                optionElClick && optionElClick();
             };
         });
 
@@ -361,8 +364,6 @@ export default class StrivenEditor {
             // this.toolbarOptionsGroup.appendChild(toolbarGroup);
         })
 
-        toolbar.appendChild(this.toolbarOptionsGroup);
-
         // toolbar group for custom options
         const customOptions = this.options.toolbarOptions.filter(option => typeof option === "object");
         if (customOptions.length > 0) {
@@ -383,18 +384,20 @@ export default class StrivenEditor {
             this.customToolbarGroup.id = "group-custom";
 
             customOptions.forEach((customOption) => {
-                // const svgData = toolbarOption[option];
-                // const optionSpan = this.constructSVG(svgData);
+                const { icon, handler } = customOption;
+                const optionSpan = this.constructSVG(icon);
 
-                const optionSpan = document.createElement("span");
                 optionSpan.id = `toolbar-customOption`;
                 optionSpan.style.margin = "0 10px";
+                optionSpan.onclick = () => handler();
 
                 this.customToolbarGroup.appendChild(optionSpan);
             })
 
-            toolbar.appendChild(this.customToolbarGroup);
+            this.toolbarOptionsGroup.appendChild(this.customToolbarGroup);
         }
+
+        toolbar.appendChild(this.toolbarOptionsGroup);
 
         //add toolbar-send
         const toolbarSend = document.createElement("div");
