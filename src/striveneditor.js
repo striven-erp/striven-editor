@@ -486,7 +486,7 @@ export default class StrivenEditor {
             }
 
             // sanitize of html
-            if (this.options.sanitizePaste && e.clipboardData.types.includes("text/html")) {
+            if (this.options.sanitizeStyles && e.clipboardData.types.includes("text/html")) {
                 e.preventDefault();
 
                 let pastedHtmlItem;
@@ -498,14 +498,8 @@ export default class StrivenEditor {
 
                 if (pastedHtmlItem) {
                     pastedHtmlItem.getAsString((htmlString) => {
-                        const dirtyNode = document.createElement("div");
-                        const cleanNode = document.createElement("div");
-
-                        dirtyNode.innerHTML = htmlString;
-                        cleanNode.append(document.createTextNode(dirtyNode.textContent));
-
                         const range = this.getRange();
-                        range.insertNode(cleanNode);
+                        range.insertNode(this.scrubHTML(htmlString));
                         range.collapse();
                     })
                 }
@@ -1081,6 +1075,7 @@ export default class StrivenEditor {
     }
 
     setContent(html) {
+        this.clearContent();
         this.body.innerHTML = html;
     }
 
@@ -1094,5 +1089,15 @@ export default class StrivenEditor {
         } else {
             return this.body.textContent;
         }
+    }
+
+    scrubHTML(html) {
+        const dirtyNode = document.createElement("div");
+        const cleanNode = document.createElement("div");
+
+        dirtyNode.innerHTML = html;
+        cleanNode.append(document.createTextNode(dirtyNode.textContent));
+
+        return cleanNode;
     }
 }

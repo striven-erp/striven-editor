@@ -49,7 +49,7 @@ export default {
       uploadOnPaste: true,
       toolbarBottom: true,
       toolbarHide: true,
-      sanitizePaste: true,
+      sanitizeStyles: true,
       placeholder: "Begin typing in this editor..."
     }
 
