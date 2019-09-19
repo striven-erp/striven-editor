@@ -35,8 +35,8 @@
 // faLib.add(faPaperPlane);
 // dom.watch();
 
-// import { StrivenEditor } from 'striven-editor';
-import { StrivenEditor } from '@striven-erp/striven-editor';
+import { StrivenEditor } from 'striven-editor';
+// import { StrivenEditor } from '@striven-erp/striven-editor';
 
 export default {
   name: 'app',

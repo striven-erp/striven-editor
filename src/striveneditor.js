@@ -452,7 +452,7 @@ export default class StrivenEditor {
             const bodyBlur = body.onblur;
             body.onblur = () => {
                 bodyBlur && bodyBlur();
-                (this.getTextContent() === "") && body.append(placeholderNode);
+                (this.getContent().trim() === "") && body.append(placeholderNode);
             }
         }
 
