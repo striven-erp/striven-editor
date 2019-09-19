@@ -118,12 +118,12 @@ export default class StrivenEditor {
             this.options = options;
             options.fontPack || (this.options.fontPack = FONTPACK);
             options.extensions || (this.options.extensions = EXTENSIONS);
-            options.toolbarOptions || (this.options.toolbarOptions = DEFAULTOPTIONS)
+            options.toolbarOptions || (this.options.toolbarOptions = DEFAULTOPTIONS);
         } else {
             this.options = {
                 fontPack: FONTPACK,
                 extensions: EXTENSIONS,
-                DEFAULTOPTIONS
+                toolbarOptions: DEFAULTOPTIONS
             };
         }
 
@@ -449,7 +449,7 @@ export default class StrivenEditor {
 
         // Remove menu that has no options enabled
         this.toolbarGroups.forEach((group) => {
-            if (group.children.length < 1) {
+            if (group && group.children.length < 1) {
                 const groupName = group.id.split("-")[1];
                 const menu = this.toolbarMenus.filter((menu) => menu.id.split("-")[1] === groupName)[0];
                 menu.remove();
@@ -471,6 +471,7 @@ export default class StrivenEditor {
         body.style.minHeight = this.editor.style.minHeight;
         body.style.maxHeight = this.editor.style.maxHeight;
 
+        // Placeholder logic
         if(this.options.placeholder) {
             const placeholderNode = document.createElement("p");
             placeholderNode.id = "placeholder-node";
@@ -961,7 +962,7 @@ export default class StrivenEditor {
                 setResponsive();
             }
         } else {
-            this.toolbarMenus.forEach(menu => (menu.style.display = "none"));
+            this.toolbarMenus.forEach(menu => (menu && (menu.style.display = "none")));
             this.toolbar.querySelector("#toolbar-strikethrough").style.display = "none";
             this.toolbar.querySelector("#toolbar-image").style.display = "none";
             this.toolbar.querySelector("#toolbar-insertOrderedList").style.display =

@@ -45,16 +45,10 @@ export default {
     const editorOptions = {
       metaUrl: 'http://localhost:4200/meta',
       // onToolbarSend: () => console.log(this.editor.getContent()),
-      minimal: false,
+      minimal: true,
       uploadOnPaste: true,
       toolbarBottom: true,
       toolbarHide: true,
-      toolbarOptions: [
-        { 
-          icon: { viewBox: "0 0 1792 1792", d: "M1600 736v192q0 40-28 68t-68 28h-416v416q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-416h-416q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h416v-416q0-40 28-68t68-28h192q40 0 68 28t28 68v416h416q40 0 68 28t28 68z" },
-          handler: () => this.editor.getRange().insertNode(document.createTextNode("hello world"))
-        }
-      ],
       placeholder: "Begin typing in this editor..."
     }
 
