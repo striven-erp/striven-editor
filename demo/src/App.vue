@@ -54,6 +54,7 @@ export default {
         "bold",
         "indent",
         "link",
+        "justifyLeft",
         { name: 'a custom option' }
       ]
     }

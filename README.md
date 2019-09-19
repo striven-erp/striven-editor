@@ -111,7 +111,29 @@ const editor = new StrivenEditor(editorEl, { toolbarOptions: ["bold", "italic", 
 * link
 * image
 
-### Passing Custom Options
+### Passing Custom Toolbar Options
+
+```js
+const customToolbarOption = { 
+    icon: { 
+        viewBox: "0 0 1792 1792", 
+        d: "M1600 736v192q0 40-28 68t-68 28h-416v416q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-416h-416q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h416v-416q0-40 28-68t68-28h192q40 0 68 28t28 68v416h416q40 0 68 28t28 68z"
+    },
+    handler: () => this.editor.getRange().insertNode(document.createTextNode("hello world"))
+};
+
+const editor = new StrivenEditor(editorEl, { toolbarOptions: ["bold", "italic", "underline",customToolbarOption] });
+```
+
+#### Finding SVG Data
+
+You can find Raw Fontawesome SVG data [here](https://github.com/encharm/Font-Awesome-SVG-PNG/tree/master/black/svg). After finding the icon you want, view the SVG file as raw.
+
+![SVG Raw](./svg-raw.png "SVG Raw")
+
+Then take the SVG element's ```viewBox``` attribute data and the path element's ```d``` attribute data.
+
+![SVG Data](./svg-data.png "SVG Data")
 
 ## Editor Options
 
@@ -132,7 +154,7 @@ const editor = new StrivenEditor(editorEl, { toolbarOptions: ["bold", "italic", 
 |:-:|:-:|:-:|
 |getFiles|```Array``` of ```File```|Returns an Array of Files attached to the editor|
 |getContent|```String```|Returns an HTML String of the editor's contents|
-|getRange|```Range```|Get the current range of the window at index ```0```|
+|getRange|```Range```|Get the current [Range](https://developer.mozilla.org/en-US/docs/Web/API/Range) of the window at index ```0```|
 |attachFile(```File```)|None|Attaches given file to the editor|
 |openLinkMenu|None|Opens the ```insertLink``` menu|
 |closeLinkMenu|None|Closes the ```insertLink``` menu|
