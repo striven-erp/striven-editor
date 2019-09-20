@@ -115,7 +115,7 @@ export default class StrivenEditor {
 
         // Toolbar Hide
         if (this.options.toolbarHide) {
-            this.customToolbarButton.style.display = "none";
+            this.customToolbarButton && (this.customToolbarButton.style.display = "none");
             this.toolbarOptionsGroup.style.display = "none";
 
             const bodyFocus = this.body.onfocus;
