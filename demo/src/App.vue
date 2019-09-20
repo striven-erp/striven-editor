@@ -44,7 +44,7 @@ export default {
     // const that = this;
     const editorOptions = {
       metaUrl: 'http://localhost:4200/meta',
-      imageUrl: 'http://localhost:4200/image',
+      // imageUrl: 'http://localhost:4200/image',
       minimal: false,
       uploadOnPaste: false,
       toolbarBottom: true,
