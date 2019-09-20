@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.4] - 2019-09-19
+### Added
+- customToolbarOption
+- imageUrl to make a POST request for referencing non-encoded images
+
+### Changed
+- Fixed the insertImage resize bug
+
+## Removed
+- onToolbarSend is now a customToolbarOption (more configuration but customizable)
+
 ## [1.2.3] - 2019-09-19
 ### Added
 - Placeholder option
