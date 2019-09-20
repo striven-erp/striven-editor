@@ -206,7 +206,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |placeholder|```String```|None|Default text to display when the editor is empty|
 |sanitizePaste|```Boolean```|```false```|*Clean* pasted content of any HTML styles|
 |imageUrl|```String```|```null```|An endpoint to make a ```POST``` request for writing encoded images to the server. <br /> See [Referencing Encoded Images](#writing-encoded-images-to-a-server)|
-|customToolbarButton|```Object```|Configuration properties for adding a custom toolbar button. <br /> See [Custom Toolbar Button Properties](#custom-toolbar-button-properties)|
+|customToolbarButton|```Object```|```null```|Configuration properties for adding a custom toolbar button. <br /> See [Custom Toolbar Button Properties](#custom-toolbar-button-properties)|
 
 ## Editor Methods
 
