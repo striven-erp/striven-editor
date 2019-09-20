@@ -483,8 +483,12 @@ export default class StrivenEditor {
             ) {
                 convertImage(e.clipboardData.files[0]).then(res => {
                     if(this.options.imageUrl) {
-                        this.getImage(res).then((data) => {
+                        this.getImage(res)
+                        .then((data) => {
                             document.execCommand("insertImage", true, data.imageRef);
+                        })
+                        .catch((err) => {
+                            document.execCommand("insertImage", true, res);
                         })
                     } else {
                         document.execCommand("insertImage", true, res);

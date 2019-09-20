@@ -45,7 +45,7 @@ export default {
     const editorOptions = {
       metaUrl: 'http://localhost:4200/meta',
       imageUrl: 'http://localhost:4200/image',
-      // onToolbarSend: () => console.log(this.editor.getContent()),
+      onToolbarSend: () => console.log(this.editor.getContent()),
       minimal: false,
       uploadOnPaste: false,
       toolbarBottom: true,
