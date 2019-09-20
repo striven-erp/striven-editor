@@ -205,7 +205,8 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |toolbarOptionFillColor|```String```|```#333```|Fill color for the toolbar option SVGs|
 |placeholder|```String```|None|Default text to display when the editor is empty|
 |sanitizePaste|```Boolean```|```false```|*Clean* pasted content of any HTML styles|
-|imageUrl|```String```|```null```|An endpoint to make a ```POST``` request for writing encoded images to the server. <br /> See [Referencing Encoded Images](#meta-data-post-request)|
+|imageUrl|```String```|```null```|An endpoint to make a ```POST``` request for writing encoded images to the server. <br /> See [Referencing Encoded Images](#writing-encoded-images-to-a-server)|
+|customToolbarButton|```Object```|Configuration properties for adding a custom toolbar button. <br /> See [Custom Toolbar Button Properties](#custom-toolbar-button-properties)|
 
 ## Editor Methods
 
@@ -227,3 +228,16 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |toolbarSlideUp|None|Manually trigger the toolbar open animation|
 |toolbarSlideDown|None|Manually trigger the toolbar close animation|
 |getTextContent|```String```|Returns the text content of the editor with no HTML|
+
+## Custom Toolbar Button Properties
+
+|Property|Type|Description|
+|:-:|:-:|:-:|
+|svgData|```Object```|Contains the SVG data for rendering the icon <br /> See [Finding SVG Data](#finding-svg-data)|
+|borderColor|```String```|Button's ```border-color```|
+|hoverBorderColor|```String```|Button's ```border-color``` on ```onmouseenter```|
+|backgroundColor|```String```|Button's ```background-color```|
+|hoverBackgroundColor|```String```|Button's ```border-color``` on ```onmouseenter```|
+|color|```String```|Button's ```border-color```|
+|hoverColor|```String```|Button's ```border-color``` on ```onmouseenter```|
+|handler|```Function```|Handler function called on ```onclick```|
