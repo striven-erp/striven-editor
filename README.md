@@ -230,6 +230,8 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 
 ## Custom Toolbar Button Properties
 
+**All properties must be defined when creating a ```customToolbarButton```**
+
 |Property|Type|Description|
 |:-:|:-:|:-:|
 |svgData|```Object```|Contains the SVG data for rendering the icon <br /> See [Finding SVG Data](#finding-svg-data)|
