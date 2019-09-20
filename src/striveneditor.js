@@ -115,7 +115,7 @@ export default class StrivenEditor {
 
         // Toolbar Hide
         if (this.options.toolbarHide) {
-            this.toolbarSend.style.display = "none";
+            this.customToolbarButton.style.display = "none";
             this.toolbarOptionsGroup.style.display = "none";
 
             const bodyFocus = this.body.onfocus;
@@ -230,7 +230,7 @@ export default class StrivenEditor {
 
         function frame() {
             if (height >= 40) {
-                that.options.onToolbarSend && (that.toolbarSend.style.display = "flex");
+                that.customToolbarButton && (that.customToolbarButton.style.display = "flex");
                 that.toolbarOptionsGroup.style.display = "flex";
                 clearInterval(id);
             } else {
@@ -243,7 +243,7 @@ export default class StrivenEditor {
     toolbarSlideDown() {
         const that = this;
 
-        this.options.onToolbarSend && (this.toolbarSend.style.display = "none");
+        this.customToolbarButton && (this.customToolbarButton.style.display = "none");
         this.toolbarOptionsGroup.style.display = "none";
 
         let height = 40;
@@ -366,45 +366,49 @@ export default class StrivenEditor {
         toolbar.appendChild(this.toolbarOptionsGroup);
 
         //add toolbar-send
-        const toolbarSend = document.createElement("div");
-        // const toolbarSendIcon = document.createElement("i");
-        toolbarSend.id = "toolbar-send";
-        // toolbarSendIcon.classList.add(this.options.fontPack);
-        // toolbarSendIcon.classList.add("fa-paper-plane");
+        if (this.options.customToolbarButton) {
+            const customToolbarButton = document.createElement("div");
+            customToolbarButton.id = "custom-toolbar-button";
 
-        toolbarSend.style.display = "none";
-        toolbarSend.style.color = "#fff";
-        toolbarSend.style.backgroundColor = "#5cb85c";
-        toolbarSend.style.minHeight = this.options.toolbarHide
-            ? "40px"
-            : this.toolbar.style.minHeight;
-        toolbarSend.style.width = "50px";
-        toolbarSend.style.textAlign = "center";
-        toolbarSend.style.justifyContent = "center";
-        toolbarSend.style.alignContent = "center";
-        toolbarSend.style.alignItems = "center";
-        toolbarSend.style.cursor = "pointer";
-        toolbarSend.style.border = "1px solid #4cae4c";
-        toolbarSend.style.alignSelf = "flex-end";
-        this.options.onToolbarSend && (toolbarSend.onclick = () => this.options.onToolbarSend());
-        this.options.onToolbarSend && !this.options.toolbarHide && (toolbarSend.style.display = "flex");
+            customToolbarButton.style.display = "none";
+            customToolbarButton.style.color = "#fff";
+            customToolbarButton.style.backgroundColor = "#5cb85c";
+            customToolbarButton.style.minHeight = this.options.toolbarHide
+                ? "40px"
+                : this.toolbar.style.minHeight;
+            customToolbarButton.style.width = "50px";
+            customToolbarButton.style.textAlign = "center";
+            customToolbarButton.style.justifyContent = "center";
+            customToolbarButton.style.alignContent = "center";
+            customToolbarButton.style.alignItems = "center";
+            customToolbarButton.style.cursor = "pointer";
+            customToolbarButton.style.border = "1px solid #4cae4c";
+            customToolbarButton.style.alignSelf = "flex-end";
+            customToolbarButton.onclick = () => this.options.customToolbarButton.handler();
+            !this.options.toolbarHide && (customToolbarButton.style.display = "flex");
 
-        toolbarSend.onmouseenter = () =>
-            (toolbarSend.style.backgroundColor = "#4cae4c");
+            customToolbarButton.onmouseenter = () => {
+                customToolbarButton.style.borderColor = this.options.customToolbarButton.hoverBorderColor;
+                customToolbarButton.style.backgroundColor = this.options.customToolbarButton.hoverBackgroundColor;
+                customToolbarButton.style.color = this.options.customToolbarButton.hoverColor;
+            }
 
-        toolbarSend.onmouseleave = () =>
-            (toolbarSend.style.backgroundColor = "#5cb85c");
+            customToolbarButton.onmouseleave = () => {
+                customToolbarButton.style.borderColor = this.options.customToolbarButton.borderColor;
+                customToolbarButton.style.backgroundColor = this.options.customToolbarButton.backgroundColor;
+                customToolbarButton.style.color = this.options.customToolbarButton.color;
+            }
 
-
-        const toolbarSendSVG = this.constructSVG({ viewBox: "0 0 1792 1792", d: "M1764 11q33 24 27 64l-256 1536q-5 29-32 45-14 8-31 8-11 0-24-5l-453-185-242 295q-18 23-49 23-13 0-22-4-19-7-30.5-23.5t-11.5-36.5v-349l864-1059-1069 925-395-162q-37-14-40-55-2-40 32-59l1664-960q15-9 32-9 20 0 36 11z" });
-        toolbarSendSVG.querySelector('path').setAttribute("fill", "#fff");
-        toolbarSend.appendChild(toolbarSendSVG);
-        toolbar.appendChild(toolbarSend);
+            const customToolbarButtonSVG = this.constructSVG(this.options.customToolbarButton.svgData);
+            customToolbarButtonSVG.querySelector('path').setAttribute("fill", this.options.customToolbarButton.color);
+            customToolbarButton.appendChild(customToolbarButtonSVG);
+            toolbar.appendChild(customToolbarButton);
+        }
 
         this.toolbarOptions = toolbar.querySelectorAll("span");
         this.toolbarGroups = [...toolbar.getElementsByClassName("toolbar-group")];
         this.toolbarMenus = [...toolbar.getElementsByClassName("toolbar-menu")];
-        this.toolbarSend = toolbar.querySelector("#toolbar-send");
+        this.customToolbarButton = toolbar.querySelector("#custom-toolbar-button");
 
         this.toolbarMenus.push(this.customToolbarMenu);
         this.toolbarGroups.push(this.customToolbarGroup);
@@ -482,14 +486,14 @@ export default class StrivenEditor {
                 e.clipboardData.files[0].type.includes("image")
             ) {
                 convertImage(e.clipboardData.files[0]).then(res => {
-                    if(this.options.imageUrl) {
+                    if (this.options.imageUrl) {
                         this.getImage(res)
-                        .then((data) => {
-                            document.execCommand("insertImage", true, data.imageRef);
-                        })
-                        .catch((err) => {
-                            document.execCommand("insertImage", true, res);
-                        })
+                            .then((data) => {
+                                document.execCommand("insertImage", true, data.imageRef);
+                            })
+                            .catch((err) => {
+                                document.execCommand("insertImage", true, res);
+                            })
                     } else {
                         document.execCommand("insertImage", true, res);
                         this.options.uploadOnPaste && this.attachFile(dataURLtoFile(res, "pastedimage"));
