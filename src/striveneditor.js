@@ -928,7 +928,7 @@ export default class StrivenEditor {
 
                             // open group
                             selectedGroup.style.display = "block";
-                            selectedGroup.style.padding = "5px";
+                            selectedGroup.style.padding = "5px 5px 0 5px";
                             selectedGroup.dataset.open = "true";
                         } else {
                             selectedGroup.style.display = "none";
