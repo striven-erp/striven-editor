@@ -482,8 +482,14 @@ export default class StrivenEditor {
                 e.clipboardData.files[0].type.includes("image")
             ) {
                 convertImage(e.clipboardData.files[0]).then(res => {
-                    document.execCommand("insertImage", true, res);
-                    this.options.uploadOnPaste && this.attachFile(dataURLtoFile(res, "pastedimage"));
+                    if(this.options.imageUrl) {
+                        this.getImage(res).then((data) => {
+                            document.execCommand("insertImage", true, data.imageRef);
+                        })
+                    } else {
+                        document.execCommand("insertImage", true, res);
+                        this.options.uploadOnPaste && this.attachFile(dataURLtoFile(res, "pastedimage"));
+                    }
                     this.overflow();
                 });
             }
@@ -994,6 +1000,14 @@ export default class StrivenEditor {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ targetUrl: url })
+        }).then((res) => res.json())
+    }
+
+    getImage(imageEncoding) {
+        return fetch(this.options.imageUrl, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ imageEncoding })
         }).then((res) => res.json())
     }
 

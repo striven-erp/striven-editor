@@ -43,6 +43,7 @@
     "metascraper-image": "^5.7.4",
     "metascraper-title": "^5.7.4",
     "metascraper-url": "^5.7.4",
+    "shortid": "^2.2.15",
     "terser-webpack-plugin": "^2.0.1",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.8"
