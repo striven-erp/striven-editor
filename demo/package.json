@@ -9,7 +9,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@striven-erp/striven-editor": "^1.2.3",
+    "@striven-erp/striven-editor": "^1.2.4",
     "core-js": "^2.6.5",
     "tributejs": "^3.7.3",
     "vue": "^2.6.10"
