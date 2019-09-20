@@ -713,9 +713,10 @@ export default class StrivenEditor {
                 window.getSelection().addRange(this.range);
                 document.execCommand("insertImage", true, linkValue);
 
-                const imageTags = this.body.querySelectorAll("img");
-                imageTags[imageTags.length - 1].style.height = `${heightValue}px`;
-                imageTags[imageTags.length - 1].style.width = `${widthValue}px`;
+                let insertedImage = [...this.body.querySelectorAll(`img`)].filter(img => img.src === linkValue);
+                insertedImage = insertedImage[insertedImage.length - 1];
+                insertedImage && (insertedImage.style.height = `${heightValue}px`);
+                insertedImage && (insertedImage.style.width = `${widthValue}px`);
 
                 imageMenuHeightFormInput.value = "";
                 imageMenuWidthFormInput.value = "";
