@@ -87,6 +87,61 @@ fetch(this.options.metaUrl, {
 }).then((res) => res.json())
 ```
 
+## Writing Encoded Images to a Server
+
+**Passing ```imageUrl``` will disable the use of ```uploadOnPaste```**
+
+Using Node's [File System](https://nodejs.org/api/fs.html), you can send encoded image data to your server and send the editor a reference to those files. See the example below for doing this on an express server.
+
+```js
+const express = require('express');
+const app = express();
+const PORT = 4200;
+const path = require('path');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const fs = require('fs');
+const shortid = require('shortid');
+
+app.use(bodyParser.json());
+app.use(cors());
+
+app.get('/images/:name', (req, res) => {
+    res.sendFile(path.join(__dirname, 'images', req.params.name));
+})
+
+app.post('/image', (req, res) => {
+    const imageEncoding = req.body.imageEncoding;
+    try {
+        const base64Image = imageEncoding.split(';base64,').pop();
+        const imageId = shortid.generate();
+
+        fs.writeFile(path.join(__dirname, 'images', `${imageId}.png`), base64Image, {encoding: 'base64'}, function(err) {
+            console.log('File created');
+            res.send({ imageRef: `http://localhost:${PORT}/images/${imageId}.png` });
+            err && console.log(err);
+        });
+    } 
+    catch (e) {
+        res.sendStatus(400);
+    }
+})
+
+app.listen(PORT, () => console.log(`Image server open on port: ${PORT}`))
+```
+
+### Handling the Image Reference
+
+Here is an example of what the editor uses for the client to make a ```POST``` request to the server. If the server returns an error, the editor will paste the image as normal.
+
+```js
+fetch(this.options.imageUrl, {
+    method: "POST",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ imageEncoding })
+}).then((res) => res.json())
+```
+
 ## Toolbar Options
 
 Specify which options to display in the toolbar and allow for use in the editor.
@@ -150,6 +205,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |toolbarOptionFillColor|```String```|```#333```|Fill color for the toolbar option SVGs|
 |placeholder|```String```|None|Default text to display when the editor is empty|
 |sanitizePaste|```Boolean```|```false```|*Clean* pasted content of any HTML styles|
+|imageUrl|```String```|```null```|An endpoint to make a ```POST``` request for writing encoded images to the server. <br /> See [Referencing Encoded Images](#meta-data-post-request)|
 
 ## Editor Methods
 
@@ -167,6 +223,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |closeImageMenu|None|Closes the ```insertImage``` menu|
 |overflow|None|Manually update the editor to handle overflow content <br /> ```overflowX``` ```overflowY```|
 |getMeta(```String```)|```Promise```|Returns a promise containing data from ```POST``` request to ```metaURl``` using the passed url as ```targetUrl``` <br /> ```const { url, title, image, description } = res```|
+|getImage(```String```)|```Promise```|Returns a promise containing data from ```POST``` request to ```imageUrl``` and passes ```imageEncoding``` in the body <br /> ```const { imageRef } = res```|
 |toolbarSlideUp|None|Manually trigger the toolbar open animation|
 |toolbarSlideDown|None|Manually trigger the toolbar close animation|
 |getTextContent|```String```|Returns the text content of the editor with no HTML|
