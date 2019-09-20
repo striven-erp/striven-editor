@@ -234,7 +234,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 
 |Property|Type|Description|
 |:-:|:-:|:-:|
-|svgData|```Object```|Contains the SVG data for rendering the icon <br /> See [Finding SVG Data](#finding-svg-data)|
+|svgData|```Object```|Contains the SVG data for rendering the icon <br /> See [Finding SVG Data](#finding-svg-data) <br /> ```{ svgData, d }```|
 |borderColor|```String```|Button's ```border-color```|
 |hoverBorderColor|```String```|Button's ```border-color``` on ```onmouseenter```|
 |backgroundColor|```String```|Button's ```background-color```|
