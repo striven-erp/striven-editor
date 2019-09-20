@@ -198,7 +198,6 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |toolbarHide|```Boolean```|```false```|Enable the toolbar slide animation|
 |toolbarBottom|```Boolean```|```false```|Render the toolbar beneath the editor|
 |minimal|```Boolean```|```false```|Display minimal editor options|
-|onToolbarSend|```Function```|```null```|Handler for when the send icon is clicked. If defined, show the toolbar send icon.|
 |metaUrl|```String```|```null```|An endpoint to make a ```POST``` request for a urls metadata. <br /> See [Fetching Metadata](#meta-data-post-request)|
 |extensions|```Array``` of ```String```|```[ ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf",".tif", ".jpeg", ".jpg", ".gif", ".bmp", ".txt", ".csv", ".png", ".msg", ".wav", ".mp3", ".mp4", ".zip", ".rtf", ".eps", ".ai", ".psd", ".avi", ".mov", ".wmv", ".cfg", ".wss", ".vsd", ".vsdx", ".tsd", ".lic" ]```|An array of file extensions allowed for upload|
 |uploadOnPaste|```Boolean```|```false```|Enable uploading images on paste.|
