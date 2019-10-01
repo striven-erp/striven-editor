@@ -180,7 +180,7 @@ export default class StrivenEditor {
                         if (this.linkMenu.dataset.active === "true") {
                             this.closeLinkMenu();
                         } else {
-                            this.openLinkMenu();
+                            this.linkMenuSlideIn();
 
                             this.range = this.getRange();
                             this.linkMenu.querySelector('input').focus();
@@ -190,7 +190,7 @@ export default class StrivenEditor {
                         if (this.imageMenu.dataset.active === "true") {
                             this.closeImageMenu();
                         } else {
-                            this.openImageMenu();
+                            this.imageMenuSlideIn();
 
                             this.range = this.getRange();
                             this.imageMenu.querySelector('input').focus();
@@ -224,6 +224,54 @@ export default class StrivenEditor {
             this.editor.removeChild(this.toolbar);
             this.editor.append(this.toolbar);
         }
+    }
+
+    imageMenuSlideIn () {
+        const that = this;
+
+        this.openImageMenu();
+
+        let opacity = 0;
+        let right = this.editor.offsetWidth / 4;
+        let id = setInterval(frame, 5);
+
+        this.imageMenu.style.opacity = opacity;
+
+        function frame() {
+            if (right <= 10) {
+                clearInterval(id);
+                that.imageMenu.style.opacity = 1;
+            } else {
+                right -= 2.5;
+                opacity += .01;
+                that.imageMenu.style.opacity = `${opacity}`;
+                that.imageMenu.style.right = `${right}px`;
+            }
+        } 
+    }
+
+    linkMenuSlideIn () {
+        const that = this;
+
+        this.openLinkMenu();
+
+        let opacity = 0;
+        let right = this.editor.offsetWidth / 4;
+        let id = setInterval(frame, 5);
+
+        this.linkMenu.style.opacity = opacity;
+
+        function frame() {
+            if (right <= 10) {
+                clearInterval(id);
+                that.linkMenu.style.opacity = 1;
+            } else {
+                right -= 2.5;
+                opacity += .01;
+                that.linkMenu.style.opacity = `${opacity}`;
+                that.linkMenu.style.right = `${right}px`;
+            }
+        } 
     }
 
     toolbarSlideUp() {
