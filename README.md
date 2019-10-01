@@ -228,6 +228,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |toolbarSlideUp|None|Manually trigger the toolbar open animation|
 |toolbarSlideDown|None|Manually trigger the toolbar close animation|
 |getTextContent|```String```|Returns the text content of the editor with no HTML|
+|toolbarState|None|Updates the toolbars state based on the options passed in by ```toolbarOptions```|
 
 ## Custom Toolbar Button Properties
 
