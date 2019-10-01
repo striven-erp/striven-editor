@@ -20,7 +20,8 @@
   "keywords": [
     "Striven",
     "Editor",
-    "WYSIWYG"
+    "WYSIWYG",
+    "rich-text-editor"
   ],
   "author": "Striven <https://striven.com/>",
   "license": "MIT",
