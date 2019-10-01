@@ -206,6 +206,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |sanitizePaste|```Boolean```|```false```|*Clean* pasted content of any HTML styles|
 |imageUrl|```String```|```null```|An endpoint to make a ```POST``` request for writing encoded images to the server. <br /> See [Referencing Encoded Images](#writing-encoded-images-to-a-server)|
 |customToolbarButton|```Object```|```null```|Configuration properties for adding a custom toolbar button. <br /> See [Custom Toolbar Button Properties](#custom-toolbar-button-properties)|
+|activeOptionColor|```String```|```#ddd```|Fill color for the toolbar action to change to when active.|
 
 ## Editor Methods
 
