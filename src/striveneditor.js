@@ -69,6 +69,7 @@ const DEFAULTOPTIONS = [
     "link",
     "image"
 ];
+const ACTIVEOPTIONCOLOR = "#ddd";
 
 export default class StrivenEditor {
     constructor(el, options) {
@@ -81,11 +82,13 @@ export default class StrivenEditor {
             options.fontPack || (this.options.fontPack = FONTPACK);
             options.extensions || (this.options.extensions = EXTENSIONS);
             options.toolbarOptions || (this.options.toolbarOptions = DEFAULTOPTIONS);
+            options.activeOptionColor || (this.options.activeOptionColor = ACTIVEOPTIONCOLOR);
         } else {
             this.options = {
                 fontPack: FONTPACK,
                 extensions: EXTENSIONS,
-                toolbarOptions: DEFAULTOPTIONS
+                toolbarOptions: DEFAULTOPTIONS,
+                activeOptionColor: ACTIVEOPTIONCOLOR
             };
         }
 
@@ -547,6 +550,32 @@ export default class StrivenEditor {
             this.overflow();
         };
 
+        // State of the editor
+        const bodyKeyup = body.onkeyup;
+        body.onkeyup = e => {
+            bodyKeyup && bodyKeyup();
+            this.options.toolbarOptions.forEach(option => {
+                const toolbarOption = this.toolbar.querySelector(`#toolbar-${option}`);
+                if (!option.includes('justify') && !option.includes('list')) {
+                    if (document.queryCommandState(option)) {
+                        toolbarOption.querySelector('path').setAttribute('fill', this.options.activeOptionColor);
+                    } else {
+                        toolbarOption.querySelector('path').setAttribute('fill', '#333');
+                    }
+                }
+            });
+        }
+
+        const bodyBlur = body.onblur;
+        body.onblur = e => {
+            bodyBlur && bodyBlur();
+            this.options.toolbarOptions.forEach(option => {
+                const toolbarOption = this.toolbar.querySelector(`#toolbar-${option}`);
+                toolbarOption.querySelector('path').setAttribute('fill', '#333');
+            })
+        }
+
+
         return body;
     }
 
@@ -989,7 +1018,11 @@ export default class StrivenEditor {
             this.overflow();
         };
 
-        this.body.onkeypress = () => this.overflow();
+        const bodyKeypress = this.body.onkeypress;
+        this.body.onkeypress = () => {
+            bodyKeypress && bodyKeypress();
+            this.overflow();
+        }
     }
 
     getFiles() {
