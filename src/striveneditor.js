@@ -109,8 +109,8 @@ export default class StrivenEditor {
         this.editor.style.flexDirection = "column";
         this.editor.style.fontFamily = "Arial";
 
-        this.editor.style.minHeight = "auto";
-        this.editor.style.maxHeight = "auto";
+        // this.editor.style.minHeight = "auto";
+        // this.editor.style.maxHeight = "auto";
         this.editor.style.maxWidth = "100%";
 
         // Toolbar Hide
@@ -436,6 +436,10 @@ export default class StrivenEditor {
         body.style.height = this.editor.style.height;
         body.style.minHeight = this.editor.style.minHeight;
         body.style.maxHeight = this.editor.style.maxHeight;
+
+        this.editor.style.height = "auto";
+        this.editor.style.minHeight = "auto";
+        this.editor.style.maxHeight = "auto";
 
         // Placeholder logic
         if (this.options.placeholder) {
