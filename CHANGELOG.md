@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - State of the editor feedback (toolbar option hightlighting)
 - Set the color for options that have active state in the editor
 - Image and Link menu animations
+- Manually invoke image and link animation
 
 ### Changed
 - Fixed the editor height bug (grow and overflow)
