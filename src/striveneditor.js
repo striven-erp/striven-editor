@@ -198,6 +198,7 @@ export default class StrivenEditor {
                         break;
                     default:
                         document.execCommand(command, true);
+                        this.toolbarState();
                         break;
                 }
 
@@ -554,27 +555,8 @@ export default class StrivenEditor {
         const bodyKeyup = body.onkeyup;
         body.onkeyup = e => {
             bodyKeyup && bodyKeyup();
-            this.options.toolbarOptions.forEach(option => {
-                const toolbarOption = this.toolbar.querySelector(`#toolbar-${option}`);
-                if (!option.includes('justify') && !option.includes('list')) {
-                    if (document.queryCommandState(option)) {
-                        toolbarOption.querySelector('path').setAttribute('fill', this.options.activeOptionColor);
-                    } else {
-                        toolbarOption.querySelector('path').setAttribute('fill', '#333');
-                    }
-                }
-            });
+            this.toolbarState();
         }
-
-        const bodyBlur = body.onblur;
-        body.onblur = e => {
-            bodyBlur && bodyBlur();
-            this.options.toolbarOptions.forEach(option => {
-                const toolbarOption = this.toolbar.querySelector(`#toolbar-${option}`);
-                toolbarOption.querySelector('path').setAttribute('fill', '#333');
-            })
-        }
-
 
         return body;
     }
@@ -1162,5 +1144,18 @@ export default class StrivenEditor {
         cleanNode.append(document.createTextNode(dirtyNode.textContent));
 
         return cleanNode;
+    }
+
+    toolbarState() {
+        this.options.toolbarOptions.forEach(option => {
+            const toolbarOption = this.toolbar.querySelector(`#toolbar-${option}`);
+            if (!option.includes('justify') && !option.includes('list')) {
+                if (document.queryCommandState(option)) {
+                    toolbarOption.querySelector('path').setAttribute('fill', this.options.activeOptionColor);
+                } else {
+                    toolbarOption.querySelector('path').setAttribute('fill', '#333');
+                }
+            }
+        })
     }
 }
