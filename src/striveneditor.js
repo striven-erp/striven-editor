@@ -160,7 +160,7 @@ export default class StrivenEditor {
             optionEl.onclick = e => {
                 const indents = () => {
                     const indents = this.body.querySelectorAll('blockquote');
-                    [ ...indents ].forEach(indent => indent.style.margin = "0 0 0 40px");
+                    [...indents].forEach(indent => indent.style.margin = "0 0 0 40px");
                 }
 
                 this.body.focus();
@@ -174,7 +174,12 @@ export default class StrivenEditor {
                             document.execCommand(command);
 
                             indents();
-                        } else {
+                        }
+                        else if (this.isEdge) {
+                            document.execCommand(command);
+                            [...document.querySelectorAll('ol')].forEach(ol => ol.style.marginLeft = "40px");
+                        }
+                        else {
                             document.execCommand("indent", true);
                             document.execCommand(command, true);
                         }
@@ -185,7 +190,12 @@ export default class StrivenEditor {
                             document.execCommand(command);
 
                             indents();
-                        } else {
+                        }
+                        else if (this.isEdge) {
+                            document.execCommand(command);
+                            [...document.querySelectorAll('ul')].forEach(ul => ul.style.marginLeft = "40px");
+                        }
+                        else {
                             document.execCommand("indent", true);
                             document.execCommand(command, true);
                         }
@@ -218,7 +228,7 @@ export default class StrivenEditor {
                         }
                         break;
                     default:
-                        if (this.isFirefox) {
+                        if (this.isFirefox || this.isEdge) {
                             document.execCommand(command);
                             (command === 'indent') && indents();
                         }
@@ -633,23 +643,25 @@ export default class StrivenEditor {
             bodyKeyup && bodyKeyup();
             if (this.options.submitOnEnter && e.keyCode === 13 && !e.shiftKey) {
 
-                const hasText = !!this.getTextContent();
-                const hasImage = !!body.querySelector('img');
-
-                // remove break from enter
-                if (hasText || hasImage) {
-                    const breaks = body.querySelectorAll('div');
-                    breaks[breaks.length ? breaks.length - 1 : 0].remove();
-                }
-
-                const content = this.getContent();
-                const files = this.getFiles();
-
-                this.clearContent();
-                this.clearFiles();
-
-                if (files.length || hasText || hasImage) {
-                    this.options.submitOnEnter({ content: (hasText || hasImage) && content, files });
+                if(!document.queryCommandState('insertOrderedList') && !document.queryCommandState('insertUnorderedList')) {
+                    const hasText = !!this.getTextContent();
+                    const hasImage = !!body.querySelector('img');
+    
+                    // remove break from enter
+                    if (hasText || hasImage) {
+                        const breaks = body.querySelectorAll('div');
+                        breaks[breaks.length ? breaks.length - 1 : 0].remove();
+                    }
+    
+                    const content = this.getContent();
+                    const files = this.getFiles();
+    
+                    this.clearContent();
+                    this.clearFiles();
+    
+                    if (files.length || hasText || hasImage) {
+                        this.options.submitOnEnter({ content: (hasText || hasImage) && content, files });
+                    }
                 }
 
             }
@@ -815,7 +827,7 @@ export default class StrivenEditor {
         const imageMenuWidthFormInput = imageMenuWidthForm.querySelector('input');
         const imageMenuWidthFormLabel = imageMenuWidthForm.querySelector('p');
 
-        imageMenuWidthFormInput.placeholder = "Image Height";
+        imageMenuWidthFormInput.placeholder = "Image Width";
         imageMenuWidthFormLabel.textContent = "Width";
 
         imageMenuButton.onclick = e => {
