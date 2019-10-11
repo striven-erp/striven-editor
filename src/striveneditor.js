@@ -603,6 +603,11 @@ export default class StrivenEditor {
         const bodyKeyup = body.onkeyup;
         body.onkeyup = e => {
             bodyKeyup && bodyKeyup();
+            if(this.options.submitOnEnter && e.keyCode === 13) {
+                e.preventDefault();
+                this.options.submitOnEnter(this.getContent());
+                this.clearContent();
+            }
             this.toolbarState();
         }
 
