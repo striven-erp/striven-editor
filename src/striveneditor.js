@@ -716,7 +716,7 @@ export default class StrivenEditor {
                 }
 
                 const bodyLinks = this.body.querySelectorAll("a");
-                [ ...bodyLinks ].forEach(link => !this.isFirefox && (link.contentEditable = 'false'));
+                [...bodyLinks].forEach(link => !this.isFirefox && (link.contentEditable = 'false'));
 
                 linkMenuFormInput.value = "";
                 this.closeLinkMenu();
@@ -812,7 +812,9 @@ export default class StrivenEditor {
             if (linkValue) {
                 window.getSelection().removeAllRanges();
                 window.getSelection().addRange(this.range);
-                document.execCommand("insertImage", true, linkValue);
+
+                if (this.isFirefox) { document.execCommand("insertImage", false, linkValue) }
+                else { document.execCommand("insertImage", true, linkValue) }
 
                 let insertedImage = [...this.body.querySelectorAll(`img`)].filter(img => img.src === linkValue);
                 insertedImage = insertedImage[insertedImage.length - 1];
@@ -822,7 +824,7 @@ export default class StrivenEditor {
                 imageMenuHeightFormInput.value = "";
                 imageMenuWidthFormInput.value = "";
                 imageMenuFormSourceInput.value = "";
-                this.toolbar.querySelector("#toolbar-image").onclick();
+                this.closeImageMenu();
             } else {
                 this.body.focus();
                 this.closeImageMenu();
