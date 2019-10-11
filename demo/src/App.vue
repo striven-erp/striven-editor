@@ -43,8 +43,8 @@ export default {
   mounted() {
     // const that = this;
     const editorOptions = {
-      // metaUrl: 'http://localhost:4200/meta',
-      // imageUrl: 'http://localhost:4200/image',
+      metaUrl: 'http://localhost:4200/meta',
+      imageUrl: 'http://localhost:4200/image',
       minimal: false,
       uploadOnPaste: false,
       toolbarBottom: true,

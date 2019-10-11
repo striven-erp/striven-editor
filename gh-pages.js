@@ -1,3 +1,3 @@
 var ghpages = require('gh-pages');
 
-ghpages.publish('demo/dist', function(err) {});
+ghpages.publish('demo/dist', err => console.log(err));
