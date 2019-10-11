@@ -164,12 +164,22 @@ export default class StrivenEditor {
 
                 switch (command) {
                     case "insertOrderedList":
-                        document.execCommand("indent", true);
-                        document.execCommand(command, true);
+                        if (this.isFirefox) {
+                            document.execCommand("indent");
+                            document.execCommand(command);
+                        } else {
+                            document.execCommand("indent", true);
+                            document.execCommand(command, true);
+                        }
                         break;
                     case "insertUnorderedList":
-                        document.execCommand("indent", true);
-                        document.execCommand(command, true);
+                        if (this.isFirefox) {
+                            document.execCommand("indent");
+                            document.execCommand(command);
+                        } else {
+                            document.execCommand("indent", true);
+                            document.execCommand(command, true);
+                        }
                         break;
                     case "attachment":
                         const attachmentInput = document.createElement("input");
@@ -691,7 +701,9 @@ export default class StrivenEditor {
             if (linkValue) {
                 window.getSelection().removeAllRanges();
                 window.getSelection().addRange(this.range);
-                document.execCommand("createLink", true, linkValue);
+
+                if (this.isFirefox) { document.execCommand("createLink", false, linkValue) }
+                else { document.execCommand("createLink", true, linkValue) }
 
                 if (this.options.metaUrl && this.validURL(linkValue)) {
                     this.getMeta(linkValue).then(res => {
@@ -704,10 +716,10 @@ export default class StrivenEditor {
                 }
 
                 const bodyLinks = this.body.querySelectorAll("a");
-                bodyLinks[bodyLinks.length - 1].contentEditable = "false";
+                [ ...bodyLinks ].forEach(link => !this.isFirefox && (link.contentEditable = 'false'));
 
                 linkMenuFormInput.value = "";
-                this.toolbar.querySelector("#toolbar-link").onclick();
+                this.closeLinkMenu();
             } else {
                 this.body.focus();
                 this.closeLinkMenu();
