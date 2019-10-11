@@ -650,7 +650,8 @@ export default class StrivenEditor {
                     // remove break from enter
                     if (hasText || hasImage) {
                         const breaks = body.querySelectorAll('div');
-                        breaks[breaks.length ? breaks.length - 1 : 0].remove();
+                        const divBreak = breaks[breaks.length ? breaks.length - 1 : 0];
+                        divBreak && divBreak.remove(); 
                     }
     
                     const content = this.getContent();
@@ -1279,6 +1280,8 @@ export default class StrivenEditor {
     }
 
     establishBrowser() {
+        // Change this to user agent
+
         // Opera 8.0+
         this.isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
 
