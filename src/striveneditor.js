@@ -604,10 +604,18 @@ export default class StrivenEditor {
         body.onkeyup = e => {
             bodyKeyup && bodyKeyup();
             if (this.options.submitOnEnter && e.keyCode === 13 && !e.shiftKey) {
-                const content = this.getContent();
+
                 const hasText = !!this.getTextContent();
-                const files = this.getFiles();
                 const hasImage = !!body.querySelector('img');
+
+                // remove break from enter
+                if (hasText || hasImage) {
+                    const breaks = body.querySelectorAll('div');
+                    breaks[breaks.length ? breaks.length - 1 : 0].remove();
+                }
+
+                const content = this.getContent();
+                const files = this.getFiles();
 
                 this.clearContent();
                 this.clearFiles();
