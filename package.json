@@ -47,7 +47,7 @@
     "shortid": "^2.2.15",
     "terser-webpack-plugin": "^2.0.1",
     "webpack": "^4.40.2",
-    "webpack-cli": "^3.3.8"
+    "webpack-cli": "^3.3.9"
   },
   "dependencies": {}
 }
