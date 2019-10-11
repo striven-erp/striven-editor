@@ -158,6 +158,11 @@ export default class StrivenEditor {
             // Execute Toolbar Commands
             const optionElClick = optionEl.onclick;
             optionEl.onclick = e => {
+                const indents = () => {
+                    const indents = this.body.querySelectorAll('blockquote');
+                    [ ...indents ].forEach(indent => indent.style.margin = "0 0 0 40px");
+                }
+
                 this.body.focus();
 
                 const command = optionEl.id.split("-")[1];
@@ -167,6 +172,8 @@ export default class StrivenEditor {
                         if (this.isFirefox) {
                             document.execCommand("indent");
                             document.execCommand(command);
+
+                            indents();
                         } else {
                             document.execCommand("indent", true);
                             document.execCommand(command, true);
@@ -176,6 +183,8 @@ export default class StrivenEditor {
                         if (this.isFirefox) {
                             document.execCommand("indent");
                             document.execCommand(command);
+
+                            indents();
                         } else {
                             document.execCommand("indent", true);
                             document.execCommand(command, true);
@@ -209,8 +218,13 @@ export default class StrivenEditor {
                         }
                         break;
                     default:
-                        if (this.isFirefox) { document.execCommand(command) }
-                        else { document.execCommand(command, true) }
+                        if (this.isFirefox) {
+                            document.execCommand(command);
+                            (command === 'indent') && indents();
+                        }
+                        else {
+                            document.execCommand(command, true);
+                        }
 
                         this.toolbarState();
                         break;
