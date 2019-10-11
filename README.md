@@ -207,6 +207,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |imageUrl|```String```|```null```|An endpoint to make a ```POST``` request for writing encoded images to the server. <br /> See [Referencing Encoded Images](#writing-encoded-images-to-a-server)|
 |customToolbarButton|```Object```|```null```|Configuration properties for adding a custom toolbar button. <br /> See [Custom Toolbar Button Properties](#custom-toolbar-button-properties)|
 |activeOptionColor|```String```|```#ddd```|Fill color for the toolbar action to change to when active.|
+|submitOnEnter|```Function```|```null```|Handler function that clears the editor on enter and returns the contents submitted. *Shift + Enter still inserts a break* <br /> ```submitOnEnter({ content, files })``` <br /> **Nothing will return if the editor is empty or no files are attached**|
 
 ## Editor Methods
 
@@ -216,6 +217,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |getContent|```String```|Returns an HTML String of the editor's contents|
 |setContent(```String```)|None|Set the editor ```innerHTML``` content by passing an HTML string|
 |clearContent|None|Clear the editor of its current contents|
+|clearFiles|None|Clear the files currently attached to the editor|
 |getRange|```Range```|Get the current [Range](https://developer.mozilla.org/en-US/docs/Web/API/Range) of the window at index ```0```|
 |attachFile(```File```)|None|Attaches given file to the editor|
 |openLinkMenu|None|Opens the ```insertLink``` menu|

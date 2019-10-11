@@ -226,7 +226,7 @@ export default class StrivenEditor {
         }
     }
 
-    imageMenuSlideIn () {
+    imageMenuSlideIn() {
         const that = this;
 
         this.openImageMenu();
@@ -247,10 +247,10 @@ export default class StrivenEditor {
                 that.imageMenu.style.opacity = `${opacity}`;
                 that.imageMenu.style.right = `${right}px`;
             }
-        } 
+        }
     }
 
-    linkMenuSlideIn () {
+    linkMenuSlideIn() {
         const that = this;
 
         this.openLinkMenu();
@@ -271,7 +271,7 @@ export default class StrivenEditor {
                 that.linkMenu.style.opacity = `${opacity}`;
                 that.linkMenu.style.right = `${right}px`;
             }
-        } 
+        }
     }
 
     toolbarSlideUp() {
@@ -603,6 +603,20 @@ export default class StrivenEditor {
         const bodyKeyup = body.onkeyup;
         body.onkeyup = e => {
             bodyKeyup && bodyKeyup();
+            if (this.options.submitOnEnter && e.keyCode === 13 && !e.shiftKey) {
+                const content = this.getContent();
+                const hasText = !!this.getTextContent();
+                const files = this.getFiles();
+                const hasImage = !!body.querySelector('img');
+
+                this.clearContent();
+                this.clearFiles();
+
+                if (files.length || hasText || hasImage) {
+                    this.options.submitOnEnter({ content: (hasText || hasImage) && content, files });
+                }
+
+            }
             this.toolbarState();
         }
 
@@ -1174,6 +1188,11 @@ export default class StrivenEditor {
 
     clearContent() {
         this.body.innerHTML = "";
+    }
+
+    clearFiles() {
+        this.files = [];
+        this.filesSection.innerHTML = '';
     }
 
     getTextContent() {
