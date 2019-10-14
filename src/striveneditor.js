@@ -609,6 +609,9 @@ export default class StrivenEditor {
                 if (pastedHtmlItem) {
                     pastedHtmlItem.getAsString((htmlString) => {
                         const range = this.getRange();
+                        if(range.startOffset === range.endOffset)
+                        range.insertNode(htmlString);
+                        else
                         range.insertNode(this.scrubHTML(htmlString));
                         range.collapse();
                     })
