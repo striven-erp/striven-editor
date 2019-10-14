@@ -97,6 +97,8 @@ export default class StrivenEditor {
         this.initEditor(el);
         this.initResponsive();
         this.initOverflow();
+
+        el.StrivenEditor = () => this;
     }
 
     initEditor(el) {
@@ -204,16 +206,19 @@ export default class StrivenEditor {
                         const attachmentInput = document.createElement("input");
                         attachmentInput.style.display = "none";
                         attachmentInput.type = "file";
+                        attachmentInput.onchange = e => this.attachFile(attachmentInput.files[0])
                         attachmentInput.click();
-                        attachmentInput.onchange = e => this.attachFile(attachmentInput.files[0]);
                         break;
                     case "link":
+                        const currentRange = this.getRange();
+                        currentRange.setStart(this.body, currentRange.endOffset - currentRange.commonAncestorContainer.textContent.length)
+
                         if (this.linkMenu.dataset.active === "true") {
                             this.closeLinkMenu();
                         } else {
                             this.linkMenuSlideIn();
 
-                            this.range = this.getRange();
+                            this.range = currentRange;
                             this.linkMenu.querySelector('input').focus();
                         }
                         break;
@@ -243,12 +248,6 @@ export default class StrivenEditor {
                 optionElClick && optionElClick();
             };
         });
-
-        // Get Content from Editor
-        this.editor.getcontent = () => this.getContent();
-
-        // Get Editor Range
-        this.editor.getrange = () => this.getRange();
 
         this.editor.appendChild(this.toolbar);
         this.editor.appendChild(this.body);
@@ -643,23 +642,23 @@ export default class StrivenEditor {
             bodyKeyup && bodyKeyup();
             if (this.options.submitOnEnter && e.keyCode === 13 && !e.shiftKey) {
 
-                if(!document.queryCommandState('insertOrderedList') && !document.queryCommandState('insertUnorderedList')) {
+                if (!document.queryCommandState('insertOrderedList') && !document.queryCommandState('insertUnorderedList')) {
                     const hasText = !!this.getTextContent();
                     const hasImage = !!body.querySelector('img');
-    
+
                     // remove break from enter
                     if (hasText || hasImage) {
                         const breaks = body.querySelectorAll('div');
                         const divBreak = breaks[breaks.length ? breaks.length - 1 : 0];
-                        divBreak && divBreak.remove(); 
+                        divBreak && divBreak.remove();
                     }
-    
+
                     const content = this.getContent();
                     const files = this.getFiles();
-    
+
                     this.clearContent();
                     this.clearFiles();
-    
+
                     if (files.length || hasText || hasImage) {
                         this.options.submitOnEnter({ content: (hasText || hasImage) && content, files });
                     }
@@ -729,8 +728,12 @@ export default class StrivenEditor {
                 window.getSelection().removeAllRanges();
                 window.getSelection().addRange(this.range);
 
-                if (this.isFirefox) { document.execCommand("createLink", false, linkValue) }
-                else { document.execCommand("createLink", true, linkValue) }
+                if (this.isFirefox || this.isEdge) {
+                    document.execCommand("createLink", false, linkValue)
+                }
+                else {
+                    document.execCommand("createLink", true, linkValue)
+                }
 
                 if (this.options.metaUrl && this.validURL(linkValue)) {
                     this.getMeta(linkValue).then(res => {
@@ -840,7 +843,7 @@ export default class StrivenEditor {
                 window.getSelection().removeAllRanges();
                 window.getSelection().addRange(this.range);
 
-                if (this.isFirefox) { document.execCommand("insertImage", false, linkValue) }
+                if (this.isFirefox || this.isEdge) { document.execCommand("insertImage", false, linkValue) }
                 else { document.execCommand("insertImage", true, linkValue) }
 
                 let insertedImage = [...this.body.querySelectorAll(`img`)].filter(img => img.src === linkValue);
@@ -901,7 +904,6 @@ export default class StrivenEditor {
             this.attachFile(file);
         }
 
-        this.editor.getfiles = () => this.getFiles();
         return filesSection;
     }
 
@@ -948,7 +950,6 @@ export default class StrivenEditor {
         fileEl.appendChild(removeFileEl);
 
         this.filesSection.appendChild(fileEl);
-        this.editor.getfiles = () => this.getFiles();
     }
 
     createMetaDataElement(url, img, title, description) {
