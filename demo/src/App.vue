@@ -34,6 +34,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 // import Tribute from 'tributejs';
 // import { faPaperPlane } from "@fortawesome/free-solid-svg-icons/faPaperPlane";
 // import { dom } from '@fortawesome/fontawesome-svg-core';
@@ -43,7 +44,6 @@
 // faLib.add(faPaperPlane);
 // dom.watch();
 
-// import { StrivenEditor } from 'striven-editor';
 import { StrivenEditor } from "@striven-erp/striven-editor";
 
 export default {

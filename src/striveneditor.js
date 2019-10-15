@@ -98,6 +98,12 @@ export default class StrivenEditor {
         this.initResponsive();
         this.initOverflow();
 
+        const documentMouseUp = document.onmouseup;
+        document.onmouseup = e => {
+            documentMouseUp && documentMouseUp();
+            this.range = this.getRange();
+        }
+
         el.StrivenEditor = () => this;
     }
 
@@ -160,12 +166,15 @@ export default class StrivenEditor {
             // Execute Toolbar Commands
             const optionElClick = optionEl.onclick;
             optionEl.onclick = e => {
+
                 const indents = () => {
                     const indents = this.body.querySelectorAll('blockquote');
                     [...indents].forEach(indent => indent.style.margin = "0 0 0 40px");
                 }
 
                 this.body.focus();
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(this.range);
 
                 const command = optionEl.id.split("-")[1];
 
@@ -640,6 +649,9 @@ export default class StrivenEditor {
         const bodyKeyup = body.onkeyup;
         body.onkeyup = e => {
             bodyKeyup && bodyKeyup();
+
+            this.range = this.getRange();
+
             if (this.options.submitOnEnter && e.keyCode === 13 && !e.shiftKey) {
 
                 if (!document.queryCommandState('insertOrderedList') && !document.queryCommandState('insertUnorderedList')) {
