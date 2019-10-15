@@ -116,15 +116,7 @@ export default class StrivenEditor {
         this.metaDataSection = this.initMetaDataSection();
         this.filesSection = this.initFilesSection();
 
-        this.editor.style.border = "2px solid #ddd";
-        this.editor.style.display = "flex";
-        this.editor.style.position = "relative";
-        this.editor.style.flexDirection = "column";
-        this.editor.style.fontFamily = "Arial";
-
-        // this.editor.style.minHeight = "auto";
-        // this.editor.style.maxHeight = "auto";
-        this.editor.style.maxWidth = "100%";
+				this.editor.classList.add("editor")
 
         // Toolbar Hide
         if (this.options.toolbarHide) {
@@ -362,15 +354,9 @@ export default class StrivenEditor {
         const groups = Object.keys(this.optionGroups);
 
         toolbar.classList.add("toolbar");
-        toolbar.style.display = "flex";
-        toolbar.style.justifyContent = "space-between";
-        toolbar.style.alignItems = "center";
-        toolbar.style.flexWrap = "wrap";
         toolbar.style.minHeight = this.options.toolbarHide ? "0" : "40px";
-        toolbar.style.position = "relative";
 
         this.toolbarOptionsGroup.classList.add("toolbar-options");
-        this.toolbarOptionsGroup.style.margin = "0 10px";
         this.toolbarOptionsGroup.style.display = this.options.toolbarHide ? "none" : "flex";
 
         //iterate groups
@@ -467,21 +453,10 @@ export default class StrivenEditor {
         if (this.options.customToolbarButton) {
             const customToolbarButton = document.createElement("div");
             customToolbarButton.id = "custom-toolbar-button";
-
-            customToolbarButton.style.display = "none";
-            customToolbarButton.style.color = "#fff";
-            customToolbarButton.style.backgroundColor = "#5cb85c";
+						customToolbarButton.classList.add('custom-toolbar-button')
             customToolbarButton.style.minHeight = this.options.toolbarHide
                 ? "40px"
                 : this.toolbar.style.minHeight;
-            customToolbarButton.style.width = "50px";
-            customToolbarButton.style.textAlign = "center";
-            customToolbarButton.style.justifyContent = "center";
-            customToolbarButton.style.alignContent = "center";
-            customToolbarButton.style.alignItems = "center";
-            customToolbarButton.style.cursor = "pointer";
-            customToolbarButton.style.border = "1px solid #4cae4c";
-            customToolbarButton.style.alignSelf = "flex-end";
             customToolbarButton.onclick = () => this.options.customToolbarButton.handler();
             !this.options.toolbarHide && (customToolbarButton.style.display = "flex");
 
@@ -525,20 +500,13 @@ export default class StrivenEditor {
 
     initBody() {
         const body = document.createElement("div");
+				
         body.classList.add("body");
-
-        body.contentEditable = "true";
-        body.style.outline = "none";
-        body.style.padding = "10px 20px";
-
-        body.style.height = this.editor.style.height;
-        body.style.minHeight = this.editor.style.minHeight;
-        body.style.maxHeight = this.editor.style.maxHeight;
-
-        this.editor.style.height = "auto";
-        this.editor.style.minHeight = "auto";
-        this.editor.style.maxHeight = "auto";
-
+				body.contentEditable = "true";
+				body.style.height = this.editor.style.height;
+				body.style.minHeight = this.editor.style.minHeight;
+				body.style.maxHeight = this.editor.style.maxHeight;
+				
         // Placeholder logic
         if (this.options.placeholder) {
             const placeholderNode = document.createElement("p");
@@ -690,43 +658,21 @@ export default class StrivenEditor {
         const linkMenuFormLabel = document.createElement("p");
         const linkMenuFormInput = document.createElement("input");
 
-        linkMenu.id = "link-menu";
-        linkMenuButton.textContent = "Insert Link";
-        linkMenuFormLabel.textContent = "Web Address";
-        linkMenuFormInput.type = "text";
-        linkMenuFormLabel.style.margin = "8px 10px 8px 0";
-        linkMenuFormLabel.style.fontSize = "14px";
-        linkMenuButton.style.cursor = "pointer";
-
+				linkMenu.id = "link-menu";
+				linkMenu.classList.add('link-menu')
         linkMenu.dataset.active = "false";
-        linkMenu.style.display = "none";
-        linkMenu.style.position = "absolute";
-        linkMenu.style.right = "10px";
-        linkMenu.style.bottom = "10px";
-        linkMenu.style.backgroundColor = "#fff";
-        linkMenu.style.border = "2px solid #ddd";
-        linkMenu.style.padding = "10px 20px";
-        linkMenu.style.zIndex = "1000";
 
-        linkMenuFormLabel.style.width = "100%";
-        linkMenuFormLabel.style.textAlign = "right";
-        linkMenuFormLabel.style.marginRight = "10px";
-
-        linkMenuFormInput.style.outline = "none";
-        linkMenuFormInput.style.padding = "0 5px";
+				linkMenuFormLabel.classList.add('link-menu-form-label')
+				linkMenuFormLabel.textContent = "Web Address";
+				
+				linkMenuFormInput.classList.add('link-menu-form-input')
+        linkMenuFormInput.type = "text";
         linkMenuFormInput.placeholder = "Insert a Link";
 
-        linkMenuForm.style.display = "flex";
-        linkMenuForm.style.justifyContent = "space-between";
-        linkMenuForm.style.margin = "5px 0";
-
-        linkMenuButton.style.float = "right";
-        linkMenuButton.style.padding = "6px 12px";
-        linkMenuButton.style.border = "1px solid #4cae4c";
-        linkMenuButton.style.backgroundColor = "#5cb85c";
-        linkMenuButton.style.fontSize = "14px";
-        linkMenuButton.style.color = "#fff";
-        linkMenuButton.style.outline = "none";
+				linkMenuForm.classList.add('link-menu-form')
+				
+				linkMenuButton.classList.add('link-menu-button')
+        linkMenuButton.textContent = "Insert Link";
 
         linkMenuButton.onmouseenter = () =>
             (linkMenuButton.style.backgroundColor = "#4cae4c");
@@ -783,44 +729,22 @@ export default class StrivenEditor {
         const imageMenuButton = document.createElement("button");
         const imageMenuFormLabel = document.createElement("p");
         const imageMenuFormSourceInput = document.createElement("input");
-
-        imageMenu.id = "image-menu";
-        imageMenuButton.textContent = "Insert Image";
-        imageMenuFormLabel.textContent = "Image URL";
-        imageMenuFormSourceInput.type = "text";
-        imageMenuFormLabel.style.margin = "8px 10px 8px 0";
-        imageMenuFormLabel.style.fontSize = "14px";
-        imageMenuButton.style.cursor = "pointer";
-
+				
+				imageMenu.id = "image-menu";
+				imageMenu.classList.add('image-menu')
         imageMenu.dataset.active = "false";
-        imageMenu.style.display = "none";
-        imageMenu.style.position = "absolute";
-        imageMenu.style.right = "10px";
-        imageMenu.style.bottom = "10px";
-        imageMenu.style.backgroundColor = "#fff";
-        imageMenu.style.border = "2px solid #ddd";
-        imageMenu.style.padding = "10px 20px";
-        imageMenu.style.zIndex = "1000";
-
-        imageMenuFormLabel.style.width = "100%";
-        imageMenuFormLabel.style.textAlign = "right";
-        imageMenuFormLabel.style.marginRight = "10px";
-
-        imageMenuFormSourceInput.style.outline = "none";
-        imageMenuFormSourceInput.style.padding = "0 5px";
+				
+				imageMenuFormLabel.classList.add('image-menu-form-label')
+        imageMenuFormLabel.textContent = "Image URL";
+				
+				imageMenuFormSourceInput.classList.add('image-menu-form-source-input')
+        imageMenuFormSourceInput.type = "text";
         imageMenuFormSourceInput.placeholder = "Insert a Link";
-
-        imageMenuForm.style.display = "flex";
-        imageMenuForm.style.justifyContent = "space-between";
-        imageMenuForm.style.margin = "5px 0";
-
-        imageMenuButton.style.float = "right";
-        imageMenuButton.style.padding = "6px 12px";
-        imageMenuButton.style.border = "1px solid #4cae4c";
-        imageMenuButton.style.backgroundColor = "#5cb85c";
-        imageMenuButton.style.fontSize = "14px";
-        imageMenuButton.style.color = "#fff";
-        imageMenuButton.style.outline = "none";
+				
+				imageMenuForm.classList.add('image-menu-form')
+				
+				imageMenuButton.classList.add('image-menu-button')
+				imageMenuButton.textContent = "Insert Image";
 
         imageMenuButton.onmouseenter = () =>
             (imageMenuButton.style.backgroundColor = "#4cae4c");
@@ -885,20 +809,12 @@ export default class StrivenEditor {
         const metaDataSection = document.createElement("div");
         metaDataSection.classList.add("metadata-section");
 
-        metaDataSection.style.display = "flex";
-        metaDataSection.style.flexWrap = "wrap";
-        metaDataSection.style.zIndex = "500";
-
         return metaDataSection;
     }
 
     initFilesSection() {
         const filesSection = document.createElement("div");
         filesSection.classList.add("files-section");
-
-        filesSection.style.display = "flex";
-        filesSection.style.flexWrap = "wrap";
-        filesSection.style.zIndex = "500";
 
         this.body.ondragenter = e => {
             this.body.style.backgroundColor = "#ddd";
@@ -929,26 +845,14 @@ export default class StrivenEditor {
         fileSizeEl.textContent = size;
         removeFileEl.textContent = "X";
 
+				fileEl.classList.add('file-el')
         fileEl.dataset.fileindex = (this.files.length - 1);
-        fileEl.style.width = "100%";
-        fileEl.style.display = "flex";
-        fileEl.style.flexDirection = "column";
-        fileEl.style.margin = "10px";
-        fileEl.style.position = "relative";
-
-        fileNameEl.style.fontWeight = "bold";
-        fileNameEl.style.margin = "0";
-        fileSizeEl.style.fontSize = "12px";
-        fileSizeEl.style.margin = "2px 0";
-
-        removeFileEl.style.margin = "0";
-        removeFileEl.style.userSelect = "none";
-        removeFileEl.style.color = "black";
-        removeFileEl.style.position = "absolute";
-        removeFileEl.style.right = "5px";
-        removeFileEl.style.top = "-5px";
-        removeFileEl.style.cursor = "pointer";
-        removeFileEl.style.backgroundColor = "#fff";
+				
+				fileNameEl.classList.add('file-name-el')
+				
+				fileSizeEl.classList.add('file-size-el')
+				
+				removeFileEl.classList.add('remove-file-el')
         removeFileEl.onmouseenter = () => removeFileEl.style.color = "#ddd";
         removeFileEl.onmouseleave = () => removeFileEl.style.color = "black";
 
@@ -979,28 +883,17 @@ export default class StrivenEditor {
         metaDataDescriptionEl.textContent = description;
         removeMetaDataEl.textContent = "X";
 
-        metaLinkEl.target = "blank";
+				metaLinkEl.target = "blank";
+				
+				metaItemEl.classList.add("meta-item-el")
+				
+				metaImageEl.classList.add("meta-image-el")
+				
+				metaDataTitleEl.classList.add("meta-data-title-el")
 
-        metaItemEl.style.width = "100%";
-        metaItemEl.style.display = "flex";
-        metaItemEl.style.margin = "10px";
-        metaItemEl.style.position = "relative";
-
-        metaImageEl.style.marginRight = "10px";
-        metaImageEl.style.height = "50px";
-        metaImageEl.style.width = "75px";
-
-        metaDataTitleEl.style.fontWeight = "bold";
-        metaDataTitleEl.style.margin = "0";
         metaDataDescriptionEl.style.margin = "0";
 
-        removeMetaDataEl.style.userSelect = "none";
-        removeMetaDataEl.style.color = "black";
-        removeMetaDataEl.style.position = "absolute";
-        removeMetaDataEl.style.right = "5px";
-        removeMetaDataEl.style.top = "-5px";
-        removeMetaDataEl.style.cursor = "pointer";
-        removeMetaDataEl.style.backgroundColor = "#fff";
+				removeMetaDataEl.classList.add("remove-meta-data-el")
         removeMetaDataEl.onmouseenter = () => removeMetaDataEl.style.color = "#ddd";
         removeMetaDataEl.onmouseleave = () => removeMetaDataEl.style.color = "black";
 
