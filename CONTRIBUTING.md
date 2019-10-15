@@ -2,6 +2,8 @@
 
 Anyone can contribute to the Striven WYSIWYG editor. Please open an issue for any feature requests, bug fixes, and enhancements that you would like to be implemented into the editor. Keep in mind that this editor has been tailored to the needs of the Striven ERP Platform, so some requests may not be fulfillable.
 
+Please make changes to the ```dev``` branch and open a pull request.
+
 ## Install Dependencies
 
 ```sh
