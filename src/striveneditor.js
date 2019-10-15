@@ -160,6 +160,9 @@ export default class StrivenEditor {
         this.toolbarOptions.forEach(optionEl => {
             // Assign Styles
             // optionEl.style.padding = "0 10px";
+            optionEl.style.display = 'inline-block';
+            optionEl.onmouseenter = () => optionEl.style.background = "#88BE7E";
+            optionEl.onmouseleave = () => optionEl.style.background = 'white';
             optionEl.style.cursor = "pointer";
             optionEl.style.userSelect = "none";
 
