@@ -2,13 +2,7 @@
 
 Anyone can contribute to the Striven WYSIWYG editor. Please open an issue for any feature requests, bug fixes, and enhancements that you would like to be implemented into the editor. Keep in mind that this editor has been tailored to the needs of the Striven ERP Platform, so some requests may not be fulfillable.
 
-<ol>
-  <li>Fork this repository</li>
-  <li>Work on test branch</li>
-  <li>Open PR to test</li>
- </ol>
-
-We will merge test branch to dev and then publish to master
+Please open all pull requests to the ```dev``` branch.
 
 ## Install Dependencies
 
@@ -31,7 +25,7 @@ $ npm link
 Symlink ```striven-editor``` in the development environment.
 
 ```sh
-$ npm link striven-editor
+$ npm link @striven-erp/striven-editor
 ```
 
 ## Start Webpack
