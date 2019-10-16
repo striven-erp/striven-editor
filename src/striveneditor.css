@@ -7,17 +7,9 @@
 ** - Link Menu
 */
 
-.body {
-	outline: none;
-	padding: 10px 20px;
-	min-height: auto;
-	max-height: auto;
-	height: auto;
-}
-
 /** Editor **/
 
-.editor {
+.Striven-Editor.editor {
 	border: 2px solid #ddd;
 	display: flex;
 	position: relative;
@@ -29,10 +21,18 @@
 	height: auto;
 }
 
+.Striven-Editor .body {
+	outline: none;
+	padding: 10px 20px;
+	min-height: auto;
+	max-height: auto;
+	height: auto;
+}
+
 
 /** Toolbar **/
 
-.toolbar {
+.Striven-Editor .toolbar {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -40,11 +40,11 @@
 	position: relative
 }
 
-.toolbar-options {
+.Striven-Editor .toolbar-options {
 	margin: 0 10px;
 }
 
-.custom-toolbar-button {
+.Striven-Editor .custom-toolbar-button {
 	display: none;
 	color: #fff;
 	background-color: #5cb85c;
@@ -60,7 +60,7 @@
 
 /** Image Menu **/
 
-.image-menu {
+.Striven-Editor .image-menu {
 	display: none;
 	position: absolute;
 	right: 10px;
@@ -71,7 +71,7 @@
 	z-index: 1000;
 }
 
-.image-menu-button {
+.Striven-Editor .image-menu-button {
 	cursor: pointer;
 	float: right;
 	padding: 6px 12px;
@@ -82,13 +82,13 @@
 	outline: none;
 }
 
-.image-menu-form {
+.Striven-Editor .image-menu-form {
 	display: flex;
 	justify-content: space-between;
 	margin: 5px 0;
 }
 
-.image-menu-form-label {
+.Striven-Editor .image-menu-form-label {
 	margin: 8px 10px 8px 0;
 	font-size: 14px;
 	width: 100%;
@@ -96,14 +96,14 @@
 	margin-right: 10px;
 }
 
-.image-menu-form-source-input {
+.Striven-Editor .image-menu-form-source-input {
 	outline: none;
 	padding: 0 5px;
 }
 
 /** File Element **/
 
-.file-el {
+.Striven-Editor .file-el {
 	width: 100%;
 	display: flex;
 	flex-direction: column;
@@ -111,17 +111,17 @@
 	position: relative;
 }
 
-.file-name-el {
+.Striven-Editor .file-name-el {
 	font-weight: bold;
 	margin: 0;
 }
 
-.file-size-el {
+.Striven-Editor .file-size-el {
 	font-size: 12px;
 	margin: 2px 0;
 }
 
-.remove-file-el {
+.Striven-Editor .remove-file-el {
 	margin: 0;
 	user-select: none;
 	color: black;
@@ -134,25 +134,25 @@
 
 /** Meta Item **/
 
-.meta-item-el {
+.Striven-Editor .meta-item-el {
 	width: 100%;
 	display: flex;
 	margin: 10px;
 	position: relative
 }
 
-.meta-image-el {
+.Striven-Editor .meta-image-el {
 	margin-right: 10px;
 	height: 50px;
 	width: 75px;
 }
 
-.meta-data-title-el {
+.Striven-Editor .meta-data-title-el {
 	font-weight: bold;
 	margin: 0;
 }
 
-.remove-meta-data-el {
+.Striven-Editor .remove-meta-data-el {
 	user-select: none;
 	color: black;
 	position: absolute;
@@ -162,7 +162,7 @@
 	background-color: #fff;
 }
 
-.metadata-section, .files-section {
+.Striven-Editor .metadata-section, .files-section {
 	display: flex;
 	flex-wrap: wrap;
 	z-index: 500
@@ -170,7 +170,7 @@
 
 /** Link Menu **/
 
-.link-menu {
+.Striven-Editor .link-menu {
 	display: none;
 	position: absolute;
 	right: 10px;
@@ -181,7 +181,7 @@
 	z-index: 1000;	
 }
 
-.link-menu-form-label {
+.Striven-Editor .link-menu-form-label {
 	margin: 8px 10px 8px 0;
 	font-size: 14px;
 	width: 100%;
@@ -189,18 +189,18 @@
 	margin-right: 10px;
 }
 
-.link-menu-form-input {
+.Striven-Editor .link-menu-form-input {
 	outline: none;
 	padding: 0 5px;
 }
 
-.link-menu-form {
+.Striven-Editor .link-menu-form {
 	display: flex;
 	justify-content: space-between;
 	margin: 5px 0;
 }
 
-.link-menu-button {
+.Striven-Editor .link-menu-button {
 	cursor: pointer;
 	float: right;
 	padding: 6px 12px;

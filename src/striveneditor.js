@@ -116,7 +116,7 @@ export default class StrivenEditor {
         this.metaDataSection = this.initMetaDataSection();
         this.filesSection = this.initFilesSection();
 
-				this.editor.classList.add("editor")
+				this.editor.classList.add("editor", "Striven-Editor")
 
         // Toolbar Hide
         if (this.options.toolbarHide) {
