@@ -25,7 +25,7 @@ $ npm link
 Symlink ```striven-editor``` in the development environment.
 
 ```sh
-$ npm link striven-editor
+$ npm link @striven-erp/striven-editor
 ```
 
 ## Start Webpack
