@@ -162,7 +162,7 @@
 	background-color: #fff;
 }
 
-.Striven-Editor .metadata-section, .files-section {
+.Striven-Editor .metadata-section, .Striven-Editor .files-section {
 	display: flex;
 	flex-wrap: wrap;
 	z-index: 500
