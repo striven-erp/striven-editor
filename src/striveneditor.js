@@ -98,13 +98,6 @@ export default class StrivenEditor {
         this.initResponsive();
         this.initOverflow();
 
-        // Safari Fix
-        // const documentMouseUp = document.onmouseup;
-        // document.onmouseup = e => {
-        //     documentMouseUp && documentMouseUp();
-        //     this.range = this.getRange();
-        // }
-
         el.StrivenEditor = () => this;
     }
 
@@ -174,10 +167,9 @@ export default class StrivenEditor {
                 }
 
                 this.body.focus();
-                
-                // Safari Fix
-                // window.getSelection().removeAllRanges();
-                // window.getSelection().addRange(this.range);
+
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(this.range);
 
                 const command = optionEl.id.split("-")[1];
 
@@ -222,15 +214,11 @@ export default class StrivenEditor {
                         attachmentInput.click();
                         break;
                     case "link":
-                        // const currentRange = this.getRange();
-                        // currentRange.setStart(this.body, currentRange.endOffset - currentRange.commonAncestorContainer.textContent.length)
-
                         if (this.linkMenu.dataset.active === "true") {
                             this.closeLinkMenu();
                         } else {
                             this.linkMenuSlideIn();
 
-                            this.range = this.getRange();
                             this.linkMenu.querySelector('input').focus();
                         }
                         break;
@@ -681,6 +669,12 @@ export default class StrivenEditor {
 
             }
             this.toolbarState();
+        }
+
+        const bodyMouseUp = body.onmouseup;
+        body.onmouseup = e => {
+            bodyMouseUp && bodyMouseUp();
+            this.range = this.getRange();
         }
 
         return body;
