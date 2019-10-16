@@ -913,6 +913,8 @@ export default class StrivenEditor {
             this.attachFile(file);
         }
 
+        this.isEdge && (this.body.ondragover = e => e.preventDefault());
+
         return filesSection;
     }
 

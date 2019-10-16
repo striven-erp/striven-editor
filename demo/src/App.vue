@@ -53,7 +53,7 @@ export default {
     const editorOptions = {
       // metaUrl: "http://localhost:4200/meta",
       // imageUrl: "http://localhost:4200/image",
-      minimal: false,
+      minimal: true,
       uploadOnPaste: false,
       toolbarBottom: true,
       toolbarHide: true,
