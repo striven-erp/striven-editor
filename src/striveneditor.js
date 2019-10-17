@@ -110,7 +110,7 @@ export default class StrivenEditor {
         this.metaDataSection = this.initMetaDataSection();
         this.filesSection = this.initFilesSection();
 
-				this.editor.classList.add("editor", "Striven-Editor")
+        this.editor.classList.add("editor", "Striven-Editor")
 
         // Toolbar Hide
         if (this.options.toolbarHide) {
@@ -444,7 +444,7 @@ export default class StrivenEditor {
         if (this.options.customToolbarButton) {
             const customToolbarButton = document.createElement("div");
             customToolbarButton.id = "custom-toolbar-button";
-						customToolbarButton.classList.add('custom-toolbar-button')
+            customToolbarButton.classList.add('custom-toolbar-button')
             customToolbarButton.style.minHeight = this.options.toolbarHide
                 ? "40px"
                 : this.toolbar.style.minHeight;
@@ -491,13 +491,13 @@ export default class StrivenEditor {
 
     initBody() {
         const body = document.createElement("div");
-				
+
         body.classList.add("body");
-				body.contentEditable = "true";
-				body.style.height = this.editor.style.height;
-				body.style.minHeight = this.editor.style.minHeight;
-				body.style.maxHeight = this.editor.style.maxHeight;
-				
+        body.contentEditable = "true";
+        body.style.height = this.editor.style.height;
+        body.style.minHeight = this.editor.style.minHeight;
+        body.style.maxHeight = this.editor.style.maxHeight;
+
         // Placeholder logic
         if (this.options.placeholder) {
             const placeholderNode = document.createElement("p");
@@ -655,20 +655,20 @@ export default class StrivenEditor {
         const linkMenuFormLabel = document.createElement("p");
         const linkMenuFormInput = document.createElement("input");
 
-				linkMenu.id = "link-menu";
-				linkMenu.classList.add('link-menu')
+        linkMenu.id = "link-menu";
+        linkMenu.classList.add('link-menu')
         linkMenu.dataset.active = "false";
 
-				linkMenuFormLabel.classList.add('link-menu-form-label')
-				linkMenuFormLabel.textContent = "Web Address";
-				
-				linkMenuFormInput.classList.add('link-menu-form-input')
+        linkMenuFormLabel.classList.add('link-menu-form-label')
+        linkMenuFormLabel.textContent = "Web Address";
+
+        linkMenuFormInput.classList.add('link-menu-form-input')
         linkMenuFormInput.type = "text";
         linkMenuFormInput.placeholder = "Insert a Link";
 
-				linkMenuForm.classList.add('link-menu-form')
-				
-				linkMenuButton.classList.add('link-menu-button')
+        linkMenuForm.classList.add('link-menu-form')
+
+        linkMenuButton.classList.add('link-menu-button')
         linkMenuButton.textContent = "Insert Link";
 
         linkMenuButton.onmouseenter = () =>
@@ -726,22 +726,22 @@ export default class StrivenEditor {
         const imageMenuButton = document.createElement("button");
         const imageMenuFormLabel = document.createElement("p");
         const imageMenuFormSourceInput = document.createElement("input");
-				
-				imageMenu.id = "image-menu";
-				imageMenu.classList.add('image-menu')
+
+        imageMenu.id = "image-menu";
+        imageMenu.classList.add('image-menu')
         imageMenu.dataset.active = "false";
-				
-				imageMenuFormLabel.classList.add('image-menu-form-label')
+
+        imageMenuFormLabel.classList.add('image-menu-form-label')
         imageMenuFormLabel.textContent = "Image URL";
-				
-				imageMenuFormSourceInput.classList.add('image-menu-form-source-input')
+
+        imageMenuFormSourceInput.classList.add('image-menu-form-source-input')
         imageMenuFormSourceInput.type = "text";
         imageMenuFormSourceInput.placeholder = "Insert a Link";
-				
-				imageMenuForm.classList.add('image-menu-form')
-				
-				imageMenuButton.classList.add('image-menu-button')
-				imageMenuButton.textContent = "Insert Image";
+
+        imageMenuForm.classList.add('image-menu-form')
+
+        imageMenuButton.classList.add('image-menu-button')
+        imageMenuButton.textContent = "Insert Image";
 
         imageMenuButton.onmouseenter = () =>
             (imageMenuButton.style.backgroundColor = "#4cae4c");
@@ -844,14 +844,14 @@ export default class StrivenEditor {
         fileSizeEl.textContent = size;
         removeFileEl.textContent = "X";
 
-				fileEl.classList.add('file-el')
+        fileEl.classList.add('file-el')
         fileEl.dataset.fileindex = (this.files.length - 1);
-				
-				fileNameEl.classList.add('file-name-el')
-				
-				fileSizeEl.classList.add('file-size-el')
-				
-				removeFileEl.classList.add('remove-file-el')
+
+        fileNameEl.classList.add('file-name-el')
+
+        fileSizeEl.classList.add('file-size-el')
+
+        removeFileEl.classList.add('remove-file-el')
         removeFileEl.onmouseenter = () => removeFileEl.style.color = "#ddd";
         removeFileEl.onmouseleave = () => removeFileEl.style.color = "black";
 
@@ -882,17 +882,17 @@ export default class StrivenEditor {
         metaDataDescriptionEl.textContent = description;
         removeMetaDataEl.textContent = "X";
 
-				metaLinkEl.target = "blank";
-				
-				metaItemEl.classList.add("meta-item-el")
-				
-				metaImageEl.classList.add("meta-image-el")
-				
-				metaDataTitleEl.classList.add("meta-data-title-el")
+        metaLinkEl.target = "blank";
+
+        metaItemEl.classList.add("meta-item-el")
+
+        metaImageEl.classList.add("meta-image-el")
+
+        metaDataTitleEl.classList.add("meta-data-title-el")
 
         metaDataDescriptionEl.style.margin = "0";
 
-				removeMetaDataEl.classList.add("remove-meta-data-el")
+        removeMetaDataEl.classList.add("remove-meta-data-el")
         removeMetaDataEl.onmouseenter = () => removeMetaDataEl.style.color = "#ddd";
         removeMetaDataEl.onmouseleave = () => removeMetaDataEl.style.color = "black";
 
