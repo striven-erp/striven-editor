@@ -1,3 +1,4 @@
+import './striveneditor.css';
 import StrivenEditor from './striveneditor';
 
 // class Striven {

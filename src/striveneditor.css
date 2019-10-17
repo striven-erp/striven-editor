@@ -1,0 +1,212 @@
+/**
+** - Editor
+** - Toolbar
+** - Image Menu
+** - File element
+** - Meta Item
+** - Link Menu
+*/
+
+/** Editor **/
+
+.Striven-Editor.editor {
+	border: 2px solid #ddd;
+	display: flex;
+	position: relative;
+	flex-direction: column;
+	font-family: Arial;
+	max-width: 100%;
+	min-height: auto;
+	max-height: auto;
+	height: auto;
+}
+
+.Striven-Editor .body {
+	outline: none;
+	padding: 10px 20px;
+	min-height: auto;
+	max-height: auto;
+	height: auto;
+}
+
+
+/** Toolbar **/
+
+.Striven-Editor .toolbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	position: relative
+}
+
+.Striven-Editor .toolbar-options {
+	margin: 0 10px;
+}
+
+.Striven-Editor .custom-toolbar-button {
+	display: none;
+	color: #fff;
+	background-color: #5cb85c;
+	width: 50px;
+	text-align: center;
+	justify-content: center;
+	align-content: center;
+	align-items: center;
+	cursor: pointer;
+	border: 1px solid #4cae4c;
+	align-self: flex-end
+}
+
+/** Image Menu **/
+
+.Striven-Editor .image-menu {
+	display: none;
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	background-color: #fff;
+	border: 2px solid #ddd;
+	padding: 10px 20px;
+	z-index: 1000;
+}
+
+.Striven-Editor .image-menu-button {
+	cursor: pointer;
+	float: right;
+	padding: 6px 12px;
+	border: 1px solid #4cae4c;
+	background-color: #5cb85c;
+	font-size: 14px;
+	color: #fff;
+	outline: none;
+}
+
+.Striven-Editor .image-menu-form {
+	display: flex;
+	justify-content: space-between;
+	margin: 5px 0;
+}
+
+.Striven-Editor .image-menu-form-label {
+	margin: 8px 10px 8px 0;
+	font-size: 14px;
+	width: 100%;
+	text-align: right;
+	margin-right: 10px;
+}
+
+.Striven-Editor .image-menu-form-source-input {
+	outline: none;
+	padding: 0 5px;
+}
+
+/** File Element **/
+
+.Striven-Editor .file-el {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	margin: 10px;
+	position: relative;
+}
+
+.Striven-Editor .file-name-el {
+	font-weight: bold;
+	margin: 0;
+}
+
+.Striven-Editor .file-size-el {
+	font-size: 12px;
+	margin: 2px 0;
+}
+
+.Striven-Editor .remove-file-el {
+	margin: 0;
+	user-select: none;
+	color: black;
+	position: absolute;
+	right: 5px;
+	top: -5px;
+	cursor: pointer;
+	background-color: #fff
+}
+
+/** Meta Item **/
+
+.Striven-Editor .meta-item-el {
+	width: 100%;
+	display: flex;
+	margin: 10px;
+	position: relative
+}
+
+.Striven-Editor .meta-image-el {
+	margin-right: 10px;
+	height: 50px;
+	width: 75px;
+}
+
+.Striven-Editor .meta-data-title-el {
+	font-weight: bold;
+	margin: 0;
+}
+
+.Striven-Editor .remove-meta-data-el {
+	user-select: none;
+	color: black;
+	position: absolute;
+	right: 5px;
+	top: -5px;
+	cursor: pointer;
+	background-color: #fff;
+}
+
+.Striven-Editor .metadata-section, .Striven-Editor .files-section {
+	display: flex;
+	flex-wrap: wrap;
+	z-index: 500
+}
+
+/** Link Menu **/
+
+.Striven-Editor .link-menu {
+	display: none;
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	background-color: #fff;
+	border: 2px solid #ddd;
+	padding: 10px 20px;
+	z-index: 1000;	
+}
+
+.Striven-Editor .link-menu-form-label {
+	margin: 8px 10px 8px 0;
+	font-size: 14px;
+	width: 100%;
+	text-align: right;
+	margin-right: 10px;
+}
+
+.Striven-Editor .link-menu-form-input {
+	outline: none;
+	padding: 0 5px;
+}
+
+.Striven-Editor .link-menu-form {
+	display: flex;
+	justify-content: space-between;
+	margin: 5px 0;
+}
+
+.Striven-Editor .link-menu-button {
+	cursor: pointer;
+	float: right;
+	padding: 6px 12px;
+	border: 1px solid #4cae4c;
+	background-color: #5cb85c;
+	font-size: 14px;
+	color: #fff;
+	outline: none;
+}
