@@ -207,7 +207,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |imageUrl|```String```|```null```|An endpoint to make a ```POST``` request for writing encoded images to the server. <br /> See [Referencing Encoded Images](#writing-encoded-images-to-a-server)|
 |customToolbarButton|```Object```|```null```|Configuration properties for adding a custom toolbar button. <br /> See [Custom Toolbar Button Properties](#custom-toolbar-button-properties)|
 |activeOptionColor|```String```|```#ddd```|Fill color for the toolbar action to change to when active.|
-|submitOnEnter|```Function```|```null```|Handler function that clears the editor on enter and returns the contents submitted. <br /> *Shift + Enter still inserts a break* <br /> ```submitOnEnter({ content, files })``` <br /> **Nothing will return if the editor is empty or no files are attached**|
+|submitOnEnter|```Function```|```null```|Handler function that clears the editor on enter and returns the contents submitted. <br /> *Shift + Enter still inserts a break* <br /> ```submitOnEnter({ content, files })``` <br /> **Nothing will return if the editor is empty and no files are attached**|
 
 ## Editor Methods
 
