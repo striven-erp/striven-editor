@@ -25,12 +25,12 @@ module.exports = {
                         plugins: ['@babel/plugin-transform-modules-umd']
                     }
                 }
-						},
-						// add .css loader
-						{
-							test: /\.css$/i,
-							use: ['style-loader', 'css-loader'],
-						}
+            },
+            // add .css loader
+            {
+                test: /\.css$/i,
+                use: ['style-loader', 'css-loader'],
+            }
         ]
     },
     optimization: {
