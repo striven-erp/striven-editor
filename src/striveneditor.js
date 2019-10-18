@@ -1006,6 +1006,7 @@ export default class StrivenEditor {
             this.toolbar.querySelector("#toolbar-insertOrderedList").style.display =
                 "none";
             this.toolbar.querySelector("#group-textAlign").style.display = "none";
+            this.toolbar.querySelector("#toolbar-removeFormat").style.display = "none";
         }
     }
 
