@@ -15,6 +15,10 @@
     <strong>Supports Firefox, Edge, Safari, and Chrome</strong>
 </p>
 
+<br />
+
+✌ [Vue](#vue-component) | 🥋 [Knockout](#knockout-binding)
+
 ## Getting Started
 
 ### Install Package
@@ -37,6 +41,35 @@ const editor = new StrivenEditor(editorEl);
 import StrivenEditor from 'striven-editor';
 
 const editor = new StrivenEditor(editorEl, { toolbarHide: true, toolbarBottom: true });
+```
+
+## Vue Component
+
+```js
+<template>
+    <striven-editor :minimal="true" />
+</template>
+
+<script>
+import { VueStrivenEditor as StrivenEditor } from '@striven-erp/striven-editor';
+
+export default {
+    components: { StrivenEditor }
+}
+</script>
+```
+
+## Knockout Binding
+
+```js
+import ko from 'knockout';
+import { KoStrivenEditor } from '@striven-erp/striven-editor';
+
+new KoStrivenEditor(ko);
+```
+
+```html
+<div data-bind="striveneditor: editorConfig" />
 ```
 
 ## Fetching Meta Data on Link Insertions
