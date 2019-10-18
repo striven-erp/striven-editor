@@ -1,3 +1,9 @@
+/*
+@license/i
+* Font Awesome Free 5.11.2 by @fontawesome - https://fontawesome.com
+* License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+*/
+
 const EXTENSIONS = [
     ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf", ".tif", ".jpeg",
     ".jpg", ".gif", ".bmp", ".txt", ".csv", ".png", ".msg", ".wav", ".mp3",

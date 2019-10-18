@@ -45,7 +45,13 @@ module.exports = {
     optimization: {
         minimize: true,
         minimizer: [new TerserPlugin({
-            exclude: 'index'
+            exclude: 'index',
+            terserOptions: {
+                output: {
+                    comments: /@license/i,
+                },
+            },
+            extractComments: true,
         })]
     }
 };
