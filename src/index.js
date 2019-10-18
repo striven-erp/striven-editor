@@ -1,11 +1,5 @@
 import './striveneditor.css';
-import StrivenEditor from './striveneditor';
-
-// class Striven {
-    // whatIs() {
-        // console.log('An ERP Platform.');
-    // }
-// }
 
 export { default as StrivenEditor } from './striveneditor';
-// export { Striven };
+export { default as KoStrivenEditor } from './ko-striveneditor';
+export { default as VueStrivenEditor } from './vue-striveneditor.vue';

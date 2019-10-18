@@ -30,8 +30,7 @@
 
 <script>
 /* eslint-disable */
-
-import { StrivenEditor } from "@striven-erp/striven-editor";
+import { StrivenEditor } from '@striven-erp/striven-editor';
 
 export default {
   name: "app",

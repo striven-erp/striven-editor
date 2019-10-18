@@ -1,11 +1,14 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
     mode: 'development',
     entry: {
         index: './src/index.js',
-        striveneditor: './src/striveneditor.js'
+        striveneditor: './src/striveneditor.js',
+        'ko-striveneditor': './src/ko-striveneditor.js',
+        'vue-striveneditor': './src/vue-striveneditor.vue'
     },
     output: {
         path: path.resolve(__dirname, "dist"),
@@ -26,13 +29,19 @@ module.exports = {
                     }
                 }
             },
-            // add .css loader
             {
                 test: /\.css$/i,
                 use: ['style-loader', 'css-loader'],
+            },
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader'
             }
         ]
     },
+    plugins: [
+        new VueLoaderPlugin()
+    ],
     optimization: {
         minimize: true,
         minimizer: [new TerserPlugin({
