@@ -386,6 +386,7 @@ export default class StrivenEditor {
 
             this.toolbarOptionsGroup.appendChild(toolbarGroup);
 
+            // FONT AWESOME IMPORTED ICONS
             // this.optionGroups[group].group.forEach((option) => {
             //     const toolbarCommand = Object.keys(option)[0];
             //     if(this.options.toolbarOptions.includes(toolbarCommand)){
