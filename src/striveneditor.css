@@ -41,6 +41,19 @@
 	margin: 0 10px;
 }
 
+.Striven-Editor .toolbar-option {
+	padding:10px;
+	vertical-align: middle;
+}
+
+
+.Striven-Editor .toolbar-option:hover,
+.Striven-Editor .toolbar-option:focus,
+.Striven-Editor .toolbar-option:active {
+	background-color: #ddd;
+}
+
+
 .Striven-Editor .custom-toolbar-button {
 	display: none;
 	color: #fff;

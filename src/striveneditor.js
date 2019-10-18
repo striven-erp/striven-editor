@@ -75,7 +75,7 @@ const DEFAULTOPTIONS = [
     "link",
     "image"
 ];
-const ACTIVEOPTIONCOLOR = "#ddd";
+const ACTIVEOPTIONCOLOR = "#777777";
 
 export default class StrivenEditor {
     constructor(el, options) {
@@ -126,6 +126,7 @@ export default class StrivenEditor {
             const bodyFocus = this.body.onfocus;
             this.body.onfocus = () => {
                 bodyFocus && bodyFocus();
+
                 this.overflow();
                 this.toolbarSlideUp();
             };
@@ -161,7 +162,7 @@ export default class StrivenEditor {
 
                 const indents = () => {
                     const indents = this.body.querySelectorAll('blockquote');
-                    [...indents].forEach(indent => indent.style.margin = "0 0 0 40px");
+                    [...indents].forEach(indent => indent.style.margin = "0 0 0 40px"); // make the margin an option
                 }
 
                 this.body.focus();
@@ -245,6 +246,7 @@ export default class StrivenEditor {
 
                 optionElClick && optionElClick();
             };
+
         });
 
         this.editor.appendChild(this.toolbar);
@@ -356,6 +358,8 @@ export default class StrivenEditor {
         this.toolbarOptionsGroup.classList.add("toolbar-options");
         this.toolbarOptionsGroup.style.display = this.options.toolbarHide ? "none" : "flex";
 
+        toolbar.onclick = () => this.body.focus();
+
         //iterate groups
         groups.forEach((group) => {
             // add menu to toolbarOptions
@@ -383,8 +387,8 @@ export default class StrivenEditor {
                     const svgData = toolbarOption[option];
                     const optionSpan = this.constructSVG(svgData);
 
+                    optionSpan.classList.add('toolbar-option');
                     optionSpan.id = `toolbar-${option}`;
-                    optionSpan.style.margin = "0 10px";
 
                     toolbarGroup.appendChild(optionSpan);
                 }
@@ -925,7 +929,7 @@ export default class StrivenEditor {
         const { viewBox, d } = svgData;
         const fillColor = (this.options.toolbarOptionFillColor ? this.options.toolbarOptionFillColor : "#333");
         const xmlns = "http://www.w3.org/2000/svg";
-        const height = "16";
+        const height = "14";
         const width = "16";
 
         const icon = document.createElement('span');
