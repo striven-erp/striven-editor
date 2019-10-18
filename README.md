@@ -13,11 +13,9 @@
 
 <p align="center">
     <strong>Supports Firefox, Edge, Safari, and Chrome</strong>
+    <br />
+    ✌ <a href="#vue-component">Vue</a> | 🥋 <a href="#knockout-binding">Knockout</a>
 </p>
-
-<br />
-
-✌ [Vue](#vue-component) | 🥋 [Knockout](#knockout-binding)
 
 ## Getting Started
 
