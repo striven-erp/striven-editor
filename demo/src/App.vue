@@ -59,13 +59,12 @@ export default {
       toolbarHide: true,
       sanitizePaste: true,
       placeholder: "Begin typing in this editor...",
-      autoGrow: true
-      // submitOnEnter: ({ content, files }) => {
-      //   if(content || files) {
-      //     console.log({ content, files });
-      //   }
-      //   this.editor.body.blur();
-      // }
+      submitOnEnter: ({ content, files }) => {
+        if(content || files) {
+          console.log({ content, files });
+        }
+        this.editor.body.blur();
+      }
       // customToolbarButton: {
       //   svgData: {
       //     viewBox: "0 0 1792 1792",

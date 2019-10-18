@@ -138,7 +138,7 @@ export default class StrivenEditor {
                     ) {
                         this.toolbarSlideDown();
                     }
-                }, 2000);
+                }, 500);
             };
         }
 
@@ -1119,7 +1119,7 @@ export default class StrivenEditor {
         setTimeout(() => {
             this.body.style.backgroundColor = "inherit";
             setTimeout(() => this.body.style.transition = "none", 500);
-        }, 500);
+        }, 2000);
     }
 
     openLinkMenu() {
