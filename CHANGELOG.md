@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Submit on enter
 - Clear files
+- Submit to enter option
+- Supports Firefox, Chrome, Safari, Edge
+
+### Changed
+- Extracted styles to css
+- Toolbar slide animation timeout is reduced
 
 ## [Unreleased]
 

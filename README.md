@@ -11,6 +11,10 @@
 <img src="https://img.shields.io/github/size/striven-erp/striven-editor/dist/striveneditor.js" alt="GitHub file size in bytes">
 </p>
 
+<p align="center">
+    <strong>Supports Firefox, Edge, Safari, and Chrome</strong>
+</p>
+
 ## Getting Started
 
 ### Install Package
