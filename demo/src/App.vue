@@ -8,7 +8,7 @@
       <div
         ref="editor"
         class="editor"
-        style="margin-top: 20px; background-color: #fff; height: 300px; width: 600px;"
+        style="margin-top: 20px; background-color: #fff; min-height: 300px; width: 600px;"
       ></div>
       <button
         ref="sendButton"
@@ -59,12 +59,13 @@ export default {
       toolbarHide: true,
       sanitizePaste: true,
       placeholder: "Begin typing in this editor...",
-      submitOnEnter: ({ content, files }) => {
-        if(content || files) {
-          console.log({ content, files });
-        }
-        this.editor.body.blur();
-      }
+      autoGrow: true
+      // submitOnEnter: ({ content, files }) => {
+      //   if(content || files) {
+      //     console.log({ content, files });
+      //   }
+      //   this.editor.body.blur();
+      // }
       // customToolbarButton: {
       //   svgData: {
       //     viewBox: "0 0 1792 1792",

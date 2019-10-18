@@ -499,6 +499,8 @@ export default class StrivenEditor {
         body.style.maxHeight = this.editor.style.maxHeight;
 
         this.editor.style.height = 'auto';
+        this.editor.style.minHeight = 'auto';
+        this.editor.style.maxHeight = 'auto';
 
         // Placeholder logic
         if (this.options.placeholder) {
