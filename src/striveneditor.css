@@ -16,9 +16,6 @@
 	flex-direction: column;
 	font-family: Arial;
 	max-width: 100%;
-	min-height: auto;
-	max-height: auto;
-	height: auto;
 }
 
 .Striven-Editor .body {
