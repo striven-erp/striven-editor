@@ -45,7 +45,7 @@ const editor = new StrivenEditor(editorEl, { toolbarHide: true, toolbarBottom: t
 
 ```js
 <template>
-    <striven-editor :minimal="true" />
+    <striven-editor ref="editor" :minimal="true" />
 </template>
 
 <script>
@@ -53,6 +53,27 @@ import { VueStrivenEditor as StrivenEditor } from '@striven-erp/striven-editor';
 
 export default {
     components: { StrivenEditor }
+}
+</script>
+```
+
+### Using Vue Component Methods
+
+```js
+<template>
+    <striven-editor ref="editor" :minimal="true" />
+</template>
+
+<script>
+import { VueStrivenEditor as StrivenEditor } from '@striven-erp/striven-editor';
+
+export default {
+    components: { StrivenEditor },
+    mounted () {
+         const editor = this.$refs.editor.editor;
+         
+         console.log(editor.getContent());
+    }
 }
 </script>
 ```
