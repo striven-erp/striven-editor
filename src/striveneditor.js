@@ -458,7 +458,7 @@ export default class StrivenEditor {
             customToolbarButton.classList.add('custom-toolbar-button')
             customToolbarButton.style.minHeight = this.options.toolbarHide
                 ? "40px"
-                : this.toolbar.style.minHeight;
+                : toolbar.style.minHeight;
             customToolbarButton.onclick = () => this.options.customToolbarButton.handler();
             !this.options.toolbarHide && (customToolbarButton.style.display = "flex");
 

@@ -42,10 +42,11 @@
 }
 
 .Striven-Editor .toolbar-option {
-	padding:10px;
+	padding:8px;
+}
+.Striven-Editor .toolbar-option >svg {
 	vertical-align: middle;
 }
-
 
 .Striven-Editor .toolbar-option:hover,
 .Striven-Editor .toolbar-option:focus,
