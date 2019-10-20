@@ -105,6 +105,9 @@ export default class StrivenEditor {
         this.initOverflow();
 
         el.StrivenEditor = () => this;
+
+        //bind handler functions to scope
+        this.bound_popupEscapeHandler=this.popupEscapeHandler.bind(this);
     }
 
     initEditor(el) {
@@ -1156,25 +1159,47 @@ export default class StrivenEditor {
     }
 
     openLinkMenu() {
+        //close other open popups
         this.closeImageMenu();
         this.linkMenu.dataset.active = "true";
         this.linkMenu.style.display = "block";
+        this.addPopupEscapeHandler();
     }
 
     openImageMenu() {
+        //close other open popups
         this.closeLinkMenu();
         this.imageMenu.dataset.active = "true";
         this.imageMenu.style.display = "block";
+        this.addPopupEscapeHandler();
     }
-
+   
     closeLinkMenu() {
         this.linkMenu.dataset.active = "false";
         this.linkMenu.style.display = "none";
+        this.removePopupEscapeHandler();
     }
 
     closeImageMenu() {
         this.imageMenu.dataset.active = "false";
         this.imageMenu.style.display = "none";
+        this.removePopupEscapeHandler();
+    }
+
+    popupEscapeHandler(evt){
+        if(evt.which===27){
+            //close all open popups
+            this.closeImageMenu();
+            this.closeLinkMenu();
+        }
+    }
+
+    addPopupEscapeHandler(){
+        this.removePopupEscapeHandler();
+        this.editor.addEventListener('keyup', this.bound_popupEscapeHandler);
+    }
+    removePopupEscapeHandler(){
+        this.editor.removeEventListener('keyup', this.bound_popupEscapeHandler);
     }
 
     setContent(html) {
