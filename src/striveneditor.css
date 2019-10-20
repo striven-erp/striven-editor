@@ -69,48 +69,6 @@
 	align-self: flex-end
 }
 
-/** Image Menu **/
-
-.Striven-Editor .image-menu {
-	display: none;
-	position: absolute;
-	right: 10px;
-	bottom: 10px;
-	background-color: #fff;
-	border: 2px solid #ddd;
-	padding: 10px 20px;
-	z-index: 1000;
-}
-
-.Striven-Editor .image-menu-button {
-	cursor: pointer;
-	float: right;
-	padding: 6px 12px;
-	border: 1px solid #4cae4c;
-	background-color: #5cb85c;
-	font-size: 14px;
-	color: #fff;
-	outline: none;
-}
-
-.Striven-Editor .image-menu-form {
-	display: flex;
-	justify-content: space-between;
-	margin: 5px 0;
-}
-
-.Striven-Editor .image-menu-form-label {
-	margin: 8px 10px 8px 0;
-	font-size: 14px;
-	width: 100%;
-	text-align: right;
-	margin-right: 10px;
-}
-
-.Striven-Editor .image-menu-form-source-input {
-	outline: none;
-	padding: 0 5px;
-}
 
 /** File Element **/
 
@@ -211,13 +169,73 @@
 	margin: 5px 0;
 }
 
-.Striven-Editor .link-menu-button {
+.Striven-Editor .popup-button-container
+{
+	float:right;
+}
+
+.Striven-Editor .popup-button{
 	cursor: pointer;
-	float: right;
 	padding: 6px 12px;
-	border: 1px solid #4cae4c;
-	background-color: #5cb85c;
+	border: 1px solid transparent;
 	font-size: 14px;
-	color: #fff;
 	outline: none;
+	color: #333;
+	margin:2px;
+}
+
+.Striven-Editor .popup-button.button-primary{
+	border-color: #4cae4c;
+	background-color: #5cb85c;
+	color: #fff;
+}
+.Striven-Editor .popup-button.button-secondary{
+	border-color: #ccc;
+	background-color: #fff;
+	color: #333;
+}
+.Striven-Editor .popup-button.button-primary:hover,
+.Striven-Editor .popup-button.button-primary:active,
+.Striven-Editor .popup-button.button-primary:focus{
+	background-color: #4cae4c;
+    border-color: #398439;
+}
+.Striven-Editor .popup-button.button-secondary:hover,
+.Striven-Editor .popup-button.button-secondary:active,
+.Striven-Editor .popup-button.button-secondary:focus{
+	background-color: #d4d4d4;
+    border-color: #8c8c8c;
+}
+
+/** Image Menu **/
+
+.Striven-Editor .image-menu {
+	display: none;
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	background-color: #fff;
+	border: 2px solid #ddd;
+	padding: 10px 20px;
+	z-index: 1000;
+}
+
+
+.Striven-Editor .image-menu-form {
+	display: flex;
+	justify-content: space-between;
+	margin: 5px 0;
+}
+
+.Striven-Editor .image-menu-form-label {
+	margin: 8px 10px 8px 0;
+	font-size: 14px;
+	width: 100%;
+	text-align: right;
+	margin-right: 10px;
+}
+
+.Striven-Editor .image-menu-form-source-input {
+	outline: none;
+	padding: 0 5px;
 }

@@ -664,7 +664,9 @@ export default class StrivenEditor {
     initLinkMenu() {
         const linkMenu = document.createElement("div");
         const linkMenuForm = document.createElement("div");
+        const linkMenuButtons = document.createElement("div");
         const linkMenuButton = document.createElement("button");
+        const linkMenuCloseButton = document.createElement("button");
         const linkMenuFormLabel = document.createElement("p");
         const linkMenuFormInput = document.createElement("input");
 
@@ -681,13 +683,15 @@ export default class StrivenEditor {
 
         linkMenuForm.classList.add('link-menu-form')
 
-        linkMenuButton.classList.add('link-menu-button')
+        linkMenuButtons.classList.add('popup-button-container');
+
+        linkMenuButton.classList.add('popup-button')
+        linkMenuButton.classList.add('button-primary')
         linkMenuButton.textContent = "Insert Link";
 
-        linkMenuButton.onmouseenter = () =>
-            (linkMenuButton.style.backgroundColor = "#4cae4c");
-        linkMenuButton.onmouseleave = () =>
-            (linkMenuButton.style.backgroundColor = "#5cb85c");
+        linkMenuCloseButton.classList.add('popup-button')
+        linkMenuCloseButton.classList.add('button-secondary')
+        linkMenuCloseButton.textContent = "Close"
 
         linkMenuButton.onclick = e => {
             const linkValue = linkMenuFormInput.value;
@@ -724,42 +728,52 @@ export default class StrivenEditor {
             }
         };
 
+        linkMenuCloseButton.onclick = e => {
+            this.body.focus();
+            this.closeLinkMenu();
+        }
+
         linkMenuForm.appendChild(linkMenuFormLabel);
         linkMenuForm.appendChild(linkMenuFormInput);
 
         linkMenu.appendChild(linkMenuForm);
-        linkMenu.appendChild(linkMenuButton);
 
+        linkMenuButtons.appendChild(linkMenuButton);
+        linkMenuButtons.appendChild(linkMenuCloseButton);
+
+        linkMenu.appendChild(linkMenuButtons);
         return linkMenu;
     }
 
     initImageMenu() {
         const imageMenu = document.createElement("div");
         const imageMenuForm = document.createElement("div");
+        const imageMenuButtons = document.createElement("div");
         const imageMenuButton = document.createElement("button");
+        const imageMenuCloseButton = document.createElement("button");
         const imageMenuFormLabel = document.createElement("p");
         const imageMenuFormSourceInput = document.createElement("input");
 
         imageMenu.id = "image-menu";
-        imageMenu.classList.add('image-menu')
+        imageMenu.classList.add('image-menu');
         imageMenu.dataset.active = "false";
 
-        imageMenuFormLabel.classList.add('image-menu-form-label')
+        imageMenuFormLabel.classList.add('image-menu-form-label');
         imageMenuFormLabel.textContent = "Image URL";
 
-        imageMenuFormSourceInput.classList.add('image-menu-form-source-input')
+        imageMenuFormSourceInput.classList.add('image-menu-form-source-input');
         imageMenuFormSourceInput.type = "text";
         imageMenuFormSourceInput.placeholder = "Insert a Link";
 
-        imageMenuForm.classList.add('image-menu-form')
+        imageMenuForm.classList.add('image-menu-form');
 
-        imageMenuButton.classList.add('image-menu-button')
+        imageMenuButton.classList.add('popup-button');
+        imageMenuButton.classList.add('button-primary');
         imageMenuButton.textContent = "Insert Image";
 
-        imageMenuButton.onmouseenter = () =>
-            (imageMenuButton.style.backgroundColor = "#4cae4c");
-        imageMenuButton.onmouseleave = () =>
-            (imageMenuButton.style.backgroundColor = "#5cb85c");
+        imageMenuCloseButton.classList.add('popup-button');
+        imageMenuCloseButton.classList.add('button-secondary');
+        imageMenuCloseButton.textContent = "Close";
 
         imageMenuForm.appendChild(imageMenuFormLabel);
         imageMenuForm.appendChild(imageMenuFormSourceInput);
@@ -806,11 +820,18 @@ export default class StrivenEditor {
                 this.closeImageMenu();
             }
         };
-
+        imageMenuCloseButton.onclick = e => {
+            this.body.focus();
+            this.closeImageMenu();
+        }
         imageMenu.appendChild(imageMenuHeightForm);
         imageMenu.appendChild(imageMenuWidthForm);
         imageMenu.appendChild(imageMenuForm);
-        imageMenu.appendChild(imageMenuButton);
+
+        imageMenuButtons.appendChild(imageMenuButton);
+        imageMenuButtons.appendChild(imageMenuCloseButton);
+
+        imageMenu.appendChild(imageMenuButtons);
 
         return imageMenu;
     }
@@ -1229,7 +1250,7 @@ export default class StrivenEditor {
             if (el === this.editor) {
                 return true;
             }
-            else if(el===document.body){
+            else if (el === document.body) {
                 return false;
             }
             return el.parentNode && isEditor(el.parentNode);
