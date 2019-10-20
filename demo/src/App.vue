@@ -41,7 +41,7 @@ export default {
       minimal: false,
       uploadOnPaste: false,
       toolbarBottom: true,
-      toolbarHide: false,
+      toolbarHide: true,
       sanitizePaste: true,
       placeholder: "Begin typing in this editor...",
       submitOnEnter: ({ content, files }) => {

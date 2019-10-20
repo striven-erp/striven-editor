@@ -137,11 +137,9 @@ export default class StrivenEditor {
                 this.overflow();
                 setTimeout(() => {
                     if (
-                        document.activeElement !== this.body &&
-                        document.activeElement !== this.linkMenu.querySelector('input') &&
-                        document.activeElement !== this.imageMenu.querySelectorAll('input')[0] &&
-                        document.activeElement !== this.imageMenu.querySelectorAll('input')[1] &&
-                        document.activeElement !== this.imageMenu.querySelectorAll('input')[2]
+                        this.linkMenu.dataset.active !== "true"
+                        && this.imageMenu.dataset.active !== "true"
+                        && !this.isEditorInFocus()
                     ) {
                         this.toolbarSlideDown();
                     }
@@ -1223,5 +1221,19 @@ export default class StrivenEditor {
 
         // Blink engine detection
         this.isBlink = (this.isChrome || this.isOpera) && !!window.CSS;
+    }
+
+    isEditorInFocus() {
+        let activeEl = document.activeElement;
+        var isEditor = (el) => {
+            if (el === this.editor) {
+                return true;
+            }
+            else if(el===document.body){
+                return false;
+            }
+            return el.parentNode && isEditor(el.parentNode);
+        };
+        return isEditor(activeEl);
     }
 }
