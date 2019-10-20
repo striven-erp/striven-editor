@@ -671,17 +671,18 @@ export default class StrivenEditor {
         const linkMenuFormInput = document.createElement("input");
 
         linkMenu.id = "link-menu";
-        linkMenu.classList.add('link-menu')
+        linkMenu.classList.add('popup')
         linkMenu.dataset.active = "false";
 
-        linkMenuFormLabel.classList.add('link-menu-form-label')
+        linkMenuForm.classList.add('popup-form')
+
+        linkMenuFormLabel.classList.add('form-label')
         linkMenuFormLabel.textContent = "Web Address";
 
-        linkMenuFormInput.classList.add('link-menu-form-input')
+        linkMenuFormInput.classList.add('form-input')
         linkMenuFormInput.type = "text";
         linkMenuFormInput.placeholder = "Insert a Link";
 
-        linkMenuForm.classList.add('link-menu-form')
 
         linkMenuButtons.classList.add('popup-button-container');
 
@@ -755,17 +756,19 @@ export default class StrivenEditor {
         const imageMenuFormSourceInput = document.createElement("input");
 
         imageMenu.id = "image-menu";
-        imageMenu.classList.add('image-menu');
+        imageMenu.classList.add('popup');
         imageMenu.dataset.active = "false";
+        
+        imageMenuForm.classList.add('popup-form');
 
-        imageMenuFormLabel.classList.add('image-menu-form-label');
+        imageMenuFormLabel.classList.add('form-label');
         imageMenuFormLabel.textContent = "Image URL";
 
-        imageMenuFormSourceInput.classList.add('image-menu-form-source-input');
+        imageMenuFormSourceInput.classList.add('form-input');
         imageMenuFormSourceInput.type = "text";
         imageMenuFormSourceInput.placeholder = "Insert a Link";
 
-        imageMenuForm.classList.add('image-menu-form');
+        imageMenuButtons.classList.add('popup-button-container');
 
         imageMenuButton.classList.add('popup-button');
         imageMenuButton.classList.add('button-primary');

@@ -137,9 +137,9 @@
 	z-index: 500
 }
 
-/** Link Menu **/
+/** Popup Menu **/
 
-.Striven-Editor .link-menu {
+.Striven-Editor .popup {
 	display: none;
 	position: absolute;
 	right: 10px;
@@ -150,7 +150,14 @@
 	z-index: 1000;	
 }
 
-.Striven-Editor .link-menu-form-label {
+
+.Striven-Editor .popup > .popup-form {
+	display: flex;
+	justify-content: space-between;
+	margin: 5px 0;
+}
+
+.Striven-Editor .popup > .popup-form > .form-label {
 	margin: 8px 10px 8px 0;
 	font-size: 14px;
 	width: 100%;
@@ -158,16 +165,11 @@
 	margin-right: 10px;
 }
 
-.Striven-Editor .link-menu-form-input {
+.Striven-Editor .popup > .popup-form >.form-input {
 	outline: none;
 	padding: 0 5px;
 }
 
-.Striven-Editor .link-menu-form {
-	display: flex;
-	justify-content: space-between;
-	margin: 5px 0;
-}
 
 .Striven-Editor .popup-button-container
 {
@@ -207,35 +209,3 @@
     border-color: #8c8c8c;
 }
 
-/** Image Menu **/
-
-.Striven-Editor .image-menu {
-	display: none;
-	position: absolute;
-	right: 10px;
-	bottom: 10px;
-	background-color: #fff;
-	border: 2px solid #ddd;
-	padding: 10px 20px;
-	z-index: 1000;
-}
-
-
-.Striven-Editor .image-menu-form {
-	display: flex;
-	justify-content: space-between;
-	margin: 5px 0;
-}
-
-.Striven-Editor .image-menu-form-label {
-	margin: 8px 10px 8px 0;
-	font-size: 14px;
-	width: 100%;
-	text-align: right;
-	margin-right: 10px;
-}
-
-.Striven-Editor .image-menu-form-source-input {
-	outline: none;
-	padding: 0 5px;
-}
