@@ -94,6 +94,7 @@ export default class StrivenEditor {
             };
         }
 
+        this.saveInitialEditorHTML(el);
         this.initEditor(el);
         this.initResponsive();
         this.initOverflow();
@@ -1318,5 +1319,23 @@ export default class StrivenEditor {
 
         // Blink engine detection
         this.isBlink = (this.isChrome || this.isOpera) && !!window.CSS;
+    }
+
+    /**
+     * This method is used to keep a ref of the initial HTML state of the editor
+     * @param el
+     */
+    saveInitialEditorHTML(el) {
+        if (el) {
+            this.initialEditorHTML = el.outerHTML;
+            this.el = el;
+        }
+    }
+
+    /**
+     * This method will destroy the editor customizations
+     */
+    destroy() {
+        this.el.outerHTML = this.initialEditorHTML;
     }
 }
