@@ -13,10 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clear files
 - Submit to enter option
 - Supports Firefox, Chrome, Safari, Edge
+- Added Close button to close image and link popup
+- Image and link popup can be closed using Esc key
 
 ### Changed
 - Extracted styles to css
 - Toolbar slide animation timeout is reduced
+- Fixed vertical spacing on the toolbar icons
+- Toolbar does not auto hide when any popups are open inside
 
 ## [Unreleased]
 
