@@ -42,6 +42,9 @@
 }
 
 .Striven-Editor .toolbar-option {
+	border: 2px solid #ddd;
+	background-color: #fff;
+	margin: 0 2px;
 	padding:8px;
 }
 .Striven-Editor .toolbar-option >svg {
@@ -53,7 +56,6 @@
 .Striven-Editor .toolbar-option:active {
 	background-color: #ddd;
 }
-
 
 .Striven-Editor .custom-toolbar-button {
 	display: none;

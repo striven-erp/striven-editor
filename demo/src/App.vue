@@ -40,7 +40,7 @@ export default {
       // imageUrl: "http://localhost:4200/image", // imageserver.js
       minimal: false,
       uploadOnPaste: false,
-      toolbarBottom: true,
+      toolbarBottom: false,
       toolbarHide: true,
       sanitizePaste: true,
       placeholder: "Begin typing in this editor...",
