@@ -11,7 +11,8 @@
     "dev": "npx webpack -w",
     "meta-server": "node metaserver",
     "gh-pages": "cd demo && npm run build && cd .. && node gh-pages",
-    "new-publish": "npx webpack --mode=\"production\" && npm publish --access=public && echo DON'T FORGET TO UPDATE GITHUB RELEASE"
+    "new-publish": "npx webpack --mode=\"production\" && npm publish --access=public && echo DON'T FORGET TO UPDATE GITHUB RELEASE",
+    "test": "cross-env NODE_ENV=test node_modules/mocha/bin/mocha --require @babel/register"
   },
   "repository": {
     "type": "git",
@@ -33,9 +34,12 @@
     "@babel/core": "^7.6.0",
     "@babel/plugin-transform-modules-umd": "^7.2.0",
     "@babel/preset-env": "^7.6.0",
+    "@babel/register": "^7.6.2",
     "babel-loader": "^8.0.6",
     "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
     "cors": "^2.8.5",
+    "cross-env": "^6.0.3",
     "express": "^4.17.1",
     "gh-pages": "^2.1.1",
     "got": "^9.6.0",
@@ -44,7 +48,9 @@
     "metascraper-image": "^5.7.4",
     "metascraper-title": "^5.7.4",
     "metascraper-url": "^5.7.4",
+    "mocha": "^6.2.2",
     "shortid": "^2.2.15",
+    "sinon": "^7.5.0",
     "terser-webpack-plugin": "^2.0.1",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.9"

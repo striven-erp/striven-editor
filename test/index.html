@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <title>Striven Editor - Unit tests</title>
+
+  <link href="../node_modules/mocha/mocha.css" rel="stylesheet"/>
+
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script src="../node_modules/sinon/pkg/sinon.js"></script>
+
+  <style>
+    .editor-container {
+      max-width: 50%;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="mocha"></div>
+
+  <div class="editor-container">
+    <div class="editor-element"></div>
+  </div>
+
+  <script type="module" src="util/setup.js"></script>
+  <script type="module" src="util/run.js"></script>
+</body>
+</html>
