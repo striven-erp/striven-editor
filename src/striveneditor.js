@@ -1302,8 +1302,8 @@ export default class StrivenEditor {
      * This method is used to detect the user browser and environment
      */
     establishBrowser() {
-        const userAgent = (navigator && navigator.userAgent || '').toLowerCase()
-        const vendor = (navigator && navigator.vendor || '').toLowerCase()
+        const userAgent = (navigator && navigator.userAgent || '').toLowerCase();
+        const vendor = (navigator && navigator.vendor || '').toLowerCase();
 
         const comparator = {
             '<': function(a, b) { return a < b; },
