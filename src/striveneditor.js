@@ -1336,6 +1336,10 @@ export default class StrivenEditor {
      * This method will destroy the editor customizations
      */
     destroy() {
-        this.el.outerHTML = this.initialEditorHTML;
+        if (this.el) {
+            this.el.outerHTML = this.initialEditorHTML;
+            this.el = undefined;
+            this.initialEditorHTML = undefined;
+        }
     }
 }
