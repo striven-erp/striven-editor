@@ -761,7 +761,10 @@ export default class StrivenEditor {
                 }
 
                 const bodyLinks = this.body.querySelectorAll("a");
-                [...bodyLinks].forEach(link => !this.browser.isFirefox() && (link.contentEditable = 'false'));
+
+                if (!this.browser.isFirefox()) {
+                    [...bodyLinks].forEach(link => (link.contentEditable = 'false'));
+                }
 
                 linkMenuFormInput.value = "";
                 this.closeLinkMenu();
