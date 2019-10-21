@@ -11,6 +11,12 @@
 <img src="https://img.shields.io/github/size/striven-erp/striven-editor/dist/striveneditor.js" alt="GitHub file size in bytes">
 </p>
 
+<p align="center">
+    <strong>Supports Firefox, Edge, Safari, and Chrome</strong>
+    <br />
+    ✌ <a href="#vue-component">Vue</a> | 🥋 <a href="#knockout-binding">Knockout</a>
+</p>
+
 ## Getting Started
 
 ### Install Package
@@ -33,6 +39,56 @@ const editor = new StrivenEditor(editorEl);
 import StrivenEditor from 'striven-editor';
 
 const editor = new StrivenEditor(editorEl, { toolbarHide: true, toolbarBottom: true });
+```
+
+## Vue Component
+
+```js
+<template>
+    <striven-editor ref="editor" :minimal="true" />
+</template>
+
+<script>
+import { VueStrivenEditor as StrivenEditor } from '@striven-erp/striven-editor';
+
+export default {
+    components: { StrivenEditor }
+}
+</script>
+```
+
+### Using Vue Component Methods
+
+```js
+<template>
+    <striven-editor ref="editor" :minimal="true" />
+</template>
+
+<script>
+import { VueStrivenEditor as StrivenEditor } from '@striven-erp/striven-editor';
+
+export default {
+    components: { StrivenEditor },
+    mounted () {
+         const editor = this.$refs.editor.editor;
+         
+         console.log(editor.getContent());
+    }
+}
+</script>
+```
+
+## Knockout Binding
+
+```js
+import ko from 'knockout';
+import { KoStrivenEditor } from '@striven-erp/striven-editor';
+
+new KoStrivenEditor(ko);
+```
+
+```html
+<div data-bind="striveneditor: editorConfig" />
 ```
 
 ## Fetching Meta Data on Link Insertions
@@ -207,7 +263,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |imageUrl|```String```|```null```|An endpoint to make a ```POST``` request for writing encoded images to the server. <br /> See [Referencing Encoded Images](#writing-encoded-images-to-a-server)|
 |customToolbarButton|```Object```|```null```|Configuration properties for adding a custom toolbar button. <br /> See [Custom Toolbar Button Properties](#custom-toolbar-button-properties)|
 |activeOptionColor|```String```|```#ddd```|Fill color for the toolbar action to change to when active.|
-|submitOnEnter|```Function```|```null```|Handler function that clears the editor on enter and returns the contents submitted. <br /> *Shift + Enter still inserts a break* <br /> ```submitOnEnter({ content, files })``` <br /> **Nothing will return if the editor is empty or no files are attached**|
+|submitOnEnter|```Function```|```null```|Handler function that clears the editor on enter and returns the contents submitted. <br /> *Shift + Enter still inserts a break* <br /> ```submitOnEnter({ content, files })``` <br /> **Nothing will return if the editor is empty and no files are attached**|
 
 ## Editor Methods
 
