@@ -979,9 +979,11 @@ export default class StrivenEditor {
                         group.dataset.open = "false";
                         group.style.display = isResponsive ? "none" : "block";
                         group.style.position = isResponsive ? "absolute" : "relative";
-                        group.style.bottom = isResponsive ? "15px" : "inherit";
                         group.style.right = isResponsive ? "10px" : "inherit";
-                        group.style.top = isResponsive ? "15px" : "inherit";
+
+                        !that.options.toolbarBottom && (group.style.top = isResponsive ? "15px" : "inherit");
+                        that.options.toolbarBottom && (group.style.bottom = isResponsive ? "15px" : "inherit");
+                        
                         // group.style.backgroundColor = isResponsive ? "#fff" : "inherit";
                         // group.style.border = isResponsive ? "2px solid #ddd" : "none";
                     }
