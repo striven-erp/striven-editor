@@ -1574,7 +1574,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   //
   //
   var _default = {
-    name: 'striven-editor',
+    name: "striven-editor",
     props: {
       toolbarHide: Boolean,
       toolbarBotoom: Boolean,
@@ -1591,7 +1591,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       submitOnEnter: Function
     },
     mounted: function mounted() {
-      this.editor = new _striveneditor["default"](this.$refs.editor, this.props);
+      this.editor = new _striveneditor["default"](this.$refs.editor, this.$props);
     },
     data: function data() {
       return {

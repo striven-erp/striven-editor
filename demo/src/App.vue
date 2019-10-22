@@ -4,21 +4,23 @@
     style="font-family: Segoe UI; color: #2c3e50; margin-top: 20vh; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 0 1rem;"
   >
     <div style="display: flex; padding: 1rem; width: 100%; justify-content: center;">
-      <div
+      <striven-editor :minimal="true" />
+      <!-- <div
         ref="editor"
         class="editor"
         style="margin-top: 20px; background-color: #fff; min-height: 300px; width: 600px;"
-      ></div>
+      ></div> -->
     </div>
   </div>
 </template>
 
 <script>
 /* eslint-disable */
-import { StrivenEditor } from "@striven-erp/striven-editor";
+import { VueStrivenEditor as StrivenEditor } from "@striven-erp/striven-editor";
 
 export default {
   name: "app",
+  components: { StrivenEditor },
   mounted() {
     const editorOptions = {
       // metaUrl: "http://localhost:4200/meta", // metaserver.js
