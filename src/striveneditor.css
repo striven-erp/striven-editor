@@ -1,0 +1,221 @@
+/**
+** - Editor
+** - Toolbar
+** - Image Menu
+** - File element
+** - Meta Item
+** - Link Menu
+*/
+
+/** Editor **/
+
+.Striven-Editor.editor {
+	border: 2px solid #ddd;
+	display: flex;
+	position: relative;
+	flex-direction: column;
+	font-family: Arial;
+	max-width: 100%;
+}
+
+.Striven-Editor .body {
+	outline: none;
+	padding: 10px 20px;
+	min-height: auto;
+	max-height: auto;
+	height: auto;
+}
+
+
+/** Toolbar **/
+
+.Striven-Editor .toolbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	position: relative
+}
+
+.Striven-Editor .toolbar-options {
+	margin: 0 10px;
+}
+
+.Striven-Editor .toolbar-option {
+	padding: 8px;
+}
+
+.Striven-Editor .toolbar-group[data-open="true"] .toolbar-option {
+	background-color: #fff;
+	border: 2px solid #ddd;
+	margin: 0 2px;	
+}
+
+.Striven-Editor .toolbar-group[data-open="true"] .toolbar-option:hover {
+	background-color: #ddd;
+}
+
+.Striven-Editor .toolbar-option >svg {
+	vertical-align: middle;
+}
+
+.Striven-Editor .toolbar-option:hover,
+.Striven-Editor .toolbar-option:focus,
+.Striven-Editor .toolbar-option:active {
+	background-color: #ddd;
+}
+
+.Striven-Editor .custom-toolbar-button {
+	display: none;
+	color: #fff;
+	background-color: #5cb85c;
+	width: 50px;
+	text-align: center;
+	justify-content: center;
+	align-content: center;
+	align-items: center;
+	cursor: pointer;
+	border: 1px solid #4cae4c;
+	align-self: flex-end
+}
+
+
+/** File Element **/
+
+.Striven-Editor .file-el {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	margin: 10px;
+	position: relative;
+}
+
+.Striven-Editor .file-name-el {
+	font-weight: bold;
+	margin: 0;
+}
+
+.Striven-Editor .file-size-el {
+	font-size: 12px;
+	margin: 2px 0;
+}
+
+.Striven-Editor .remove-file-el {
+	margin: 0;
+	user-select: none;
+	color: black;
+	position: absolute;
+	right: 5px;
+	top: -5px;
+	cursor: pointer;
+	background-color: #fff
+}
+
+/** Meta Item **/
+
+.Striven-Editor .meta-item-el {
+	width: 100%;
+	display: flex;
+	margin: 10px;
+	position: relative
+}
+
+.Striven-Editor .meta-image-el {
+	margin-right: 10px;
+	height: 50px;
+	width: 75px;
+}
+
+.Striven-Editor .meta-data-title-el {
+	font-weight: bold;
+	margin: 0;
+}
+
+.Striven-Editor .remove-meta-data-el {
+	user-select: none;
+	color: black;
+	position: absolute;
+	right: 5px;
+	top: -5px;
+	cursor: pointer;
+	background-color: #fff;
+}
+
+.Striven-Editor .metadata-section, .Striven-Editor .files-section {
+	display: flex;
+	flex-wrap: wrap;
+	z-index: 500
+}
+
+/** Popup Menu **/
+
+.Striven-Editor .popup {
+	display: none;
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	background-color: #fff;
+	border: 2px solid #ddd;
+	padding: 10px 20px;
+	z-index: 1000;	
+}
+
+
+.Striven-Editor .popup > .popup-form {
+	display: flex;
+	justify-content: space-between;
+	margin: 5px 0;
+}
+
+.Striven-Editor .popup > .popup-form > .form-label {
+	margin: 8px 10px 8px 0;
+	font-size: 14px;
+	width: 100%;
+	text-align: right;
+	margin-right: 10px;
+}
+
+.Striven-Editor .popup > .popup-form >.form-input {
+	outline: none;
+	padding: 0 5px;
+}
+
+
+.Striven-Editor .popup-button-container
+{
+	float:right;
+}
+
+.Striven-Editor .popup-button{
+	cursor: pointer;
+	padding: 6px 12px;
+	border: 1px solid transparent;
+	font-size: 14px;
+	outline: none;
+	color: #333;
+	margin:2px;
+}
+
+.Striven-Editor .popup-button.button-primary{
+	border-color: #4cae4c;
+	background-color: #5cb85c;
+	color: #fff;
+}
+.Striven-Editor .popup-button.button-secondary{
+	border-color: #ccc;
+	background-color: #fff;
+	color: #333;
+}
+.Striven-Editor .popup-button.button-primary:hover,
+.Striven-Editor .popup-button.button-primary:active,
+.Striven-Editor .popup-button.button-primary:focus{
+	background-color: #4cae4c;
+    border-color: #398439;
+}
+.Striven-Editor .popup-button.button-secondary:hover,
+.Striven-Editor .popup-button.button-secondary:active,
+.Striven-Editor .popup-button.button-secondary:focus{
+	background-color: #d4d4d4;
+    border-color: #8c8c8c;
+}
+
