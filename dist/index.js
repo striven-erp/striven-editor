@@ -291,7 +291,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         this.imageMenu = this.initImageMenu();
         this.metaDataSection = this.initMetaDataSection();
         this.filesSection = this.initFilesSection();
-        this.editor.classList.add("editor", "Striven-Editor"); // Toolbar Hide
+        this.editor.classList.add("editor", "Striven-Editor"); // Initialze with the value property in the options
+
+        this.options.value && this.setContent(this.options.value); // Toolbar Hide
 
         if (this.options.toolbarHide) {
           this.customToolbarButton && (this.customToolbarButton.style.display = "none");
@@ -1569,10 +1571,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-  //
-  //
-  //
-  //
+  function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+  function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+  function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
   var _default = {
     name: "striven-editor",
     props: {
@@ -1588,10 +1592,19 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       imageUrl: String,
       customToolbarOption: Object,
       activeOptionColor: String,
-      submitOnEnter: Function
+      submitOnEnter: Function,
+      value: String
     },
     mounted: function mounted() {
-      this.editor = new _striveneditor["default"](this.$refs.editor, this.$props);
+      var vm = this; // Create new object to avoid mutating props
+
+      var config = _objectSpread({}, vm.$props);
+
+      vm.editor = new _striveneditor["default"](vm.$refs.editor, config); // Listen to input event for v-model support
+
+      vm.editor.body.oninput = function (e) {
+        vm.$emit("input", vm.editor.getContent());
+      };
     },
     data: function data() {
       return {
@@ -1608,18 +1621,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 "use strict";
 
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./src/vue-striveneditor.vue?vue&type=template&id=5e858f64&
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { ref: "editor" })
-}
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./src/vue-striveneditor.vue?vue&type=template&id=52b34c6a&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"editor"})}
 var staticRenderFns = []
-render._withStripped = true
 
 
-// CONCATENATED MODULE: ./src/vue-striveneditor.vue?vue&type=template&id=5e858f64&
+// CONCATENATED MODULE: ./src/vue-striveneditor.vue?vue&type=template&id=52b34c6a&
 /* concated harmony reexport render */__webpack_require__.d(__webpack_exports__, "a", function() { return render; });
 /* concated harmony reexport staticRenderFns */__webpack_require__.d(__webpack_exports__, "b", function() { return staticRenderFns; });
 
@@ -1770,7 +1777,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _vue_striveneditor_vue_vue_type_template_id_5e858f64___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+/* harmony import */ var _vue_striveneditor_vue_vue_type_template_id_52b34c6a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
 /* harmony import */ var _vue_striveneditor_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1);
 /* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _vue_striveneditor_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _vue_striveneditor_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
@@ -1783,8 +1790,8 @@ __webpack_require__.r(__webpack_exports__);
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__[/* default */ "a"])(
   _vue_striveneditor_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _vue_striveneditor_vue_vue_type_template_id_5e858f64___WEBPACK_IMPORTED_MODULE_0__[/* render */ "a"],
-  _vue_striveneditor_vue_vue_type_template_id_5e858f64___WEBPACK_IMPORTED_MODULE_0__[/* staticRenderFns */ "b"],
+  _vue_striveneditor_vue_vue_type_template_id_52b34c6a___WEBPACK_IMPORTED_MODULE_0__[/* render */ "a"],
+  _vue_striveneditor_vue_vue_type_template_id_52b34c6a___WEBPACK_IMPORTED_MODULE_0__[/* staticRenderFns */ "b"],
   false,
   null,
   null,
@@ -1792,9 +1799,6 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
   
 )
 
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "src/vue-striveneditor.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
