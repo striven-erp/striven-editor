@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Released]
 
-## [2.0.0]
+## [2.0.0] - 2019-10-22
 
 ### Added
 - Submit on enter
@@ -21,8 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Toolbar slide animation timeout is reduced
 - Fixed vertical spacing on the toolbar icons
 - Toolbar does not auto hide when any popups are open inside
-
-## [Unreleased]
 
 ## [1.3.0] - 2019-10-01
 
