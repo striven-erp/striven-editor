@@ -42,11 +42,19 @@
 }
 
 .Striven-Editor .toolbar-option {
-	border: 2px solid #ddd;
-	background-color: #fff;
-	margin: 0 2px;
-	padding:8px;
+	padding: 8px;
 }
+
+.Striven-Editor .toolbar-group[data-open="true"] .toolbar-option {
+	background-color: #fff;
+	border: 2px solid #ddd;
+	margin: 0 2px;	
+}
+
+.Striven-Editor .toolbar-group[data-open="true"] .toolbar-option:hover {
+	background-color: #ddd;
+}
+
 .Striven-Editor .toolbar-option >svg {
 	vertical-align: middle;
 }
