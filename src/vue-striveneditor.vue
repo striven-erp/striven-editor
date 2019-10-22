@@ -9,7 +9,7 @@ export default {
   name: "striven-editor",
   props: {
     toolbarHide: Boolean,
-    toolbarBotoom: Boolean,
+    toolbarBottom: Boolean,
     minimal: Boolean,
     metaUrl: String,
     extensions: Array,
