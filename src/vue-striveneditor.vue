@@ -3,13 +3,13 @@
 </template>
 
 <script>
-import StrivenEditor from './striveneditor';
+import StrivenEditor from "./striveneditor";
 
 export default {
-    name: 'striven-editor',
+    name: "striven-editor",
     props: {
         toolbarHide: Boolean,
-        toolbarBotoom: Boolean,
+        toolbarBottom: Boolean,
         minimal: Boolean,
         metaUrl: String,
         extensions: Array,
@@ -20,17 +20,31 @@ export default {
         imageUrl: String,
         customToolbarOption: Object,
         activeOptionColor: String,
-        submitOnEnter: Function
-    }, 
-    mounted() {
-        this.editor = new StrivenEditor(this.$refs.editor, this.props)
+        submitOnEnter: Function,
+        value: String
     },
-    data () {
+    mounted() {
+        let vm = this;
+        // Create new object to avoid mutating props
+        let config = {...vm.$props};
+        vm.editor = new StrivenEditor(vm.$refs.editor, config);
+        // Listen to input event for v-model support
+        vm.editor.body.oninput = e => {
+            vm.$emit("input", vm.editor.getContent());
+        };
+    },
+    data() {
         return {
             editor: {}
+        };
+    },
+    watch:{
+        value(val){
+            // Clear the editor if the value is cleared
+            !val && this.editor.setContent(null);
         }
     }
-}
+};
 </script>
 
 <style></style>

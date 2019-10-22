@@ -6,6 +6,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Released]
 
+## [2.0.4] - 2019-10-22
+
+### Changed
+
+- More Vue v-model support (listen for changes)
+
+## [2.0.3] - 2019-10-22
+
+### Changed
+
+- Vue v-model support
+
+## [2.0.2] - 2019-10-22
+
+### Changed
+
+- Vue options hotfix
+
+## [2.0.1] - 2019-10-22
+
+### Changed
+
+- Vue props hotfix
+
 ## [2.0.0] - 2019-10-22
 
 ### Added

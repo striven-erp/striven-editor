@@ -291,7 +291,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         this.imageMenu = this.initImageMenu();
         this.metaDataSection = this.initMetaDataSection();
         this.filesSection = this.initFilesSection();
-        this.editor.classList.add("editor", "Striven-Editor"); // Toolbar Hide
+        this.editor.classList.add("editor", "Striven-Editor"); // Initialze with the value property in the options
+
+        this.setContent(this.options.value || ''); // Toolbar Hide
 
         if (this.options.toolbarHide) {
           this.customToolbarButton && (this.customToolbarButton.style.display = "none");
@@ -1569,15 +1571,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-  //
-  //
-  //
-  //
+  function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+  function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+  function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
   var _default = {
-    name: 'striven-editor',
+    name: "striven-editor",
     props: {
       toolbarHide: Boolean,
-      toolbarBotoom: Boolean,
+      toolbarBottom: Boolean,
       minimal: Boolean,
       metaUrl: String,
       extensions: Array,
@@ -1588,15 +1592,30 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       imageUrl: String,
       customToolbarOption: Object,
       activeOptionColor: String,
-      submitOnEnter: Function
+      submitOnEnter: Function,
+      value: String
     },
     mounted: function mounted() {
-      this.editor = new _striveneditor["default"](this.$refs.editor, this.props);
+      var vm = this; // Create new object to avoid mutating props
+
+      var config = _objectSpread({}, vm.$props);
+
+      vm.editor = new _striveneditor["default"](vm.$refs.editor, config); // Listen to input event for v-model support
+
+      vm.editor.body.oninput = function (e) {
+        vm.$emit("input", vm.editor.getContent());
+      };
     },
     data: function data() {
       return {
         editor: {}
       };
+    },
+    watch: {
+      value: function value(val) {
+        // Clear the editor if the value is cleared
+        !val && this.editor.setContent(null);
+      }
     }
   };
   _exports["default"] = _default;
