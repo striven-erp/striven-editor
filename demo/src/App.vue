@@ -15,6 +15,8 @@
 
     <p>Output</p>
     <p v-html="value"></p>
+
+    <button @click="value = null">Clear Value</button>
   </div>
   
 </template>
