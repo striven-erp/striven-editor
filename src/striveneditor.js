@@ -91,6 +91,7 @@ export default class StrivenEditor {
             options.extensions || (this.options.extensions = EXTENSIONS);
             options.toolbarOptions || (this.options.toolbarOptions = DEFAULTOPTIONS);
             options.activeOptionColor || (this.options.activeOptionColor = ACTIVEOPTIONCOLOR);
+            
         } else {
             this.options = {
                 fontPack: FONTPACK,
@@ -120,6 +121,9 @@ export default class StrivenEditor {
         this.filesSection = this.initFilesSection();
 
         this.editor.classList.add("editor", "Striven-Editor")
+
+        // Initialze with the value property in the options
+        this.options.value && this.setContent(this.options.value);
 
         // Toolbar Hide
         if (this.options.toolbarHide) {
