@@ -883,7 +883,7 @@ export default class StrivenEditor {
 
     createFileElement(name, size) {
         const fileEl = document.createElement("div");
-        const fileNameEl = document.createElement("h4");
+        const fileNameEl = document.createElement("p");
         const fileSizeEl = document.createElement("p");
         const removeFileEl = document.createElement("p");
 

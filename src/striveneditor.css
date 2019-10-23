@@ -90,7 +90,8 @@
 	position: relative;
 }
 
-.Striven-Editor .file-name-el {
+.Striven-Editor p.file-name-el {
+	font-size: 16px;
 	font-weight: bold;
 	margin: 0;
 }
