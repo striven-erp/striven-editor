@@ -6,7 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.0.5] - 2019-10-22
+## [Released]
+
+## [2.0.5] - 2019-10-23
 
 ### Added
 
@@ -17,8 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - File titles use ```<p>``` and ```px```
 - Custom toolbar button can now be templated and passed as a DOM node
-
-## [Released]
 
 ## [2.0.4] - 2019-10-22
 
