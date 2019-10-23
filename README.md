@@ -263,7 +263,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |placeholder|```String```|```null```|Default text to display when the editor is empty|
 |sanitizePaste|```Boolean```|```false```|*Clean* pasted content of any HTML styles|
 |imageUrl|```String```|```null```|An endpoint to make a ```POST``` request for writing encoded images to the server. <br /> See [Referencing Encoded Images](#writing-encoded-images-to-a-server)|
-|customToolbarButton|```Object```|```null```|Configuration properties for adding a custom toolbar button. <br /> See [Custom Toolbar Button Properties](#custom-toolbar-button-properties)|
+|customToolbarButton|```DOM Node```|```null```|A custom HTML DOM Node option can be passed to append to the toolbar|
 |activeOptionColor|```String```|```#ddd```|Fill color for the toolbar action to change to when active.|
 |submitOnEnter|```Function```|```null```|Handler function that clears the editor on enter and returns the contents submitted. <br /> *Shift + Enter still inserts a break* <br /> ```submitOnEnter({ content, files })``` <br /> **Nothing will return if the editor is empty and no files are attached**|
 
@@ -291,18 +291,3 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |toolbarState|None|Updates the toolbars state based on the options passed in by ```toolbarOptions```|
 |linkMenuSlideIn|None|Manually open the link menu with animation.|
 |imageMenuSlideIn|None|Manually open image menu with animation.|
-
-## Custom Toolbar Button Properties
-
-**All properties must be defined when creating a ```customToolbarButton```**
-
-|Property|Type|Description|
-|:-:|:-:|:-:|
-|svgData|```Object```|Contains the SVG data for rendering the icon <br /> See [Finding SVG Data](#finding-svg-data) <br /> ```{ svgData, d }```|
-|borderColor|```String```|Button's ```border-color```|
-|hoverBorderColor|```String```|Button's ```border-color``` on ```onmouseenter```|
-|backgroundColor|```String```|Button's ```background-color```|
-|hoverBackgroundColor|```String```|Button's ```border-color``` on ```onmouseenter```|
-|color|```String```|Button's ```border-color```|
-|hoverColor|```String```|Button's ```border-color``` on ```onmouseenter```|
-|handler|```Function```|Handler function called on ```onclick```|
