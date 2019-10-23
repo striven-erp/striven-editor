@@ -29,7 +29,7 @@ export default {
       minimal: true,
       uploadOnPaste: false,
       toolbarBottom: true,
-      toolbarHide: false,
+      toolbarHide: true,
       sanitizePaste: true,
       onInvalidFile() {
         alert("invalid file");

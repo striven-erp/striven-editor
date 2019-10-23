@@ -6,11 +6,12 @@
   "main": "./dist",
   "scripts": {
     "start": "cd demo && npm run serve",
+    "prepare": "npx webpack --mode=\"production\"",
     "build": "npx webpack --mode=\"production\"",
     "dev": "npx webpack -w",
     "meta-server": "node metaserver",
     "gh-pages": "cd demo && npm run build && cd .. && node gh-pages",
-    "new-publish": "npx webpack --mode=\"production\" && npm publish --access=public && echo DON'T FORGET TO UPDATE GITHUB RELEASE"
+    "new-publish": "npm publish --access=public && echo DON'T FORGET TO UPDATE GITHUB RELEASE"
   },
   "repository": {
     "type": "git",
