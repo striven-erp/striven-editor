@@ -122,9 +122,6 @@ export default class StrivenEditor {
 
         this.editor.classList.add("editor", "Striven-Editor")
 
-        // Initialze with the value property in the options
-         this.setContent(this.options.value || '')
-
         // Toolbar Hide
         if (this.options.toolbarHide) {
             this.customToolbarButton && (this.customToolbarButton.style.display = "none");
@@ -518,6 +515,10 @@ export default class StrivenEditor {
         this.editor.style.minHeight = 'auto';
         this.editor.style.maxHeight = 'auto';
 
+
+        // Initialze with the value property in the options
+        body.innerHTML = this.options.value || '';
+
         // Placeholder logic
         if (this.options.placeholder) {
             const placeholderNode = document.createElement("p");
@@ -526,7 +527,7 @@ export default class StrivenEditor {
             placeholderNode.style.margin = "0";
             placeholderNode.textContent = this.options.placeholder;
 
-            body.append(placeholderNode);
+            this.options.value || body.append(placeholderNode);
 
             const bodyFocus = body.onfocus;
             body.onfocus = () => {
@@ -1213,6 +1214,7 @@ export default class StrivenEditor {
     setContent(html) {
         this.clearContent();
         this.body.innerHTML = html;
+        this.body.onblur();
     }
 
     clearContent() {
