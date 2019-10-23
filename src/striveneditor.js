@@ -123,7 +123,7 @@ export default class StrivenEditor {
         this.editor.classList.add("editor", "Striven-Editor")
 
         // Initialze with the value property in the options
-        this.options.value && this.setContent(this.options.value);
+         this.setContent(this.options.value || '')
 
         // Toolbar Hide
         if (this.options.toolbarHide) {

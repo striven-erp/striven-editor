@@ -37,6 +37,12 @@ export default {
         return {
             editor: {}
         };
+    },
+    watch:{
+        value(val){
+            // Clear the editor if the value is cleared
+            !val && this.editor.setContent(null);
+        }
     }
 };
 </script>
