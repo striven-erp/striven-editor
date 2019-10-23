@@ -22,7 +22,7 @@
 ### Install Package
 
 ```sh
-$ npm install striven-editor
+$ npm install @striven-erp/striven-editor
 ```
 
 ### Initialize Editor
