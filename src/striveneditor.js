@@ -179,13 +179,13 @@ export default class StrivenEditor {
 
                 switch (command) {
                     case "insertOrderedList":
-                        if (this.isFirefox) {
+                        if (this.browser.isFirefox()) {
                             document.execCommand("indent");
                             document.execCommand(command);
 
                             indents();
                         }
-                        else if (this.isEdge) {
+                        else if (this.browser.isEdge()) {
                             document.execCommand(command);
                             [...document.querySelectorAll('ol')].forEach(ol => ol.style.marginLeft = "40px");
                         }
@@ -195,13 +195,13 @@ export default class StrivenEditor {
                         }
                         break;
                     case "insertUnorderedList":
-                        if (this.isFirefox) {
+                        if (this.browser.isFirefox()) {
                             document.execCommand("indent");
                             document.execCommand(command);
 
                             indents();
                         }
-                        else if (this.isEdge) {
+                        else if (this.browser.isEdge()) {
                             document.execCommand(command);
                             [...document.querySelectorAll('ul')].forEach(ul => ul.style.marginLeft = "40px");
                         }
@@ -237,7 +237,7 @@ export default class StrivenEditor {
                         }
                         break;
                     default:
-                        if (this.isFirefox || this.isEdge) {
+                        if (this.browser.isFirefox() || this.browser.isEdge()) {
                             document.execCommand(command);
                             (command === 'indent') && indents();
                         }
@@ -708,7 +708,7 @@ export default class StrivenEditor {
                 window.getSelection().removeAllRanges();
                 window.getSelection().addRange(this.range);
 
-                if (this.isFirefox || this.isEdge) {
+                if (this.browser.isFirefox() || this.browser.isEdge()) {
                     document.execCommand("createLink", false, linkValue)
                 }
                 else {
@@ -726,7 +726,10 @@ export default class StrivenEditor {
                 }
 
                 const bodyLinks = this.body.querySelectorAll("a");
-                [...bodyLinks].forEach(link => !this.isFirefox && (link.contentEditable = 'false'));
+
+                if (!this.browser.isFirefox()) {
+                    [...bodyLinks].forEach(link => (link.contentEditable = 'false'));
+                }
 
                 linkMenuFormInput.value = "";
                 this.closeLinkMenu();
@@ -813,7 +816,7 @@ export default class StrivenEditor {
                 window.getSelection().removeAllRanges();
                 window.getSelection().addRange(this.range);
 
-                if (this.isFirefox || this.isEdge) { document.execCommand("insertImage", false, linkValue) }
+                if (this.browser.isFirefox() || this.browser.isEdge()) { document.execCommand("insertImage", false, linkValue) }
                 else { document.execCommand("insertImage", true, linkValue) }
 
                 let insertedImage = [...this.body.querySelectorAll(`img`)].filter(img => img.src === linkValue);
@@ -1255,29 +1258,72 @@ export default class StrivenEditor {
         })
     }
 
+    /**
+     * This method is used to detect the user browser and environment
+     */
     establishBrowser() {
-        // Change this to user agent
+        const userAgent = (navigator && navigator.userAgent || '').toLowerCase();
+        const vendor = (navigator && navigator.vendor || '').toLowerCase();
 
-        // Opera 8.0+
-        this.isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+        const comparator = {
+            '<': function(a, b) { return a < b; },
+            '<=': function(a, b) { return a <= b; },
+            '>': function(a, b) { return a > b; },
+            '>=': function(a, b) { return a >= b; }
+        };
 
-        // Firefox 1.0+
-        this.isFirefox = typeof InstallTrigger !== 'undefined';
+        const compareVersion = (version, range) => {
+            const str = (range + '');
+            const n = +(str.match(/\d+/) || NaN);
+            const op = str.match(/^[<>]=?|/)[0];
+            return comparator[op] ? comparator[op](version, n) : (version == n || n !== n);
+        };
 
-        // Safari 3.0+ "[object HTMLElementConstructor]" 
-        this.isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+        this.browser = {
+            userAgent,
+            vendor,
+        };
 
-        // Internet Explorer 6-11
-        this.isIE = /*@cc_on!@*/false || !!document.documentMode;
+        // detect opera
+        this.browser.isOpera = function isOpera(range) {
+            const match = userAgent.match(/(?:^opera.+?version|opr)\/(\d+)/);
+            return match !== null && compareVersion(match[1], range);
+        }
 
-        // Edge 20+
-        this.isEdge = !this.isIE && !!window.StyleMedia;
+        // detect chrome
+        this.browser.isChrome = function isChrome(range) {
+            const match = /google inc/.test(vendor) ? userAgent.match(/(?:chrome|crios)\/(\d+)/) : null;
+            return match !== null && !this.isOpera() && compareVersion(match[1], range);
+        }
 
-        // Chrome 1 - 71
-        this.isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+        // detect firefox
+        this.browser.isFirefox = function isFirefox(range) {
+            const match = userAgent.match(/(?:firefox|fxios)\/(\d+)/);
+            return match !== null && compareVersion(match[1], range);
+        };
 
-        // Blink engine detection
-        this.isBlink = (this.isChrome || this.isOpera) && !!window.CSS;
+        // detect safari
+        this.browser.isSafari = function isSafari(range) {
+            const match = userAgent.match(/version\/(\d+).+?safari/);
+            return match !== null && compareVersion(match[1], range);
+        };
+
+        // detect internet explorer
+        this.browser.isIE = function isIE(range) {
+            const match = userAgent.match(/(?:msie |trident.+?; rv:)(\d+)/);
+            return match !== null && compareVersion(match[1], range);
+        };
+
+        // detect edge
+        this.browser.isEdge = function isEdge(range) {
+            const match = userAgent.match(/edge\/(\d+)/);
+            return match !== null && compareVersion(match[1], range);
+        };
+
+        // detect blink engine
+        this.browser.isBlink = function isBlink() {
+            return (this.isChrome() || this.isOpera()) && !!window.CSS;
+        };
     }
 
     isEditorInFocus() {
