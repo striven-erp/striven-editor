@@ -324,7 +324,8 @@ export default class StrivenEditor {
 
         function frame() {
             if (height >= 40) {
-                that.customToolbarButton && (that.customToolbarButton.style.display = "flex");
+                const customButton = that.toolbar.querySelector('#custom-button');
+                customButton && (customButton.style.display = "flex");
                 that.toolbarOptionsGroup.style.display = "flex";
                 clearInterval(id);
             } else {
@@ -337,7 +338,8 @@ export default class StrivenEditor {
     toolbarSlideDown() {
         const that = this;
 
-        this.customToolbarButton && (this.customToolbarButton.style.display = "none");
+        const customButton = this.toolbar.querySelector('#custom-button');
+        customButton && (customButton.style.display = "none");
         this.toolbarOptionsGroup.style.display = "none";
 
         let height = 40;
@@ -456,33 +458,14 @@ export default class StrivenEditor {
 
         toolbar.appendChild(this.toolbarOptionsGroup);
 
-        //add toolbar-send
-        if (this.options.customToolbarButton) {
-            const customToolbarButton = document.createElement("div");
-            customToolbarButton.id = "custom-toolbar-button";
-            customToolbarButton.classList.add('custom-toolbar-button')
-            customToolbarButton.style.minHeight = this.options.toolbarHide
-                ? "40px"
-                : toolbar.style.minHeight;
-            customToolbarButton.onclick = () => this.options.customToolbarButton.handler();
-            !this.options.toolbarHide && (customToolbarButton.style.display = "flex");
+        // Custom toolbar button
+        if(this.options.customToolbarButton) {
+            const customButton = document.createElement('div');
+            customButton.id = 'custom-button';
+            customButton.appendChild(this.options.customToolbarButton);
+            toolbar.appendChild(customButton);
 
-            customToolbarButton.onmouseenter = () => {
-                customToolbarButton.style.borderColor = this.options.customToolbarButton.hoverBorderColor;
-                customToolbarButton.style.backgroundColor = this.options.customToolbarButton.hoverBackgroundColor;
-                customToolbarButton.style.color = this.options.customToolbarButton.hoverColor;
-            }
-
-            customToolbarButton.onmouseleave = () => {
-                customToolbarButton.style.borderColor = this.options.customToolbarButton.borderColor;
-                customToolbarButton.style.backgroundColor = this.options.customToolbarButton.backgroundColor;
-                customToolbarButton.style.color = this.options.customToolbarButton.color;
-            }
-
-            const customToolbarButtonSVG = this.constructSVG(this.options.customToolbarButton.svgData);
-            customToolbarButtonSVG.querySelector('path').setAttribute("fill", this.options.customToolbarButton.color);
-            customToolbarButton.appendChild(customToolbarButtonSVG);
-            toolbar.appendChild(customToolbarButton);
+            this.options.toolbarHide && (customButton.style.display = "none");
         }
 
         this.toolbarOptions = toolbar.querySelectorAll("span");
@@ -648,7 +631,7 @@ export default class StrivenEditor {
                     const files = this.getFiles();
 
                     this.clearContent();
-                    this.clearFiles();
+                    this.filesSection && this.clearFiles();
 
                     if (files.length || hasText || hasImage) {
                         this.options.submitOnEnter({ content: (hasText || hasImage) && content, files });

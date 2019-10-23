@@ -88,20 +88,9 @@
 	background-color: #ddd;
 }
 
-.Striven-Editor .custom-toolbar-button {
-	display: none;
-	color: #fff;
-	background-color: #5cb85c;
-	width: 50px;
-	text-align: center;
-	justify-content: center;
-	align-content: center;
-	align-items: center;
-	cursor: pointer;
-	border: 1px solid #4cae4c;
-	align-self: flex-end
+.Striven-Editor .toolbar #custom-button {
+	height: 40px;
 }
-
 
 /** File Element **/
 
