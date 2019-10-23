@@ -29,7 +29,7 @@ export default {
       minimal: true,
       uploadOnPaste: false,
       toolbarBottom: true,
-      toolbarHide: true,
+      toolbarHide: false,
       sanitizePaste: true,
       onInvalidFile() {
         alert("invalid file");
@@ -62,17 +62,21 @@ export default {
 
 <style>
 .custom-button {
-  background-color: green;
+  height: 100%;
+  border-color: #4cae4c;
+  background-color: #5cb85c;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0 15px;
   color: #fff;
+  margin: 0 0 1px 0;
   cursor: pointer;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .custom-button:hover {
-  background-color: lightgreen;
+  background-color: #4cae4c;
+  border-color: #398439;
 }
 </style>
