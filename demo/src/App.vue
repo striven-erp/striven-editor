@@ -4,7 +4,7 @@
     style="font-family: Segoe UI; color: #2c3e50; margin-top: 20vh; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 0 1rem;"
   >
     <div style="display: flex; padding: 1rem; width: 100%; justify-content: center;">
-      <striven-editor :minimal="true" v-model="value"/>
+      <striven-editor :minimal="true" v-model="value" :placeholder="'Type your message here'"/>
       
       <!-- <div
         ref="editor"
@@ -29,7 +29,9 @@ export default {
   name: "app",
   components: { StrivenEditor },
   data(){
-        return {value: null}
+        return {
+            value: ''
+        }
   },
   mounted() {
     const editorOptions = {
