@@ -30,20 +30,25 @@ export default {
         vm.editor = new StrivenEditor(vm.$refs.editor, config);
         // Listen to input event for v-model support
         vm.editor.body.oninput = e => {
+            vm.pauseUpdate = true;
             vm.$emit("input", vm.editor.getContent());
+            
         };
     },
     data() {
         return {
-            editor: {}
+            editor: {},
+            pauseUpdate: false
         };
     },
     watch:{
         value(val){
-            // Clear the editor if the value is cleared
-            if (!val){
-                this.editor.setContent(null);
+            // Set the editor content when not modified from within the editor
+            if (!this.pauseUpdate){
+                this.editor.setContent(val);
             }
+
+            this.pauseUpdate = false;
         }
     }
 };

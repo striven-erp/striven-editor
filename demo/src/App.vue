@@ -4,11 +4,14 @@
     style="font-family: Segoe UI; color: #2c3e50; margin-top: 20vh; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 0 1rem;"
   >
     <div style="display: flex; padding: 1rem; width: 100%; justify-content: center;">
-      <div
+      <!-- <div
         ref="editor"
         class="editor"
         style="margin-top: 20px; background-color: #fff; min-height: 300px; width: 600px;"
-      ></div>
+      ></div> -->
+      <striven-editor :placeholder="'Hey there'" v-model="notes"></striven-editor>
+      {{notes}}
+      <button @click="notes = null">Clear</button>
     </div>
     <div ref="customButton" class="custom-button" @click="sendContent">
       Send
@@ -18,10 +21,14 @@
 
 <script>
 /* eslint-disable */
-import { StrivenEditor } from "@striven-erp/striven-editor";
+import { VueStrivenEditor as StrivenEditor } from "@striven-erp/striven-editor";
 
 export default {
   name: "app",
+  components: {StrivenEditor},
+  data(){
+      return {notes: ''};
+  },
   mounted() {
     const editorOptions = {
       metaUrl: "https://mighty-anchorage-82390.herokuapp.com/meta", // metaserver.js
