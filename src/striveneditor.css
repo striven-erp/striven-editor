@@ -27,6 +27,10 @@
 	height: auto;
 }
 
+.Striven-Editor .body:empty::after {
+	content: 'Type some text here...'
+}
+
 .Striven-Editor .body .file-drop-dropzone {
 	height: 90%;
 	width: 95%;
@@ -172,7 +176,6 @@
 	padding: 10px 20px;
 	z-index: 1000;	
 }
-
 
 .Striven-Editor .popup > .popup-form {
 	display: flex;

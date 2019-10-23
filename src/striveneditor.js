@@ -91,6 +91,7 @@ export default class StrivenEditor {
             options.extensions || (this.options.extensions = EXTENSIONS);
             options.toolbarOptions || (this.options.toolbarOptions = DEFAULTOPTIONS);
             options.activeOptionColor || (this.options.activeOptionColor = ACTIVEOPTIONCOLOR);
+            (options.fileUpload !== false) && (this.options.fileUpload = true);
         } else {
             this.options = {
                 fontPack: FONTPACK,
