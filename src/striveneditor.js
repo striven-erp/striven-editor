@@ -91,13 +91,13 @@ export default class StrivenEditor {
             options.extensions || (this.options.extensions = EXTENSIONS);
             options.toolbarOptions || (this.options.toolbarOptions = DEFAULTOPTIONS);
             options.activeOptionColor || (this.options.activeOptionColor = ACTIVEOPTIONCOLOR);
-
         } else {
             this.options = {
                 fontPack: FONTPACK,
                 extensions: EXTENSIONS,
                 toolbarOptions: DEFAULTOPTIONS,
-                activeOptionColor: ACTIVEOPTIONCOLOR
+                activeOptionColor: ACTIVEOPTIONCOLOR,
+                fileUpload: true
             };
         }
 
@@ -118,7 +118,7 @@ export default class StrivenEditor {
         this.linkMenu = this.initLinkMenu();
         this.imageMenu = this.initImageMenu();
         this.metaDataSection = this.initMetaDataSection();
-        this.filesSection = this.initFilesSection();
+        this.filesSection = this.options.fileUpload && this.initFilesSection();
 
         this.editor.classList.add("editor", "Striven-Editor")
 
@@ -254,12 +254,12 @@ export default class StrivenEditor {
 
         });
 
-        this.editor.appendChild(this.toolbar);
-        this.editor.appendChild(this.body);
-        this.editor.appendChild(this.linkMenu);
-        this.editor.appendChild(this.imageMenu);
-        this.editor.appendChild(this.metaDataSection);
-        this.editor.appendChild(this.filesSection);
+        this.toolbar && this.editor.appendChild(this.toolbar);
+        this.body && this.editor.appendChild(this.body);
+        this.linkMenu && this.editor.appendChild(this.linkMenu);
+        this.imageMenu && this.editor.appendChild(this.imageMenu);
+        this.metaDataSection && this.editor.appendChild(this.metaDataSection);
+        this.filesSection &&    this.editor.appendChild(this.filesSection);
 
         // Reposition Toolbar
         if (this.options.toolbarBottom) {
