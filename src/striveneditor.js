@@ -91,7 +91,7 @@ export default class StrivenEditor {
             options.extensions || (this.options.extensions = EXTENSIONS);
             options.toolbarOptions || (this.options.toolbarOptions = DEFAULTOPTIONS);
             options.activeOptionColor || (this.options.activeOptionColor = ACTIVEOPTIONCOLOR);
-            
+
         } else {
             this.options = {
                 fontPack: FONTPACK,
@@ -108,7 +108,7 @@ export default class StrivenEditor {
         el.StrivenEditor = () => this;
 
         //bind handler functions to scope
-        this.bound_popupEscapeHandler=this.popupEscapeHandler.bind(this);
+        this.bound_popupEscapeHandler = this.popupEscapeHandler.bind(this);
     }
 
     initEditor(el) {
@@ -123,7 +123,7 @@ export default class StrivenEditor {
         this.editor.classList.add("editor", "Striven-Editor")
 
         // Initialze with the value property in the options
-         this.setContent(this.options.value || '')
+        this.setContent(this.options.value || '')
 
         // Toolbar Hide
         if (this.options.toolbarHide) {
@@ -768,7 +768,7 @@ export default class StrivenEditor {
         imageMenu.id = "image-menu";
         imageMenu.classList.add('popup');
         imageMenu.dataset.active = "false";
-        
+
         imageMenuForm.classList.add('popup-form');
 
         imageMenuFormLabel.classList.add('form-label');
@@ -860,16 +860,51 @@ export default class StrivenEditor {
         const filesSection = document.createElement("div");
         filesSection.classList.add("files-section");
 
+        window.addEventListener("dragover", function (e) {
+            e = e || event;
+            e.preventDefault();
+        }, false);
+
+        window.addEventListener("drop", function (e) {
+            e = e || event;
+            e.preventDefault();
+        }, false);
+
         this.body.ondragenter = e => {
-            this.body.style.backgroundColor = "#ddd";
+            const placeholder = this.body.querySelector("#placeholder-node");
+            placeholder && (placeholder.style.display = "none");
+
+            if (!this.body.querySelector('.file-drop-dropzone')) {
+                const dropzone = document.createElement("div");
+                const dropzoneTextEl = document.createElement("p");
+
+                dropzone.classList.add('file-drop-dropzone');
+                dropzone.contentEditable = "false";
+                dropzoneTextEl.textContent = 'Drop files to upload';
+
+                dropzone.ondrop = e => e.target.remove();
+                dropzone.ondragover = e => dropzone.dataset.enabled = "true";
+
+                dropzone.append(dropzoneTextEl);
+                this.body.append(dropzone);
+            }
         }
 
         this.body.ondragleave = e => {
-            this.body.style.backgroundColor = "inherit";
+            const placeholder = this.body.querySelector("#placeholder-node");
+            placeholder && (placeholder.style.display = "block");
+
+            const dropzone = this.body.querySelector('.file-drop-dropzone');
+            (dropzone && dropzone.dataset.enabled === "true") && dropzone.remove();
         }
 
         this.body.ondrop = e => {
-            this.body.style.backgroundColor = "inherit";
+            const placeholder = this.body.querySelector("#placeholder-node");
+            placeholder && (placeholder.style.display = "block");
+
+            const dropzone = this.body.querySelector('.file-drop-dropzone');
+            dropzone && dropzone.remove();
+
             e.preventDefault();
 
             const file = (e.dataTransfer.files && e.dataTransfer.files[0]);
@@ -1184,7 +1219,7 @@ export default class StrivenEditor {
         this.imageMenu.style.display = "block";
         this.addPopupEscapeHandler();
     }
-   
+
     closeLinkMenu() {
         this.linkMenu.dataset.active = "false";
         this.linkMenu.style.display = "none";
@@ -1197,19 +1232,19 @@ export default class StrivenEditor {
         this.removePopupEscapeHandler();
     }
 
-    popupEscapeHandler(evt){
-        if(evt.which===27){
+    popupEscapeHandler(evt) {
+        if (evt.which === 27) {
             //close all open popups
             this.closeImageMenu();
             this.closeLinkMenu();
         }
     }
 
-    addPopupEscapeHandler(){
+    addPopupEscapeHandler() {
         this.removePopupEscapeHandler();
         this.editor.addEventListener('keyup', this.bound_popupEscapeHandler);
     }
-    removePopupEscapeHandler(){
+    removePopupEscapeHandler() {
         this.editor.removeEventListener('keyup', this.bound_popupEscapeHandler);
     }
 
@@ -1266,10 +1301,10 @@ export default class StrivenEditor {
         const vendor = (navigator && navigator.vendor || '').toLowerCase();
 
         const comparator = {
-            '<': function(a, b) { return a < b; },
-            '<=': function(a, b) { return a <= b; },
-            '>': function(a, b) { return a > b; },
-            '>=': function(a, b) { return a >= b; }
+            '<': function (a, b) { return a < b; },
+            '<=': function (a, b) { return a <= b; },
+            '>': function (a, b) { return a > b; },
+            '>=': function (a, b) { return a >= b; }
         };
 
         const compareVersion = (version, range) => {

@@ -19,6 +19,7 @@
 }
 
 .Striven-Editor .body {
+	position: relative;
 	outline: none;
 	padding: 10px 20px;
 	min-height: auto;
@@ -26,6 +27,28 @@
 	height: auto;
 }
 
+.Striven-Editor .body .file-drop-dropzone {
+	height: 90%;
+	width: 95%;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	margin: auto;
+	position: absolute;
+	border: 5px dashed #ddd;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}	
+
+.Striven-Editor .body .file-drop-dropzone p {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	color: #777;
+	user-select: none;
+	text-align: center;
+	font-size: 25px;
+}
 
 /** Toolbar **/
 
