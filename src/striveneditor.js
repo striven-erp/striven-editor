@@ -1225,7 +1225,7 @@ export default class StrivenEditor {
     setContent(html) {
         this.clearContent();
         this.body.innerHTML = html;
-        this.body.onblur();
+        this.body.blur();
     }
 
     clearContent() {
