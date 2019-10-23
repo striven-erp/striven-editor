@@ -4,6 +4,10 @@ Anyone can contribute to the Striven WYSIWYG editor. Please open an issue for an
 
 Please open all pull requests to the ```dev``` branch.
 
+## Addressing Issues
+
+When resolving a posted issue, please ask a maintainer to assign the issue to you prior to opening a pull request.
+
 ## Install Dependencies
 
 ```sh

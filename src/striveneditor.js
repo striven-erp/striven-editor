@@ -91,13 +91,14 @@ export default class StrivenEditor {
             options.extensions || (this.options.extensions = EXTENSIONS);
             options.toolbarOptions || (this.options.toolbarOptions = DEFAULTOPTIONS);
             options.activeOptionColor || (this.options.activeOptionColor = ACTIVEOPTIONCOLOR);
-            
+            (options.fileUpload !== false) && (this.options.fileUpload = true);
         } else {
             this.options = {
                 fontPack: FONTPACK,
                 extensions: EXTENSIONS,
                 toolbarOptions: DEFAULTOPTIONS,
-                activeOptionColor: ACTIVEOPTIONCOLOR
+                activeOptionColor: ACTIVEOPTIONCOLOR,
+                fileUpload: true
             };
         }
 
@@ -108,7 +109,7 @@ export default class StrivenEditor {
         el.StrivenEditor = () => this;
 
         //bind handler functions to scope
-        this.bound_popupEscapeHandler=this.popupEscapeHandler.bind(this);
+        this.bound_popupEscapeHandler = this.popupEscapeHandler.bind(this);
     }
 
     initEditor(el) {
@@ -118,9 +119,12 @@ export default class StrivenEditor {
         this.linkMenu = this.initLinkMenu();
         this.imageMenu = this.initImageMenu();
         this.metaDataSection = this.initMetaDataSection();
-        this.filesSection = this.initFilesSection();
+        this.filesSection = this.options.fileUpload && this.initFilesSection();
 
         this.editor.classList.add("editor", "Striven-Editor")
+
+        // Initialze with the value property in the options
+        this.setContent(this.options.value || '')
 
         // Toolbar Hide
         if (this.options.toolbarHide) {
@@ -176,13 +180,13 @@ export default class StrivenEditor {
 
                 switch (command) {
                     case "insertOrderedList":
-                        if (this.isFirefox) {
+                        if (this.browser.isFirefox()) {
                             document.execCommand("indent");
                             document.execCommand(command);
 
                             indents();
                         }
-                        else if (this.isEdge) {
+                        else if (this.browser.isEdge()) {
                             document.execCommand(command);
                             [...document.querySelectorAll('ol')].forEach(ol => ol.style.marginLeft = "40px");
                         }
@@ -192,13 +196,13 @@ export default class StrivenEditor {
                         }
                         break;
                     case "insertUnorderedList":
-                        if (this.isFirefox) {
+                        if (this.browser.isFirefox()) {
                             document.execCommand("indent");
                             document.execCommand(command);
 
                             indents();
                         }
-                        else if (this.isEdge) {
+                        else if (this.browser.isEdge()) {
                             document.execCommand(command);
                             [...document.querySelectorAll('ul')].forEach(ul => ul.style.marginLeft = "40px");
                         }
@@ -234,7 +238,7 @@ export default class StrivenEditor {
                         }
                         break;
                     default:
-                        if (this.isFirefox || this.isEdge) {
+                        if (this.browser.isFirefox() || this.browser.isEdge()) {
                             document.execCommand(command);
                             (command === 'indent') && indents();
                         }
@@ -251,12 +255,12 @@ export default class StrivenEditor {
 
         });
 
-        this.editor.appendChild(this.toolbar);
-        this.editor.appendChild(this.body);
-        this.editor.appendChild(this.linkMenu);
-        this.editor.appendChild(this.imageMenu);
-        this.editor.appendChild(this.metaDataSection);
-        this.editor.appendChild(this.filesSection);
+        this.toolbar && this.editor.appendChild(this.toolbar);
+        this.body && this.editor.appendChild(this.body);
+        this.linkMenu && this.editor.appendChild(this.linkMenu);
+        this.imageMenu && this.editor.appendChild(this.imageMenu);
+        this.metaDataSection && this.editor.appendChild(this.metaDataSection);
+        this.filesSection &&    this.editor.appendChild(this.filesSection);
 
         // Reposition Toolbar
         if (this.options.toolbarBottom) {
@@ -321,7 +325,8 @@ export default class StrivenEditor {
 
         function frame() {
             if (height >= 40) {
-                that.customToolbarButton && (that.customToolbarButton.style.display = "flex");
+                const customButton = that.toolbar.querySelector('#custom-button');
+                customButton && (customButton.style.display = "flex");
                 that.toolbarOptionsGroup.style.display = "flex";
                 clearInterval(id);
             } else {
@@ -334,7 +339,8 @@ export default class StrivenEditor {
     toolbarSlideDown() {
         const that = this;
 
-        this.customToolbarButton && (this.customToolbarButton.style.display = "none");
+        const customButton = this.toolbar.querySelector('#custom-button');
+        customButton && (customButton.style.display = "none");
         this.toolbarOptionsGroup.style.display = "none";
 
         let height = 40;
@@ -453,33 +459,14 @@ export default class StrivenEditor {
 
         toolbar.appendChild(this.toolbarOptionsGroup);
 
-        //add toolbar-send
-        if (this.options.customToolbarButton) {
-            const customToolbarButton = document.createElement("div");
-            customToolbarButton.id = "custom-toolbar-button";
-            customToolbarButton.classList.add('custom-toolbar-button')
-            customToolbarButton.style.minHeight = this.options.toolbarHide
-                ? "40px"
-                : toolbar.style.minHeight;
-            customToolbarButton.onclick = () => this.options.customToolbarButton.handler();
-            !this.options.toolbarHide && (customToolbarButton.style.display = "flex");
+        // Custom toolbar button
+        if(this.options.customToolbarButton) {
+            const customButton = document.createElement('div');
+            customButton.id = 'custom-button';
+            customButton.appendChild(this.options.customToolbarButton);
+            toolbar.appendChild(customButton);
 
-            customToolbarButton.onmouseenter = () => {
-                customToolbarButton.style.borderColor = this.options.customToolbarButton.hoverBorderColor;
-                customToolbarButton.style.backgroundColor = this.options.customToolbarButton.hoverBackgroundColor;
-                customToolbarButton.style.color = this.options.customToolbarButton.hoverColor;
-            }
-
-            customToolbarButton.onmouseleave = () => {
-                customToolbarButton.style.borderColor = this.options.customToolbarButton.borderColor;
-                customToolbarButton.style.backgroundColor = this.options.customToolbarButton.backgroundColor;
-                customToolbarButton.style.color = this.options.customToolbarButton.color;
-            }
-
-            const customToolbarButtonSVG = this.constructSVG(this.options.customToolbarButton.svgData);
-            customToolbarButtonSVG.querySelector('path').setAttribute("fill", this.options.customToolbarButton.color);
-            customToolbarButton.appendChild(customToolbarButtonSVG);
-            toolbar.appendChild(customToolbarButton);
+            this.options.toolbarHide && (customButton.style.display = "none");
         }
 
         this.toolbarOptions = toolbar.querySelectorAll("span");
@@ -515,32 +502,30 @@ export default class StrivenEditor {
         this.editor.style.minHeight = 'auto';
         this.editor.style.maxHeight = 'auto';
 
-
-        // Initialze with the value property in the options
-        body.innerHTML = this.options.value || '';
+        this.options.placeholder && (body.dataset.placeholder = this.options.placeholder);
 
         // Placeholder logic
-        if (this.options.placeholder) {
-            const placeholderNode = document.createElement("p");
-            placeholderNode.id = "placeholder-node";
-            placeholderNode.style.color = "#5f6368";
-            placeholderNode.style.margin = "0";
-            placeholderNode.textContent = this.options.placeholder;
+        // if (this.options.placeholder) {
+        //     const placeholderNode = document.createElement("p");
+        //     placeholderNode.id = "placeholder-node";
+        //     placeholderNode.style.color = "#5f6368";
+        //     placeholderNode.style.margin = "0";
+        //     placeholderNode.textContent = this.options.placeholder;
 
-            this.options.value || body.append(placeholderNode);
+        //     body.append(placeholderNode);
 
-            const bodyFocus = body.onfocus;
-            body.onfocus = () => {
-                bodyFocus && bodyFocus();
-                (body.querySelector("#placeholder-node") === placeholderNode) && this.clearContent();
-            }
+        //     const bodyFocus = body.onfocus;
+        //     body.onfocus = () => {
+        //         bodyFocus && bodyFocus();
+        //         (body.querySelector("#placeholder-node") === placeholderNode) && this.clearContent();
+        //     }
 
-            const bodyBlur = body.onblur;
-            body.onblur = () => {
-                bodyBlur && bodyBlur();
-                (this.getContent().trim() === "") && body.append(placeholderNode);
-            }
-        }
+        //     const bodyBlur = body.onblur;
+        //     body.onblur = () => {
+        //         bodyBlur && bodyBlur();
+        //         (this.getContent().trim() === "") && body.append(placeholderNode);
+        //     }
+        // }
 
         // Paste Handler
         body.onpaste = e => {
@@ -649,7 +634,7 @@ export default class StrivenEditor {
                     const files = this.getFiles();
 
                     this.clearContent();
-                    this.clearFiles();
+                    this.filesSection && this.clearFiles();
 
                     if (files.length || hasText || hasImage) {
                         this.options.submitOnEnter({ content: (hasText || hasImage) && content, files });
@@ -709,7 +694,7 @@ export default class StrivenEditor {
                 window.getSelection().removeAllRanges();
                 window.getSelection().addRange(this.range);
 
-                if (this.isFirefox || this.isEdge) {
+                if (this.browser.isFirefox() || this.browser.isEdge()) {
                     document.execCommand("createLink", false, linkValue)
                 }
                 else {
@@ -727,7 +712,10 @@ export default class StrivenEditor {
                 }
 
                 const bodyLinks = this.body.querySelectorAll("a");
-                [...bodyLinks].forEach(link => !this.isFirefox && (link.contentEditable = 'false'));
+
+                if (!this.browser.isFirefox()) {
+                    [...bodyLinks].forEach(link => (link.contentEditable = 'false'));
+                }
 
                 linkMenuFormInput.value = "";
                 this.closeLinkMenu();
@@ -766,7 +754,7 @@ export default class StrivenEditor {
         imageMenu.id = "image-menu";
         imageMenu.classList.add('popup');
         imageMenu.dataset.active = "false";
-        
+
         imageMenuForm.classList.add('popup-form');
 
         imageMenuFormLabel.classList.add('form-label');
@@ -814,7 +802,7 @@ export default class StrivenEditor {
                 window.getSelection().removeAllRanges();
                 window.getSelection().addRange(this.range);
 
-                if (this.isFirefox || this.isEdge) { document.execCommand("insertImage", false, linkValue) }
+                if (this.browser.isFirefox() || this.browser.isEdge()) { document.execCommand("insertImage", false, linkValue) }
                 else { document.execCommand("insertImage", true, linkValue) }
 
                 let insertedImage = [...this.body.querySelectorAll(`img`)].filter(img => img.src === linkValue);
@@ -858,16 +846,42 @@ export default class StrivenEditor {
         const filesSection = document.createElement("div");
         filesSection.classList.add("files-section");
 
+        window.addEventListener("dragover", function (e) {
+            e = e || event;
+            e.preventDefault();
+        }, false);
+
+        window.addEventListener("drop", function (e) {
+            e = e || event;
+            e.preventDefault();
+        }, false);
+
         this.body.ondragenter = e => {
-            this.body.style.backgroundColor = "#ddd";
+            if (!this.body.querySelector('.file-drop-dropzone')) {
+                const dropzone = document.createElement("div");
+                const dropzoneTextEl = document.createElement("p");
+
+                dropzone.classList.add('file-drop-dropzone');
+                dropzone.contentEditable = "false";
+                dropzoneTextEl.textContent = 'Drop files to upload';
+
+                dropzone.ondrop = e => e.target.remove();
+                dropzone.ondragover = e => dropzone.dataset.enabled = "true";
+
+                dropzone.append(dropzoneTextEl);
+                this.body.append(dropzone);
+            }
         }
 
         this.body.ondragleave = e => {
-            this.body.style.backgroundColor = "inherit";
+            const dropzone = this.body.querySelector('.file-drop-dropzone');
+            (dropzone && dropzone.dataset.enabled === "true") && dropzone.remove();
         }
 
         this.body.ondrop = e => {
-            this.body.style.backgroundColor = "inherit";
+            const dropzone = this.body.querySelector('.file-drop-dropzone');
+            dropzone && dropzone.remove();
+
             e.preventDefault();
 
             const file = (e.dataTransfer.files && e.dataTransfer.files[0]);
@@ -881,7 +895,7 @@ export default class StrivenEditor {
 
     createFileElement(name, size) {
         const fileEl = document.createElement("div");
-        const fileNameEl = document.createElement("h4");
+        const fileNameEl = document.createElement("p");
         const fileSizeEl = document.createElement("p");
         const removeFileEl = document.createElement("p");
 
@@ -1082,11 +1096,7 @@ export default class StrivenEditor {
     }
 
     getContent() {
-        if (this.body.querySelector("#placeholder-node")) {
-            return "";
-        } else {
-            return this.body.innerHTML;
-        }
+        return this.body.innerHTML;
     }
 
     getRange() {
@@ -1159,6 +1169,7 @@ export default class StrivenEditor {
     }
 
     fileInvalid() {
+        this.options.onInvalidFile && this.options.onInvalidFile();
         this.body.style.transition = "background-color .5s";
         this.body.style.backgroundColor = "#d9534f";
         setTimeout(() => {
@@ -1182,7 +1193,7 @@ export default class StrivenEditor {
         this.imageMenu.style.display = "block";
         this.addPopupEscapeHandler();
     }
-   
+
     closeLinkMenu() {
         this.linkMenu.dataset.active = "false";
         this.linkMenu.style.display = "none";
@@ -1195,26 +1206,26 @@ export default class StrivenEditor {
         this.removePopupEscapeHandler();
     }
 
-    popupEscapeHandler(evt){
-        if(evt.which===27){
+    popupEscapeHandler(evt) {
+        if (evt.which === 27) {
             //close all open popups
             this.closeImageMenu();
             this.closeLinkMenu();
         }
     }
 
-    addPopupEscapeHandler(){
+    addPopupEscapeHandler() {
         this.removePopupEscapeHandler();
         this.editor.addEventListener('keyup', this.bound_popupEscapeHandler);
     }
-    removePopupEscapeHandler(){
+    removePopupEscapeHandler() {
         this.editor.removeEventListener('keyup', this.bound_popupEscapeHandler);
     }
 
     setContent(html) {
         this.clearContent();
         this.body.innerHTML = html;
-        this.body.onblur();
+        this.body.blur();
     }
 
     clearContent() {
@@ -1227,11 +1238,7 @@ export default class StrivenEditor {
     }
 
     getTextContent() {
-        if (this.body.querySelector("#placeholder-node")) {
-            return "";
-        } else {
-            return this.body.textContent;
-        }
+        return this.body.textContent;
     }
 
     scrubHTML(html) {
@@ -1257,29 +1264,72 @@ export default class StrivenEditor {
         })
     }
 
+    /**
+     * This method is used to detect the user browser and environment
+     */
     establishBrowser() {
-        // Change this to user agent
+        const userAgent = (navigator && navigator.userAgent || '').toLowerCase();
+        const vendor = (navigator && navigator.vendor || '').toLowerCase();
 
-        // Opera 8.0+
-        this.isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+        const comparator = {
+            '<': function (a, b) { return a < b; },
+            '<=': function (a, b) { return a <= b; },
+            '>': function (a, b) { return a > b; },
+            '>=': function (a, b) { return a >= b; }
+        };
 
-        // Firefox 1.0+
-        this.isFirefox = typeof InstallTrigger !== 'undefined';
+        const compareVersion = (version, range) => {
+            const str = (range + '');
+            const n = +(str.match(/\d+/) || NaN);
+            const op = str.match(/^[<>]=?|/)[0];
+            return comparator[op] ? comparator[op](version, n) : (version == n || n !== n);
+        };
 
-        // Safari 3.0+ "[object HTMLElementConstructor]" 
-        this.isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+        this.browser = {
+            userAgent,
+            vendor,
+        };
 
-        // Internet Explorer 6-11
-        this.isIE = /*@cc_on!@*/false || !!document.documentMode;
+        // detect opera
+        this.browser.isOpera = function isOpera(range) {
+            const match = userAgent.match(/(?:^opera.+?version|opr)\/(\d+)/);
+            return match !== null && compareVersion(match[1], range);
+        }
 
-        // Edge 20+
-        this.isEdge = !this.isIE && !!window.StyleMedia;
+        // detect chrome
+        this.browser.isChrome = function isChrome(range) {
+            const match = /google inc/.test(vendor) ? userAgent.match(/(?:chrome|crios)\/(\d+)/) : null;
+            return match !== null && !this.isOpera() && compareVersion(match[1], range);
+        }
 
-        // Chrome 1 - 71
-        this.isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+        // detect firefox
+        this.browser.isFirefox = function isFirefox(range) {
+            const match = userAgent.match(/(?:firefox|fxios)\/(\d+)/);
+            return match !== null && compareVersion(match[1], range);
+        };
 
-        // Blink engine detection
-        this.isBlink = (this.isChrome || this.isOpera) && !!window.CSS;
+        // detect safari
+        this.browser.isSafari = function isSafari(range) {
+            const match = userAgent.match(/version\/(\d+).+?safari/);
+            return match !== null && compareVersion(match[1], range);
+        };
+
+        // detect internet explorer
+        this.browser.isIE = function isIE(range) {
+            const match = userAgent.match(/(?:msie |trident.+?; rv:)(\d+)/);
+            return match !== null && compareVersion(match[1], range);
+        };
+
+        // detect edge
+        this.browser.isEdge = function isEdge(range) {
+            const match = userAgent.match(/edge\/(\d+)/);
+            return match !== null && compareVersion(match[1], range);
+        };
+
+        // detect blink engine
+        this.browser.isBlink = function isBlink() {
+            return (this.isChrome() || this.isOpera()) && !!window.CSS;
+        };
     }
 
     isEditorInFocus() {

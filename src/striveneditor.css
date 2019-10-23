@@ -10,7 +10,7 @@
 /** Editor **/
 
 .Striven-Editor.editor {
-	border: 2px solid #ddd;
+	border: 1px solid #ddd;
 	display: flex;
 	position: relative;
 	flex-direction: column;
@@ -19,6 +19,7 @@
 }
 
 .Striven-Editor .body {
+	position: relative;
 	outline: none;
 	padding: 10px 20px;
 	min-height: auto;
@@ -26,6 +27,32 @@
 	height: auto;
 }
 
+.Striven-Editor .body:empty::after {
+	content: attr(data-placeholder);
+}
+
+.Striven-Editor .body .file-drop-dropzone {
+	height: 90%;
+	width: 95%;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	margin: auto;
+	position: absolute;
+	border: 5px dashed #ddd;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}	
+
+.Striven-Editor .body .file-drop-dropzone p {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	color: #777;
+	user-select: none;
+	text-align: center;
+	font-size: 25px;
+}
 
 /** Toolbar **/
 
@@ -65,20 +92,9 @@
 	background-color: #ddd;
 }
 
-.Striven-Editor .custom-toolbar-button {
-	display: none;
-	color: #fff;
-	background-color: #5cb85c;
-	width: 50px;
-	text-align: center;
-	justify-content: center;
-	align-content: center;
-	align-items: center;
-	cursor: pointer;
-	border: 1px solid #4cae4c;
-	align-self: flex-end
+.Striven-Editor .toolbar #custom-button {
+	height: 40px;
 }
-
 
 /** File Element **/
 
@@ -90,8 +106,9 @@
 	position: relative;
 }
 
-.Striven-Editor .file-name-el {
+.Striven-Editor p.file-name-el {
 	font-weight: bold;
+	font-size: 14px;
 	margin: 0;
 }
 
@@ -159,7 +176,6 @@
 	padding: 10px 20px;
 	z-index: 1000;	
 }
-
 
 .Striven-Editor .popup > .popup-form {
 	display: flex;
