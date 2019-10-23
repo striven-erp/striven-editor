@@ -1096,7 +1096,7 @@ export default class StrivenEditor {
     }
 
     getContent() {
-        return this.body.innerHTML;
+        return this.pruneScripts(this.body).innerHTML;
     }
 
     getRange() {
@@ -1140,6 +1140,13 @@ export default class StrivenEditor {
         body.scrollWidth > body.clientWidth
             ? (body.style.overflowX = "scroll")
             : (body.style.overflowX = "hidden");
+    }
+
+    pruneScripts (el) {
+        const scripts = el.querySelectorAll('script');
+        scripts.forEach(script => script.remove());
+
+        return el;
     }
 
     formatBytes(bytes, decimals = 2) {

@@ -10,7 +10,9 @@
         style="margin-top: 20px; background-color: #fff; min-height: 300px; width: 600px;"
       ></div>
     </div>
-    <div ref="customButton" class="custom-button" @click="sendContent">Send</div>
+    <div ref="customButton" class="custom-button" @click="sendContent">
+      Send
+    </div>
   </div>
 </template>
 
@@ -21,10 +23,8 @@ import { StrivenEditor } from "@striven-erp/striven-editor";
 export default {
   name: "app",
   mounted() {
-    const toolbarButton = this.$refs.customButton;
-
     const editorOptions = {
-      // metaUrl: "http://localhost:4200/meta", // metaserver.js
+      metaUrl: "https://mighty-anchorage-82390.herokuapp.com/meta", // metaserver.js
       // imageUrl: "http://localhost:4200/image", // imageserver.js
       minimal: true,
       uploadOnPaste: false,
@@ -41,7 +41,7 @@ export default {
         }
         this.editor.body.blur();
       },
-      customToolbarButton: toolbarButton
+      customToolbarButton: this.$refs.customButton
     };
 
     this.editor = new StrivenEditor(this.$refs.editor, editorOptions);
