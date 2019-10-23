@@ -4,7 +4,13 @@
     style="font-family: Segoe UI; color: #2c3e50; margin-top: 20vh; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 0 1rem;"
   >
     <div style="display: flex; padding: 1rem; width: 100%; justify-content: center;">
+<<<<<<< HEAD
       <div
+=======
+      <striven-editor :minimal="true" v-model="value" :placeholder="'Type your message here'"/>
+      
+      <!-- <div
+>>>>>>> cd2d1bbd62521416540b7fef8338ed5ce00adf39
         ref="editor"
         class="editor"
         style="margin-top: 20px; background-color: #fff; min-height: 300px; width: 600px;"
@@ -20,6 +26,15 @@ import { StrivenEditor } from "@striven-erp/striven-editor";
 
 export default {
   name: "app",
+<<<<<<< HEAD
+=======
+  components: { StrivenEditor },
+  data(){
+        return {
+            value: ''
+        }
+  },
+>>>>>>> cd2d1bbd62521416540b7fef8338ed5ce00adf39
   mounted() {
     const toolbarButton = this.$refs.customButton;
 

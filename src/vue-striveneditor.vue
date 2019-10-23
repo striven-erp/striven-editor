@@ -41,7 +41,9 @@ export default {
     watch:{
         value(val){
             // Clear the editor if the value is cleared
-            !val && this.editor.setContent(null);
+            if (!val){
+                this.editor.setContent(null);
+            }
         }
     }
 };
