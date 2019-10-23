@@ -28,7 +28,7 @@
 }
 
 .Striven-Editor .body:empty::after {
-	content: 'Type some text here...'
+	content: attr(data-placeholder);
 }
 
 .Striven-Editor .body .file-drop-dropzone {

@@ -502,6 +502,8 @@ export default class StrivenEditor {
         this.editor.style.minHeight = 'auto';
         this.editor.style.maxHeight = 'auto';
 
+        this.options.placeholder && (body.dataset.placeholder = this.options.placeholder);
+
         // Placeholder logic
         // if (this.options.placeholder) {
         //     const placeholderNode = document.createElement("p");
