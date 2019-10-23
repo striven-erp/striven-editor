@@ -32,6 +32,7 @@ export default {
       toolbarBottom: true,
       toolbarHide: true,
       sanitizePaste: true,
+      onInvalidFile () { alert('invalid file') },
       placeholder: "Begin typing in this editor...",
       submitOnEnter: ({ content, files }) => {
         if (content || files.length ) {

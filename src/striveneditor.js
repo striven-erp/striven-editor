@@ -1196,6 +1196,7 @@ export default class StrivenEditor {
     }
 
     fileInvalid() {
+        this.options.onInvalidFile && this.options.onInvalidFile();
         this.body.style.transition = "background-color .5s";
         this.body.style.backgroundColor = "#d9534f";
         setTimeout(() => {
