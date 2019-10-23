@@ -10,7 +10,7 @@
 /** Editor **/
 
 .Striven-Editor.editor {
-	border: 2px solid #ddd;
+	border: 1px solid #ddd;
 	display: flex;
 	position: relative;
 	flex-direction: column;

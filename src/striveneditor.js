@@ -519,27 +519,27 @@ export default class StrivenEditor {
         this.editor.style.maxHeight = 'auto';
 
         // Placeholder logic
-        if (this.options.placeholder) {
-            const placeholderNode = document.createElement("p");
-            placeholderNode.id = "placeholder-node";
-            placeholderNode.style.color = "#5f6368";
-            placeholderNode.style.margin = "0";
-            placeholderNode.textContent = this.options.placeholder;
+        // if (this.options.placeholder) {
+        //     const placeholderNode = document.createElement("p");
+        //     placeholderNode.id = "placeholder-node";
+        //     placeholderNode.style.color = "#5f6368";
+        //     placeholderNode.style.margin = "0";
+        //     placeholderNode.textContent = this.options.placeholder;
 
-            body.append(placeholderNode);
+        //     body.append(placeholderNode);
 
-            const bodyFocus = body.onfocus;
-            body.onfocus = () => {
-                bodyFocus && bodyFocus();
-                (body.querySelector("#placeholder-node") === placeholderNode) && this.clearContent();
-            }
+        //     const bodyFocus = body.onfocus;
+        //     body.onfocus = () => {
+        //         bodyFocus && bodyFocus();
+        //         (body.querySelector("#placeholder-node") === placeholderNode) && this.clearContent();
+        //     }
 
-            const bodyBlur = body.onblur;
-            body.onblur = () => {
-                bodyBlur && bodyBlur();
-                (this.getContent().trim() === "") && body.append(placeholderNode);
-            }
-        }
+        //     const bodyBlur = body.onblur;
+        //     body.onblur = () => {
+        //         bodyBlur && bodyBlur();
+        //         (this.getContent().trim() === "") && body.append(placeholderNode);
+        //     }
+        // }
 
         // Paste Handler
         body.onpaste = e => {
@@ -871,9 +871,6 @@ export default class StrivenEditor {
         }, false);
 
         this.body.ondragenter = e => {
-            const placeholder = this.body.querySelector("#placeholder-node");
-            placeholder && (placeholder.style.display = "none");
-
             if (!this.body.querySelector('.file-drop-dropzone')) {
                 const dropzone = document.createElement("div");
                 const dropzoneTextEl = document.createElement("p");
@@ -891,17 +888,11 @@ export default class StrivenEditor {
         }
 
         this.body.ondragleave = e => {
-            const placeholder = this.body.querySelector("#placeholder-node");
-            placeholder && (placeholder.style.display = "block");
-
             const dropzone = this.body.querySelector('.file-drop-dropzone');
             (dropzone && dropzone.dataset.enabled === "true") && dropzone.remove();
         }
 
         this.body.ondrop = e => {
-            const placeholder = this.body.querySelector("#placeholder-node");
-            placeholder && (placeholder.style.display = "block");
-
             const dropzone = this.body.querySelector('.file-drop-dropzone');
             dropzone && dropzone.remove();
 
@@ -1119,11 +1110,7 @@ export default class StrivenEditor {
     }
 
     getContent() {
-        if (this.body.querySelector("#placeholder-node")) {
-            return "";
-        } else {
-            return this.body.innerHTML;
-        }
+        return this.body.innerHTML;
     }
 
     getRange() {
@@ -1264,11 +1251,7 @@ export default class StrivenEditor {
     }
 
     getTextContent() {
-        if (this.body.querySelector("#placeholder-node")) {
-            return "";
-        } else {
-            return this.body.textContent;
-        }
+        return this.body.textContent;
     }
 
     scrubHTML(html) {
