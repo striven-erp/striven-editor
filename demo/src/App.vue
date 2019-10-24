@@ -33,7 +33,7 @@ export default {
   },
   mounted() {
     const editorOptions = {
-      metaUrl: "http://localhost:4200",//"https://mighty-anchorage-82390.herokuapp.com/meta", // metaserver.js
+      metaUrl: "http://localhost:4200/meta",//"https://mighty-anchorage-82390.herokuapp.com/meta", // metaserver.js
       // imageUrl: "http://localhost:4200/image", // imageserver.js
       minimal: true,
       uploadOnPaste: false,
