@@ -121,7 +121,7 @@ export default class StrivenEditor {
         this.metaDataSection = this.initMetaDataSection();
         this.filesSection = this.options.fileUpload && this.initFilesSection();
 
-        this.editor.classList.add("editor", "striven-editor")
+        this.editor.classList.add("striven-editor");
 
         // Initialze with the value property in the options
         this.setContent(this.options.value || '')
@@ -853,8 +853,7 @@ export default class StrivenEditor {
         }, false);
 
         this.body.ondragenter = e => {
-            console.log(e.dataTransfer.files)
-            if (!this.body.querySelector('.se-file-drop-dropzone')) {
+            if (e.dataTransfer.files.length && !this.body.querySelector('.se-file-drop-dropzone')) {
                 const dropzone = document.createElement("div");
                 const dropzoneTextEl = document.createElement("p");
 
@@ -882,6 +881,7 @@ export default class StrivenEditor {
             e.preventDefault();
 
             const file = (e.dataTransfer.files.length && e.dataTransfer.files[0]);
+            debugger;
             this.attachFile(file);
         }
 
