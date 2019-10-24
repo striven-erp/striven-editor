@@ -24,7 +24,7 @@ export function createEditor(options) {
     });
 }
 
-export function useMemoizedEditor(options, input) {
+export function useEditor(options, input) {
     return useMemo(
         () => createEditor(options),
         input
