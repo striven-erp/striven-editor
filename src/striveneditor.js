@@ -881,7 +881,7 @@ export default class StrivenEditor {
             e.preventDefault();
 
             const file = (e.dataTransfer.files.length && e.dataTransfer.files[0]);
-            debugger;
+            
             this.attachFile(file);
         }
 
@@ -1172,11 +1172,11 @@ export default class StrivenEditor {
     fileInvalid() {
         this.options.onInvalidFile && this.options.onInvalidFile();
         this.body.style.transition = "background-color .5s";
-        this.body.style.backgroundColor = "#d9534f";
+        this.body.style.backgroundColor = "#e3bdbd";
         setTimeout(() => {
             this.body.style.backgroundColor = "inherit";
             setTimeout(() => this.body.style.transition = "none", 500);
-        }, 2000);
+        }, 500);
     }
 
     openLinkMenu() {
