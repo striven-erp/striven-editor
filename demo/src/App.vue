@@ -5,14 +5,15 @@
   >
     <striven-editor
       ref="editor"
-      v-model="notes"
       :toolbar-hide="toolbarHide"
+      :minimal="minimal"
       :toolbar-bottom="true"
       :placeholder="'Type something in here...'"
       style="min-height:300px; width: 800px;"
       meta-url="http://localhost:4200/meta"
       :custom-toolbar-button="customButton"
     ></striven-editor>
+    <div class="custom-button" ref="customButton" @click="sendContent">Send</div>
   </div>
 </template>
 
@@ -25,7 +26,7 @@ export default {
   components: { StrivenEditor },
   data() {
     return {
-      metaUrl: "http://localhost:4200/meta", //"https://mighty-anchorage-82390.herokuapp.com/meta", // metaserver.js
+      metaUrl: "https://mighty-anchorage-82390.herokuapp.com/meta", // metaserver.js
       // imageUrl: "http://localhost:4200/image", // imageserver.js
       minimal: true,
       uploadOnPaste: false,
