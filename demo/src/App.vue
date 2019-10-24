@@ -66,6 +66,8 @@ export default {
 
       if (content || files.length) {
         console.log({ content, files });
+        this.editor.clearContent();
+        this.editor.clearFiles();
       }
       this.editor.body.blur();
     }
