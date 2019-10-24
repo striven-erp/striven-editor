@@ -56,6 +56,6 @@
   },
   "dependencies": {},
   "optionalDependencies": {
-    "react": "^16.10.2"
+    "react": "^16.8.0"
   }
 }
