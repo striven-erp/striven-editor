@@ -91,6 +91,49 @@ new KoStrivenEditor(ko);
 <div data-bind="striveneditor: editorConfig" />
 ```
 
+## React Integration
+We other optional react integration
+```js
+import React from 'react';
+import {render} from 'react-dom';
+import {createEditor} from '@striven-erp/striven-editor/dist/react-integration'
+
+const Editor = createEditor({toolbarBottom: true, minimal: true,});
+
+render( <Editor />, document.getElementById('app'))
+```
+Note, that the editor options can't be changed, when mounted. Therefore, we currently do not support setting them via props.
+If you want to change them, create a new editor component.
+
+You can pass a ref to the component to access the underlying editor instance.
+We also provide a memoized hook for functional components, if you want to change editor options,
+but take care of handling editor state as needed.
+```js
+import React, {useRef, useLayoutEffect} from 'react';
+import {useEditor} from '@striven-erp/striven-editor/dist/react-integration'
+
+function MinimizableEditor({minimal}) {
+    let editor = useRef(null);
+    let content = useRef(null);
+    let EditorComponent = useEditor({minimal, toolbarBottom: true}, [minimal]);
+
+    useLayoutEffect(
+        () => {
+            // set previous content
+            editor.current.setContent(content.current);
+            let prevEditor = editor.current;
+            return () => {
+                // backup old content
+                content.current = prevEditor.getContent();
+            }
+        },
+        [EditorComponent]
+    );
+
+    return <EditorComponent ref={editor} />
+}
+```
+
 ## Fetching Meta Data on Link Insertions
 
 To fetch meta data from links that are pasted or inserted into the editor, you must set up a back end utility to fetch the data and send it back to your client. For a node server, we recommend using [metascraper](https://metascraper.js.org/#/) on your server. See the example below for setting this up with express.
