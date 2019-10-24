@@ -8,7 +8,8 @@ module.exports = {
         index: './src/index.js',
         striveneditor: './src/striveneditor.js',
         'ko-striveneditor': './src/ko-striveneditor.js',
-        'vue-striveneditor': './src/vue-striveneditor.vue'
+        'vue-striveneditor': './src/vue-striveneditor.vue',
+        'react-integration': './src/react-integration.jsx',
     },
     output: {
         path: path.resolve(__dirname, "dist"),
