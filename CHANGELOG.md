@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Released]
 
+## [2.1.5] - 2019-10-24
+
+### Added
+
+- Image menu popup animations
+
+### Changed
+
+- Custom Toolbar options for Knockout and Vue
+
 ## [2.1.0] - 2019-10-24
 
 ### Added
