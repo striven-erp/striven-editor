@@ -1,5 +1,5 @@
 import StrivenEditor from "./striveneditor";
-import React, {useLayoutEffect, useRef, useCallback, forwardRef} from "react";
+import React, {useLayoutEffect, useRef, useCallback, useMemo, forwardRef} from "react";
 
 export function createEditor(options) {
     return forwardRef(({defaultContent}, ref) => {
@@ -22,4 +22,11 @@ export function createEditor(options) {
 
         return <div ref={container} />
     });
+}
+
+export function useMemoizedEditor(options, input) {
+    return useMemo(
+        () => createEditor(options),
+        input
+    )
 }
