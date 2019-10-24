@@ -9,8 +9,9 @@
 
 /** Editor **/
 
-.Striven-Editor.editor {
+.striven-editor.editor {
 	border: 1px solid #ddd;
+	background-color: #fff;
 	display: flex;
 	position: relative;
 	flex-direction: column;
@@ -18,7 +19,7 @@
 	max-width: 100%;
 }
 
-.Striven-Editor .body {
+.striven-editor .se-body {
 	position: relative;
 	outline: none;
 	padding: 10px 20px;
@@ -27,11 +28,12 @@
 	height: auto;
 }
 
-.Striven-Editor .body:empty::after {
+.striven-editor .se-body:empty::after {
 	content: attr(data-placeholder);
+	color:#777;
 }
 
-.Striven-Editor .body .file-drop-dropzone {
+.striven-editor .se-body .se-file-drop-dropzone {
 	height: 90%;
 	width: 95%;
 	left: 0;
@@ -46,7 +48,7 @@
 	align-items: center;
 }	
 
-.Striven-Editor .body .file-drop-dropzone p {
+.striven-editor .se-body .se-file-drop-dropzone p {
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	color: #777;
 	user-select: none;
@@ -56,7 +58,7 @@
 
 /** Toolbar **/
 
-.Striven-Editor .toolbar {
+.striven-editor .se-toolbar {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -64,41 +66,41 @@
 	position: relative
 }
 
-.Striven-Editor .toolbar-options {
+.striven-editor .se-toolbar-options {
 	margin: 0 10px;
 }
 
-.Striven-Editor .toolbar-option {
+.striven-editor .se-toolbar-option {
 	padding: 8px;
 }
 
-.Striven-Editor .toolbar-group[data-open="true"] .toolbar-option {
+.striven-editor .se-toolbar-group[data-open="true"] .se-toolbar-option {
 	background-color: #fff;
 	border: 2px solid #ddd;
 	margin: 0 2px;	
 }
 
-.Striven-Editor .toolbar-group[data-open="true"] .toolbar-option:hover {
+.striven-editor .se-toolbar-group[data-open="true"] .se-toolbar-option:hover {
 	background-color: #ddd;
 }
 
-.Striven-Editor .toolbar-option >svg {
+.striven-editor .se-toolbar-option >svg {
 	vertical-align: middle;
 }
 
-.Striven-Editor .toolbar-option:hover,
-.Striven-Editor .toolbar-option:focus,
-.Striven-Editor .toolbar-option:active {
+.striven-editor .se-toolbar-option:hover,
+.striven-editor .se-toolbar-option:focus,
+.striven-editor .se-toolbar-option:active {
 	background-color: #ddd;
 }
 
-.Striven-Editor .toolbar #custom-button {
+.striven-editor .se-toolbar #custom-button {
 	height: 40px;
 }
 
 /** File Element **/
 
-.Striven-Editor .file-el {
+.striven-editor .se-file {
 	width: 100%;
 	display: flex;
 	flex-direction: column;
@@ -106,18 +108,18 @@
 	position: relative;
 }
 
-.Striven-Editor p.file-name-el {
+.striven-editor p.se-file-name {
 	font-weight: bold;
 	font-size: 14px;
 	margin: 0;
 }
 
-.Striven-Editor .file-size-el {
+.striven-editor .se-file-size {
 	font-size: 12px;
 	margin: 2px 0;
 }
 
-.Striven-Editor .remove-file-el {
+.striven-editor .se-remove-link {
 	margin: 0;
 	user-select: none;
 	color: black;
@@ -127,38 +129,35 @@
 	cursor: pointer;
 	background-color: #fff
 }
+.striven-editor .se-remove-link:hover,
+.striven-editor .se-remove-link:focus,
+.striven-editor .se-remove-link:active
+{
+	color:#ddd;
+}
 
 /** Meta Item **/
 
-.Striven-Editor .meta-item-el {
+.striven-editor .se-meta-item {
 	width: 100%;
 	display: flex;
 	margin: 10px;
 	position: relative
 }
 
-.Striven-Editor .meta-image-el {
+.striven-editor .se-meta-image {
 	margin-right: 10px;
 	height: 50px;
 	width: 75px;
 }
 
-.Striven-Editor .meta-data-title-el {
+.striven-editor .se-meta-data-title {
 	font-weight: bold;
 	margin: 0;
 }
 
-.Striven-Editor .remove-meta-data-el {
-	user-select: none;
-	color: black;
-	position: absolute;
-	right: 5px;
-	top: -5px;
-	cursor: pointer;
-	background-color: #fff;
-}
-
-.Striven-Editor .metadata-section, .Striven-Editor .files-section {
+.striven-editor .se-metadata-section,
+ .striven-editor .se-files-section {
 	display: flex;
 	flex-wrap: wrap;
 	z-index: 500
@@ -166,7 +165,7 @@
 
 /** Popup Menu **/
 
-.Striven-Editor .popup {
+.striven-editor .se-popup {
 	display: none;
 	position: absolute;
 	right: 10px;
@@ -177,13 +176,13 @@
 	z-index: 1000;	
 }
 
-.Striven-Editor .popup > .popup-form {
+.striven-editor .se-popup > .se-popup-form {
 	display: flex;
 	justify-content: space-between;
 	margin: 5px 0;
 }
 
-.Striven-Editor .popup > .popup-form > .form-label {
+.striven-editor .se-popup > .se-popup-form > .se-form-label {
 	margin: 8px 10px 8px 0;
 	font-size: 14px;
 	width: 100%;
@@ -191,18 +190,18 @@
 	margin-right: 10px;
 }
 
-.Striven-Editor .popup > .popup-form >.form-input {
+.striven-editor .se-popup > .se-popup-form >.se-form-input {
 	outline: none;
 	padding: 0 5px;
 }
 
 
-.Striven-Editor .popup-button-container
+.striven-editor .se-popup-button-container
 {
 	float:right;
 }
 
-.Striven-Editor .popup-button{
+.striven-editor .se-popup-button{
 	cursor: pointer;
 	padding: 6px 12px;
 	border: 1px solid transparent;
@@ -212,25 +211,25 @@
 	margin:2px;
 }
 
-.Striven-Editor .popup-button.button-primary{
+.striven-editor .se-popup-button.se-button-primary{
 	border-color: #4cae4c;
 	background-color: #5cb85c;
 	color: #fff;
 }
-.Striven-Editor .popup-button.button-secondary{
+.striven-editor .se-popup-button.se-button-secondary{
 	border-color: #ccc;
 	background-color: #fff;
 	color: #333;
 }
-.Striven-Editor .popup-button.button-primary:hover,
-.Striven-Editor .popup-button.button-primary:active,
-.Striven-Editor .popup-button.button-primary:focus{
+.striven-editor .se-popup-button.se-button-primary:hover,
+.striven-editor .se-popup-button.se-button-primary:active,
+.striven-editor .se-popup-button.se-button-primary:focus{
 	background-color: #4cae4c;
     border-color: #398439;
 }
-.Striven-Editor .popup-button.button-secondary:hover,
-.Striven-Editor .popup-button.button-secondary:active,
-.Striven-Editor .popup-button.button-secondary:focus{
+.striven-editor .se-popup-button.se-button-secondary:hover,
+.striven-editor .se-popup-button.se-button-secondary:active,
+.striven-editor .se-popup-button.se-button-secondary:focus{
 	background-color: #d4d4d4;
     border-color: #8c8c8c;
 }

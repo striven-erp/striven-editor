@@ -1,12 +1,12 @@
 {
   "name": "@striven-erp/striven-editor",
   "private": false,
-  "version": "2.0.5",
+  "version": "2.0.9",
   "description": "The lightweight Striven WYSIWYG editor built with pure JavaScript.",
   "main": "./dist",
   "scripts": {
     "start": "cd demo && npm run serve",
-    "prepare": "npx webpack --mode=\"production\"",
+    "prepare": "npm run build",
     "build": "npx webpack --mode=\"production\"",
     "dev": "npx webpack -w",
     "meta-server": "node metaserver",
