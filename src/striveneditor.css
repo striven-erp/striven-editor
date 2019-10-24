@@ -172,7 +172,7 @@
 	padding: 10px 20px;
 	z-index: 1000;
 	opacity: 0;
-	transition: all 500ms;
+	transition: opacity 500ms, transform 500ms;
 }
 
 .striven-editor .se-popup.se-popup-top {
