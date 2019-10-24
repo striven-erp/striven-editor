@@ -222,7 +222,7 @@ export default class StrivenEditor {
                         if (this.linkMenu.dataset.active === "true") {
                             this.closeLinkMenu();
                         } else {
-                            this.linkMenuSlideIn();
+                            this.openLinkMenu();
 
                             this.linkMenu.querySelector('input').focus();
                         }
@@ -231,7 +231,7 @@ export default class StrivenEditor {
                         if (this.imageMenu.dataset.active === "true") {
                             this.closeImageMenu();
                         } else {
-                            this.imageMenuSlideIn();
+                            this.openImageMenu();
 
                             this.range = this.getRange();
                             this.imageMenu.querySelector('input').focus();
@@ -264,56 +264,14 @@ export default class StrivenEditor {
 
         // Reposition Toolbar
         if (this.options.toolbarBottom) {
+            this.linkMenu.classList.remove('se-popup-top');
+            this.linkMenu.classList.add('se-popup-bottom');
+
+            this.imageMenu.classList.remove('se-popup-top');
+            this.imageMenu.classList.add('se-popup-bottom');
+
             this.editor.removeChild(this.toolbar);
             this.editor.append(this.toolbar);
-        }
-    }
-
-    imageMenuSlideIn() {
-        const that = this;
-
-        this.openImageMenu();
-
-        let opacity = 0;
-        let right = this.editor.offsetWidth / 4;
-        let id = setInterval(frame, 5);
-
-        this.imageMenu.style.opacity = opacity;
-
-        function frame() {
-            if (right <= 10) {
-                clearInterval(id);
-                that.imageMenu.style.opacity = 1;
-            } else {
-                right -= 2.5;
-                opacity += .01;
-                that.imageMenu.style.opacity = `${opacity}`;
-                that.imageMenu.style.right = `${right}px`;
-            }
-        }
-    }
-
-    linkMenuSlideIn() {
-        const that = this;
-
-        this.openLinkMenu();
-
-        let opacity = 0;
-        let right = this.editor.offsetWidth / 4;
-        let id = setInterval(frame, 5);
-
-        this.linkMenu.style.opacity = opacity;
-
-        function frame() {
-            if (right <= 10) {
-                clearInterval(id);
-                that.linkMenu.style.opacity = 1;
-            } else {
-                right -= 2.5;
-                opacity += .01;
-                that.linkMenu.style.opacity = `${opacity}`;
-                that.linkMenu.style.right = `${right}px`;
-            }
         }
     }
 
@@ -664,7 +622,7 @@ export default class StrivenEditor {
         const linkMenuFormInput = document.createElement("input");
 
         linkMenu.id = "link-menu";
-        linkMenu.classList.add('se-popup')
+        linkMenu.classList.add('se-popup', 'se-popup-top');
         linkMenu.dataset.active = "false";
 
         linkMenuForm.classList.add('se-popup-form')
@@ -750,7 +708,7 @@ export default class StrivenEditor {
         const imageMenuFormSourceInput = document.createElement("input");
 
         imageMenu.id = "image-menu";
-        imageMenu.classList.add('se-popup');
+        imageMenu.classList.add('se-popup', 'se-popup-top');
         imageMenu.dataset.active = "false";
 
         imageMenuForm.classList.add('se-popup-form');
@@ -1179,31 +1137,51 @@ export default class StrivenEditor {
         }, 500);
     }
 
+    setMenuOffset(button, menu) {
+        const editorRect = this.editor.getClientRects()[0];
+        const buttonRect = button.getClientRects()[0];
+        const buttonOffset = buttonRect.left - editorRect.left;
+        const menuRight = buttonOffset + menu.clientWidth;
+
+        let offset;
+        if(menuRight > this.editor.clientWidth) {
+            offset = buttonOffset + (this.editor.clientWidth - menuRight);
+        } else {
+            offset = buttonOffset;
+        }
+
+        menu.style.left = `${offset}px`;
+    }
+
     openLinkMenu() {
+        this.setMenuOffset(this.toolbar.querySelector('#toolbar-link'), this.linkMenu);
+        this.linkMenu.classList.add('se-popup-open');
+
         //close other open popups
         this.closeImageMenu();
         this.linkMenu.dataset.active = "true";
-        this.linkMenu.style.display = "block";
         this.addPopupEscapeHandler();
     }
 
     openImageMenu() {
+        this.setMenuOffset(this.toolbar.querySelector('#toolbar-image'), this.imageMenu);
+        this.imageMenu.classList.add('se-popup-open');
+
         //close other open popups
         this.closeLinkMenu();
         this.imageMenu.dataset.active = "true";
-        this.imageMenu.style.display = "block";
         this.addPopupEscapeHandler();
     }
 
     closeLinkMenu() {
+        this.linkMenu.classList.remove('se-popup-open');
         this.linkMenu.dataset.active = "false";
-        this.linkMenu.style.display = "none";
         this.removePopupEscapeHandler();
     }
 
     closeImageMenu() {
+        this.imageMenu.classList.remove('se-popup-open');
         this.imageMenu.dataset.active = "false";
-        this.imageMenu.style.display = "none";
         this.removePopupEscapeHandler();
     }
 

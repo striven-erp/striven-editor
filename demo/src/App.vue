@@ -5,12 +5,14 @@
   >
     <striven-editor
       ref="editor"
+      v-model="notes"
+      :toolbar-hide="toolbarHide"
+      :toolbar-bottom="true"
       :placeholder="'Type something in here...'"
-      style="min-height:300px; width: 600px;"
+      style="min-height:300px; width: 800px;"
       meta-url="http://localhost:4200/meta"
       :custom-toolbar-button="customButton"
     ></striven-editor>
-    <div ref="customButton" class="custom-button" @click="sendContent">Send</div>
   </div>
 </template>
 
@@ -40,8 +42,12 @@ export default {
         }
         this.editor.body.blur();
       },
-      customButton: () => this.$refs.customButton
+      customButton: () => this.$refs.customButton,
+      editor: null
     };
+  },
+  mounted() {
+    this.editor = this.$refs.editor.editor;
   },
   methods: {
     sendContent() {

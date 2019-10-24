@@ -63,7 +63,6 @@
 	justify-content: space-between;
 	align-items: center;
 	flex-wrap: wrap;
-	position: relative
 }
 
 .striven-editor .se-toolbar-options {
@@ -166,14 +165,30 @@
 /** Popup Menu **/
 
 .striven-editor .se-popup {
-	display: none;
+	visibility: hidden;
 	position: absolute;
-	right: 10px;
-	bottom: 10px;
 	background-color: #fff;
 	border: 2px solid #ddd;
 	padding: 10px 20px;
-	z-index: 1000;	
+	z-index: 1000;
+	opacity: 0;
+	transition: all 500ms;
+}
+
+.striven-editor .se-popup.se-popup-top {
+	top: 40px;
+	transform: translateY(-30px);
+}
+
+.striven-editor .se-popup.se-popup-bottom {
+	bottom: 40px;
+	transform: translateY(30px);	
+}
+
+.striven-editor .se-popup.se-popup-open {
+	visibility: visible;
+	transform: translateY(0);
+	opacity: 1;
 }
 
 .striven-editor .se-popup > .se-popup-form {
