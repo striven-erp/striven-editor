@@ -3,13 +3,15 @@
     id="app"
     style="font-family: Segoe UI; color: #2c3e50; margin-top: 20vh; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 0 1rem;"
   >
+      <striven-editor :placeholder="'Hey there'" v-model="notes" style="min-height:300px;"></striven-editor>
+
     <div style="display: flex; padding: 1rem; width: 100%; justify-content: center;">
       <!-- <div
         ref="editor"
         class="editor"
         style="margin-top: 20px; background-color: #fff; min-height: 300px; width: 600px;"
       ></div> -->
-      <striven-editor :placeholder="'Hey there'" v-model="notes"></striven-editor>
+    <br/>
       {{notes}}
       <button @click="notes = null">Clear</button>
     </div>
@@ -31,7 +33,7 @@ export default {
   },
   mounted() {
     const editorOptions = {
-      metaUrl: "https://mighty-anchorage-82390.herokuapp.com/meta", // metaserver.js
+      metaUrl: "http://localhost:4200",//"https://mighty-anchorage-82390.herokuapp.com/meta", // metaserver.js
       // imageUrl: "http://localhost:4200/image", // imageserver.js
       minimal: true,
       uploadOnPaste: false,

@@ -121,7 +121,7 @@ export default class StrivenEditor {
         this.metaDataSection = this.initMetaDataSection();
         this.filesSection = this.options.fileUpload && this.initFilesSection();
 
-        this.editor.classList.add("editor", "Striven-Editor")
+        this.editor.classList.add("editor", "striven-editor")
 
         // Initialze with the value property in the options
         this.setContent(this.options.value || '')
@@ -360,10 +360,10 @@ export default class StrivenEditor {
         this.toolbarOptionsGroup = document.createElement("div");
         const groups = Object.keys(this.optionGroups);
 
-        toolbar.classList.add("toolbar");
+        toolbar.classList.add("se-toolbar");
         toolbar.style.minHeight = this.options.toolbarHide ? "0" : "40px";
 
-        this.toolbarOptionsGroup.classList.add("toolbar-options");
+        this.toolbarOptionsGroup.classList.add("se-toolbar-options");
         this.toolbarOptionsGroup.style.display = this.options.toolbarHide ? "none" : "flex";
 
         toolbar.onclick = () => this.body.focus();
@@ -374,7 +374,7 @@ export default class StrivenEditor {
             const toolbarMenu = document.createElement("div");
             // const toolbarMenuIcon = document.createElement("i");
 
-            toolbarMenu.classList.add("toolbar-menu");
+            toolbarMenu.classList.add("se-toolbar-menu");
             toolbarMenu.id = `menu-${group}`;
 
             // toolbarMenuIcon.classList.add(this.options.fontPack);
@@ -386,7 +386,7 @@ export default class StrivenEditor {
             // add group to toolbarOptions
             const toolbarGroup = document.createElement("div");
 
-            toolbarGroup.classList.add("toolbar-group");
+            toolbarGroup.classList.add("se-toolbar-group");
             toolbarGroup.id = `group-${group}`;
 
             this.options.toolbarOptions.forEach((option) => {
@@ -395,7 +395,7 @@ export default class StrivenEditor {
                     const svgData = toolbarOption[option];
                     const optionSpan = this.constructSVG(svgData);
 
-                    optionSpan.classList.add('toolbar-option');
+                    optionSpan.classList.add('se-toolbar-option');
                     optionSpan.id = `toolbar-${option}`;
 
                     toolbarGroup.appendChild(optionSpan);
@@ -429,7 +429,7 @@ export default class StrivenEditor {
         if (customOptions.length > 0) {
             this.customToolbarMenu = document.createElement("div");
 
-            this.customToolbarMenu.classList.add("toolbar-menu");
+            this.customToolbarMenu.classList.add("se-toolbar-menu");
             this.customToolbarMenu.id = `menu-custom`;
 
             const customSVGViewBox = "0 0 1792 1792";
@@ -440,7 +440,7 @@ export default class StrivenEditor {
 
             this.customToolbarGroup = document.createElement("div");
 
-            this.customToolbarGroup.classList.add("toolbar-group");
+            this.customToolbarGroup.classList.add("se-toolbar-group");
             this.customToolbarGroup.id = "group-custom";
 
             customOptions.forEach((customOption) => {
@@ -470,8 +470,8 @@ export default class StrivenEditor {
         }
 
         this.toolbarOptions = toolbar.querySelectorAll("span");
-        this.toolbarGroups = [...toolbar.getElementsByClassName("toolbar-group")];
-        this.toolbarMenus = [...toolbar.getElementsByClassName("toolbar-menu")];
+        this.toolbarGroups = [...toolbar.getElementsByClassName("se-toolbar-group")];
+        this.toolbarMenus = [...toolbar.getElementsByClassName("se-toolbar-menu")];
         this.customToolbarButton = toolbar.querySelector("#custom-toolbar-button");
 
         this.toolbarMenus.push(this.customToolbarMenu);
@@ -492,7 +492,7 @@ export default class StrivenEditor {
     initBody() {
         const body = document.createElement("div");
 
-        body.classList.add("body");
+        body.classList.add("se-body");
         body.contentEditable = "true";
         body.style.height = this.editor.style.height;
         body.style.minHeight = this.editor.style.minHeight;
@@ -664,28 +664,26 @@ export default class StrivenEditor {
         const linkMenuFormInput = document.createElement("input");
 
         linkMenu.id = "link-menu";
-        linkMenu.classList.add('popup')
+        linkMenu.classList.add('se-popup')
         linkMenu.dataset.active = "false";
 
-        linkMenuForm.classList.add('popup-form')
+        linkMenuForm.classList.add('se-popup-form')
 
-        linkMenuFormLabel.classList.add('form-label')
+        linkMenuFormLabel.classList.add('se-form-label')
         linkMenuFormLabel.textContent = "Web Address";
 
-        linkMenuFormInput.classList.add('form-input')
+        linkMenuFormInput.classList.add('se-form-input')
         linkMenuFormInput.type = "text";
         linkMenuFormInput.placeholder = "Insert a Link";
 
 
-        linkMenuButtons.classList.add('popup-button-container');
+        linkMenuButtons.classList.add('se-popup-button-container');
 
-        linkMenuButton.classList.add('popup-button')
-        linkMenuButton.classList.add('button-primary')
+        linkMenuButton.classList.add('se-popup-button','se-button-primary');
         linkMenuButton.textContent = "Insert Link";
 
-        linkMenuCloseButton.classList.add('popup-button')
-        linkMenuCloseButton.classList.add('button-secondary')
-        linkMenuCloseButton.textContent = "Close"
+        linkMenuCloseButton.classList.add('se-popup-button','se-button-secondary');
+        linkMenuCloseButton.textContent = "Close";
 
         linkMenuButton.onclick = e => {
             const linkValue = linkMenuFormInput.value;
@@ -752,26 +750,24 @@ export default class StrivenEditor {
         const imageMenuFormSourceInput = document.createElement("input");
 
         imageMenu.id = "image-menu";
-        imageMenu.classList.add('popup');
+        imageMenu.classList.add('se-popup');
         imageMenu.dataset.active = "false";
 
-        imageMenuForm.classList.add('popup-form');
+        imageMenuForm.classList.add('se-popup-form');
 
-        imageMenuFormLabel.classList.add('form-label');
+        imageMenuFormLabel.classList.add('se-form-label');
         imageMenuFormLabel.textContent = "Image URL";
 
-        imageMenuFormSourceInput.classList.add('form-input');
+        imageMenuFormSourceInput.classList.add('se-form-input');
         imageMenuFormSourceInput.type = "text";
         imageMenuFormSourceInput.placeholder = "Insert a Link";
 
-        imageMenuButtons.classList.add('popup-button-container');
+        imageMenuButtons.classList.add('se-popup-button-container');
 
-        imageMenuButton.classList.add('popup-button');
-        imageMenuButton.classList.add('button-primary');
+        imageMenuButton.classList.add('se-popup-button','se-button-primary');
         imageMenuButton.textContent = "Insert Image";
 
-        imageMenuCloseButton.classList.add('popup-button');
-        imageMenuCloseButton.classList.add('button-secondary');
+        imageMenuCloseButton.classList.add('se-popup-button','se-button-secondary');
         imageMenuCloseButton.textContent = "Close";
 
         imageMenuForm.appendChild(imageMenuFormLabel);
@@ -837,14 +833,14 @@ export default class StrivenEditor {
 
     initMetaDataSection() {
         const metaDataSection = document.createElement("div");
-        metaDataSection.classList.add("metadata-section");
+        metaDataSection.classList.add("se-metadata-section");
 
         return metaDataSection;
     }
 
     initFilesSection() {
         const filesSection = document.createElement("div");
-        filesSection.classList.add("files-section");
+        filesSection.classList.add("se-files-section");
 
         window.addEventListener("dragover", function (e) {
             e = e || event;
@@ -857,11 +853,11 @@ export default class StrivenEditor {
         }, false);
 
         this.body.ondragenter = e => {
-            if (!this.body.querySelector('.file-drop-dropzone')) {
+            if (!this.body.querySelector('.se-file-drop-dropzone')) {
                 const dropzone = document.createElement("div");
                 const dropzoneTextEl = document.createElement("p");
 
-                dropzone.classList.add('file-drop-dropzone');
+                dropzone.classList.add('se-file-drop-dropzone');
                 dropzone.contentEditable = "false";
                 dropzoneTextEl.textContent = 'Drop files to upload';
 
@@ -874,12 +870,12 @@ export default class StrivenEditor {
         }
 
         this.body.ondragleave = e => {
-            const dropzone = this.body.querySelector('.file-drop-dropzone');
+            const dropzone = this.body.querySelector('.se-file-drop-dropzone');
             (dropzone && dropzone.dataset.enabled === "true") && dropzone.remove();
         }
 
         this.body.ondrop = e => {
-            const dropzone = this.body.querySelector('.file-drop-dropzone');
+            const dropzone = this.body.querySelector('.se-file-drop-dropzone');
             dropzone && dropzone.remove();
 
             e.preventDefault();
@@ -903,16 +899,15 @@ export default class StrivenEditor {
         fileSizeEl.textContent = size;
         removeFileEl.textContent = "X";
 
-        fileEl.classList.add('file-el')
+        fileEl.classList.add('se-file')
         fileEl.dataset.fileindex = (this.files.length - 1);
 
-        fileNameEl.classList.add('file-name-el')
+        fileNameEl.classList.add('se-file-name')
 
-        fileSizeEl.classList.add('file-size-el')
+        fileSizeEl.classList.add('se-file-size')
 
-        removeFileEl.classList.add('remove-file-el')
-        removeFileEl.onmouseenter = () => removeFileEl.style.color = "#ddd";
-        removeFileEl.onmouseleave = () => removeFileEl.style.color = "black";
+        removeFileEl.classList.add('se-remove-link')
+       
 
         removeFileEl.onclick = e => {
             this.files.splice(e.target.parentElement.dataset.fileindex, 1);
@@ -943,18 +938,16 @@ export default class StrivenEditor {
 
         metaLinkEl.target = "blank";
 
-        metaItemEl.classList.add("meta-item-el")
+        metaItemEl.classList.add("se-meta-item");
 
-        metaImageEl.classList.add("meta-image-el")
+        metaImageEl.classList.add("se-meta-image");
 
-        metaDataTitleEl.classList.add("meta-data-title-el")
+        metaDataTitleEl.classList.add("se-meta-data-title");
 
         metaDataDescriptionEl.style.margin = "0";
 
-        removeMetaDataEl.classList.add("remove-meta-data-el")
-        removeMetaDataEl.onmouseenter = () => removeMetaDataEl.style.color = "#ddd";
-        removeMetaDataEl.onmouseleave = () => removeMetaDataEl.style.color = "black";
-
+        removeMetaDataEl.classList.add("se-remove-link");
+       
         removeMetaDataEl.onclick = e => e.target.parentElement.remove();
 
         metaLinkEl.appendChild(metaImageEl);
@@ -1232,7 +1225,6 @@ export default class StrivenEditor {
     setContent(html) {
         this.clearContent();
         this.body.innerHTML = html;
-        this.body.blur();
     }
 
     clearContent() {
