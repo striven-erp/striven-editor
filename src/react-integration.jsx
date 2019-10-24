@@ -1,5 +1,5 @@
 import StrivenEditor from "./striveneditor";
-import React, {useLayoutEffect, useRef, useCallback, useMemo, forwardRef} from "react";
+import React, {useLayoutEffect, useRef, useMemo, forwardRef} from "react";
 
 export function createEditor(options) {
     return forwardRef(({defaultContent}, ref) => {
@@ -9,12 +9,9 @@ export function createEditor(options) {
 
         useLayoutEffect(
             () => {
-                editor.current = new StrivenEditor(container.current, options);
-                if (ref) {
-                    ref.current = editor.current;
-                }
+                ref.current = new StrivenEditor(container.current, options);
                 if (defaultContent !== undefined) {
-                    editor.current.setContent(defaultContent);
+                    ref.current.setContent(defaultContent);
                 }
             },
             []
