@@ -12,9 +12,11 @@
       style="min-height:300px; width: 800px;"
       meta-url="metaUrl"
       :custom-toolbar-button="customButton"
-      :submit-on-enter="submitOnEnter"
+      :on-enter="submitOnEnter"
     ></striven-editor>
     <div class="custom-button" ref="customButton" @click="sendContent">Send</div>
+    <br />
+    <i>ctrl + enter to submit</i>
   </div>
 </template>
 
@@ -38,11 +40,17 @@ export default {
         alert("invalid file");
       },
       placeholder: "Begin typing in this editor...",
-      submitOnEnter: ({ content, files }) => {
-        if (content || files.length) {
-          console.log({ content, files });
+      submitOnEnter: (e) => {
+        if(e.keyCode === 13 && e.ctrlKey) {
+          const content = this.editor.getContent();
+          const files = this.editor.getFiles();
+
+          if(content || files.length) {
+            console.log({ content, files });
+            this.editor.clearContent();
+            this.editor.clearFiles();
+          }
         }
-        this.editor.body.blur();
       },
       customButton: () => this.$refs.customButton,
       editor: null

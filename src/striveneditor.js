@@ -575,28 +575,20 @@ export default class StrivenEditor {
 
             this.range = this.getRange();
 
-            if (this.options.submitOnEnter && e.keyCode === 13 && !e.shiftKey) {
+            if (this.options.onEnter && e.keyCode === 13) {
 
                 if (!document.queryCommandState('insertOrderedList') && !document.queryCommandState('insertUnorderedList')) {
-                    const hasText = !!this.getTextContent();
-                    const hasImage = !!body.querySelector('img');
+                    // const hasText = !!this.getTextContent();
+                    // const hasImage = !!body.querySelector('img');
 
-                    // remove break from enter
-                    if (hasText || hasImage) {
-                        const breaks = body.querySelectorAll('div');
-                        const divBreak = breaks[breaks.length ? breaks.length - 1 : 0];
-                        divBreak && divBreak.remove();
-                    }
+                    // // remove break from enter
+                    // if (hasText || hasImage) {
+                    //     const breaks = body.querySelectorAll('div');
+                    //     const divBreak = breaks[breaks.length ? breaks.length - 1 : 0];
+                    //     divBreak && divBreak.remove();
+                    // }
 
-                    const content = this.getContent();
-                    const files = this.getFiles();
-
-                    this.clearContent();
-                    this.filesSection && this.clearFiles();
-
-                    if (files.length || hasText || hasImage) {
-                        this.options.submitOnEnter({ content: (hasText || hasImage) && content, files });
-                    }
+                    this.options.onEnter(e);
                 }
 
             }

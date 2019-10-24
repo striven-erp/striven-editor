@@ -20,7 +20,7 @@ export default {
     imageUrl: String,
     customToolbarOption: Object,
     activeOptionColor: String,
-    submitOnEnter: Function,
+    onEnter: Function,
     value: String,
     customToolbarButton: Function
   },
