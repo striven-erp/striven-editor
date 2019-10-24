@@ -4,17 +4,23 @@ export default class KoStrivenEditor {
     constructor(ko) {
         ko.bindingHandlers.striveneditor = {
             init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
-                
-                // Unwrap options
-                var options = ko.utils.unwrapObservable(valueAccessor());
-                // Get the value binding in case we are binding the editor's contents to an observable
-                var value = allBindings().value;
-                if (ko.isObservable(value)) {
-                    // Pass the value to the editor in options
-                    options.value = value();
+                // Get options
+                let options = valueAccessor();
+                // Options must be passed as an observable
+                if (!ko.isObservable(options)) {
+                    throw "Options must be an observable.";
                 }
                 
-                let editor = new StrivenEditor(element, options);
+                // Get the value binding in case we are binding the editor's contents to an observable
+                let value = allBindings().value;
+                if (value && !ko.isObservable(value)) {
+                    throw "Value must be an observable.";
+                }
+        
+                // Pass the value to the editor in options
+                options().value = value();
+        
+                let editor = new StrivenEditor(element, options());
                 let pauseUpdate = false;
         
                 // Handle updates and changes to value observable
@@ -35,6 +41,8 @@ export default class KoStrivenEditor {
                     });
                 }
         
+                // Set the editor in options
+                options().api = editor;
         
             }
         };
