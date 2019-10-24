@@ -853,6 +853,7 @@ export default class StrivenEditor {
         }, false);
 
         this.body.ondragenter = e => {
+            console.log(e.dataTransfer.files)
             if (!this.body.querySelector('.se-file-drop-dropzone')) {
                 const dropzone = document.createElement("div");
                 const dropzoneTextEl = document.createElement("p");
@@ -880,7 +881,7 @@ export default class StrivenEditor {
 
             e.preventDefault();
 
-            const file = (e.dataTransfer.files && e.dataTransfer.files[0]);
+            const file = (e.dataTransfer.files.length && e.dataTransfer.files[0]);
             this.attachFile(file);
         }
 
