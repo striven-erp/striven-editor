@@ -10,8 +10,9 @@
       :toolbar-bottom="true"
       :placeholder="'Type something in here...'"
       style="min-height:300px; width: 800px;"
-      meta-url="http://localhost:4200/meta"
+      meta-url="metaUrl"
       :custom-toolbar-button="customButton"
+      :submit-on-enter="submitOnEnter"
     ></striven-editor>
     <div class="custom-button" ref="customButton" @click="sendContent">Send</div>
   </div>
