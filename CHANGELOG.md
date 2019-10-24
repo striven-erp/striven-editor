@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Released]
 
+## [2.1.0] - 2019-10-24
+
+### Added
+
+- Invalid file handler option
+- Drag and drop file dropzone style
+
+### Changed
+
+- Dist folder is no longer distributed in the repo
+- Made fixes for the Knockout binding
+- Made fixed for the Vue component
+
 ## [2.0.5] - 2019-10-23
 
 ### Added
