@@ -853,8 +853,6 @@ export default class StrivenEditor {
         }, false);
 
         this.body.ondragenter = e => {
-            console.log(e)
-
             if (!this.body.querySelector('.se-file-drop-dropzone')) {
                 const dropzone = document.createElement("div");
                 const dropzoneTextEl = document.createElement("p");
