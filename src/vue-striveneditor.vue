@@ -27,7 +27,7 @@ export default {
   mounted() {
     let vm = this;
     // Create new object to avoid mutating props
-    let config = { ...vm.$props, customToolbarButton: vm.customToolbarButton() };
+    let config = { ...vm.$props, customToolbarButton: (vm.customToolbarButton && vm.customToolbarButton()) };
 
     vm.editor = new StrivenEditor(vm.$refs.editor, config);
 

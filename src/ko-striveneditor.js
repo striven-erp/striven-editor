@@ -10,19 +10,22 @@ export default class KoStrivenEditor {
                 if (!ko.isObservable(options)) {
                     throw "Options must be an observable.";
                 }
-                
+
                 // Get the value binding in case we are binding the editor's contents to an observable
                 let value = allBindings().value;
                 if (value && !ko.isObservable(value)) {
                     throw "Value must be an observable.";
                 }
-        
+
                 // Pass the value to the editor in options
                 options().value = value();
-        
-                let editor = new StrivenEditor(element, options());
+
+                let editor = new StrivenEditor(element, { 
+                    ...options(), 
+                    customToolbarButton: (options().customToolbarButton && options.customToolbarButton()) 
+                });
                 let pauseUpdate = false;
-        
+
                 // Handle updates and changes to value observable
                 if (ko.isObservable(value)) {
                     // Listen to input event
@@ -31,7 +34,7 @@ export default class KoStrivenEditor {
                         value(editor.getContent());
                         pauseUpdate = false;
                     };
-        
+
                     // Subscribe to the value observable to detect when it is changed and update the editor
                     value.subscribe((newValue) => {
                         // Update the content if it's not being updated from within the editor
@@ -40,10 +43,10 @@ export default class KoStrivenEditor {
                         }
                     });
                 }
-        
+
                 // Set the editor in options
                 options().api = editor;
-        
+
             }
         };
     }
