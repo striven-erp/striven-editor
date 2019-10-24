@@ -3,21 +3,14 @@
     id="app"
     style="font-family: Segoe UI; color: #2c3e50; margin-top: 20vh; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 0 1rem;"
   >
-      <striven-editor :placeholder="'Hey there'" v-model="notes" style="min-height:300px;"></striven-editor>
-
-    <div style="display: flex; padding: 1rem; width: 100%; justify-content: center;">
-      <!-- <div
-        ref="editor"
-        class="editor"
-        style="margin-top: 20px; background-color: #fff; min-height: 300px; width: 600px;"
-      ></div> -->
-    <br/>
-      {{notes}}
-      <button @click="notes = null">Clear</button>
-    </div>
-    <div ref="customButton" class="custom-button" @click="sendContent">
-      Send
-    </div>
+    <striven-editor
+      ref="editor"
+      :placeholder="'Type something in here...'"
+      style="min-height:300px; width: 600px;"
+      meta-url="http://localhost:4200/meta"
+      :custom-toolbar-button="customButton"
+    ></striven-editor>
+    <div ref="customButton" class="custom-button" @click="sendContent">Send</div>
   </div>
 </template>
 
@@ -27,13 +20,10 @@ import { VueStrivenEditor as StrivenEditor } from "@striven-erp/striven-editor";
 
 export default {
   name: "app",
-  components: {StrivenEditor},
-  data(){
-      return {notes: ''};
-  },
-  mounted() {
-    const editorOptions = {
-      metaUrl: "http://localhost:4200/meta",//"https://mighty-anchorage-82390.herokuapp.com/meta", // metaserver.js
+  components: { StrivenEditor },
+  data() {
+    return {
+      metaUrl: "http://localhost:4200/meta", //"https://mighty-anchorage-82390.herokuapp.com/meta", // metaserver.js
       // imageUrl: "http://localhost:4200/image", // imageserver.js
       minimal: true,
       uploadOnPaste: false,
@@ -50,10 +40,8 @@ export default {
         }
         this.editor.body.blur();
       },
-      customToolbarButton: this.$refs.customButton
+      customButton: () => this.$refs.customButton
     };
-
-    this.editor = new StrivenEditor(this.$refs.editor, editorOptions);
   },
   methods: {
     sendContent() {
