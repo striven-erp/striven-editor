@@ -78,6 +78,25 @@ export default {
 </script>
 ```
 
+### Custom Toolbar Options with Vue
+
+```js
+<template>
+    <striven-editor :custom-toolbar-button="customButton" />
+    <button ref="customButton">Send</button>
+</template>
+
+<script>
+export default {
+    data () {
+        return {
+            customButton: () => this.$refs.customButton
+        }
+    }
+}
+</script>
+```
+
 ## Knockout Binding
 
 ```js
