@@ -75,7 +75,7 @@
 
 .striven-editor .se-toolbar-group[data-open="true"] .se-toolbar-option {
 	background-color: #fff;
-	border: 2px solid #ddd;
+	border: 1px solid #ddd;
 	margin: 0 2px;	
 }
 
@@ -83,7 +83,8 @@
 	background-color: #ddd;
 }
 
-.striven-editor .se-toolbar-option >svg {
+.striven-editor .se-toolbar-option > svg {
+	transform: scale(1);
 	vertical-align: middle;
 }
 
@@ -168,7 +169,7 @@
 	visibility: hidden;
 	position: absolute;
 	background-color: #fff;
-	border: 2px solid #ddd;
+	border: 1px solid #ddd;
 	padding: 10px 20px;
 	z-index: 1000;
 	opacity: 0;
