@@ -6,14 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.2.0]
+## [Released]
+
+## [2.2.0] - 2019-10-25
 
 ### Changed
 
 - Custom Button is not Toolbar Tempalte and can be used to manage the remaining real estate of the toolbar
 - Editor only initializes areas that are required by the enabled options
-
-## [Released]
+- Toolbar now uses CSS transition isntead of setInterval
 
 ## [2.1.5] - 2019-10-24
 
