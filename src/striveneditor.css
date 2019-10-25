@@ -63,6 +63,12 @@
 	justify-content: space-between;
 	align-items: center;
 	flex-wrap: wrap;
+	height: 40px;
+	transition: height 200ms;
+}
+
+.striven-editor .se-toolbar-close {
+	height: 0px;
 }
 
 .striven-editor .se-toolbar-options {

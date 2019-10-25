@@ -134,12 +134,14 @@ export default class StrivenEditor {
             this.toolbarTemplate && (this.toolbarTemplate.style.display = "none");
             this.toolbarOptionsGroup.style.display = "none";
 
+            this.toolbar.classList.add("se-toolbar-close");
+
             const bodyFocus = this.body.onfocus;
             this.body.onfocus = () => {
                 bodyFocus && bodyFocus();
 
                 this.overflow();
-                this.toolbarSlideUp();
+                this.openToolbar();
             };
 
             const bodyBlur = this.body.onblur;
@@ -152,7 +154,7 @@ export default class StrivenEditor {
                         && this.imageMenu.dataset.active !== "true"
                         && !this.isEditorInFocus()
                     ) {
-                        this.toolbarSlideDown();
+                        this.closeToolbar();
                     }
                 }, 200);
             };
@@ -263,7 +265,7 @@ export default class StrivenEditor {
         this.linkMenu && this.editor.appendChild(this.linkMenu);
         this.imageMenu && this.editor.appendChild(this.imageMenu);
         this.metaDataSection && this.editor.appendChild(this.metaDataSection);
-        this.filesSection &&    this.editor.appendChild(this.filesSection);
+        this.filesSection && this.editor.appendChild(this.filesSection);
 
         // Reposition Toolbar
         if (this.options.toolbarBottom) {
@@ -278,40 +280,18 @@ export default class StrivenEditor {
         }
     }
 
-    toolbarSlideUp() {
-        const that = this;
-
-        let height = this.toolbar.offsetHeight;
-        let id = setInterval(frame, 5);
-
-        function frame() {
-            if (height >= 40) {
-                that.toolbarTemplate && (that.toolbarTemplate.style.display = "flex");
-                that.toolbarOptionsGroup.style.display = "flex";
-                clearInterval(id);
-            } else {
-                height++;
-                that.toolbar.style.minHeight = `${height}px`;
-            }
-        }
+    openToolbar() {
+        this.toolbar.classList.remove('se-toolbar-close');
+        setTimeout(() => {
+            this.toolbarOptionsGroup.style.display = "flex";
+            this.toolbarTemplate.style.display = "flex";
+        }, 200)
     }
 
-    toolbarSlideDown() {
-        const that = this;
-
-        this.toolbarTemplate && (this.toolbarTemplate.style.display = "none");
+    closeToolbar() {
         this.toolbarOptionsGroup.style.display = "none";
-
-        let height = 40;
-        let id = setInterval(frame, 5);
-        function frame() {
-            if (height === 0) {
-                clearInterval(id);
-            } else {
-                height--;
-                that.toolbar.style.minHeight = `${height}px`;
-            }
-        }
+        this.toolbarTemplate.style.display = "none";
+        this.toolbar.classList.add('se-toolbar-close');
     }
 
     initToolbar() {
@@ -320,10 +300,8 @@ export default class StrivenEditor {
         const groups = Object.keys(this.optionGroups);
 
         toolbar.classList.add("se-toolbar");
-        toolbar.style.minHeight = this.options.toolbarHide ? "0" : "40px";
 
         this.toolbarOptionsGroup.classList.add("se-toolbar-options");
-        this.toolbarOptionsGroup.style.display = this.options.toolbarHide ? "none" : "flex";
 
         toolbar.onclick = () => this.body.focus();
 
@@ -419,14 +397,13 @@ export default class StrivenEditor {
         toolbar.appendChild(this.toolbarOptionsGroup);
 
         // Custom toolbar template
-        if(this.options.toolbarTemplate) {
+        if (this.options.toolbarTemplate) {
             const toolbarTemplate = document.createElement('div');
             toolbarTemplate.id = 'toolbar-template';
 
             toolbarTemplate.appendChild(this.options.toolbarTemplate);
             toolbar.appendChild(toolbarTemplate);
 
-            this.options.toolbarHide && (toolbarTemplate.style.display = "none");
             this.toolbarTemplate = toolbarTemplate;
         }
 
@@ -583,15 +560,15 @@ export default class StrivenEditor {
                 this.options.onEnter(e);
 
                 // if (!document.queryCommandState('insertOrderedList') && !document.queryCommandState('insertUnorderedList')) {
-                    // const hasText = !!this.getTextContent();
-                    // const hasImage = !!body.querySelector('img');
+                // const hasText = !!this.getTextContent();
+                // const hasImage = !!body.querySelector('img');
 
-                    // // remove break from enter
-                    // if (hasText || hasImage) {
-                    //     const breaks = body.querySelectorAll('div');
-                    //     const divBreak = breaks[breaks.length ? breaks.length - 1 : 0];
-                    //     divBreak && divBreak.remove();
-                    // }
+                // // remove break from enter
+                // if (hasText || hasImage) {
+                //     const breaks = body.querySelectorAll('div');
+                //     const divBreak = breaks[breaks.length ? breaks.length - 1 : 0];
+                //     divBreak && divBreak.remove();
+                // }
 
                 // }
 
@@ -633,10 +610,10 @@ export default class StrivenEditor {
 
         linkMenuButtons.classList.add('se-popup-button-container');
 
-        linkMenuButton.classList.add('se-popup-button','se-button-primary');
+        linkMenuButton.classList.add('se-popup-button', 'se-button-primary');
         linkMenuButton.textContent = "Insert Link";
 
-        linkMenuCloseButton.classList.add('se-popup-button','se-button-secondary');
+        linkMenuCloseButton.classList.add('se-popup-button', 'se-button-secondary');
         linkMenuCloseButton.textContent = "Close";
 
         linkMenuButton.onclick = e => {
@@ -718,10 +695,10 @@ export default class StrivenEditor {
 
         imageMenuButtons.classList.add('se-popup-button-container');
 
-        imageMenuButton.classList.add('se-popup-button','se-button-primary');
+        imageMenuButton.classList.add('se-popup-button', 'se-button-primary');
         imageMenuButton.textContent = "Insert Image";
 
-        imageMenuCloseButton.classList.add('se-popup-button','se-button-secondary');
+        imageMenuCloseButton.classList.add('se-popup-button', 'se-button-secondary');
         imageMenuCloseButton.textContent = "Close";
 
         imageMenuForm.appendChild(imageMenuFormLabel);
@@ -835,7 +812,7 @@ export default class StrivenEditor {
             e.preventDefault();
 
             const file = (e.dataTransfer.files.length && e.dataTransfer.files[0]);
-            
+
             this.attachFile(file);
         }
 
@@ -862,7 +839,7 @@ export default class StrivenEditor {
         fileSizeEl.classList.add('se-file-size')
 
         removeFileEl.classList.add('se-remove-link')
-       
+
 
         removeFileEl.onclick = e => {
             this.files.splice(e.target.parentElement.dataset.fileindex, 1);
@@ -902,7 +879,7 @@ export default class StrivenEditor {
         metaDataDescriptionEl.style.margin = "0";
 
         removeMetaDataEl.classList.add("se-remove-link");
-       
+
         removeMetaDataEl.onclick = e => e.target.parentElement.remove();
 
         metaLinkEl.appendChild(metaImageEl);
@@ -1090,7 +1067,7 @@ export default class StrivenEditor {
             : (body.style.overflowX = "hidden");
     }
 
-    pruneScripts (el) {
+    pruneScripts(el) {
         const scripts = el.querySelectorAll('script');
         scripts.forEach(script => script.remove());
 
@@ -1140,7 +1117,7 @@ export default class StrivenEditor {
         const menuRight = buttonOffset + menu.clientWidth;
 
         let offset;
-        if(menuRight > this.editor.clientWidth) {
+        if (menuRight > this.editor.clientWidth) {
             offset = buttonOffset + (this.editor.clientWidth - menuRight);
         } else {
             offset = buttonOffset;
