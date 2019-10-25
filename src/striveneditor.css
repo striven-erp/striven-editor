@@ -79,6 +79,10 @@
 	padding: 8px;
 }
 
+.striven-editor .se-toolbar-group {
+	display: inline-block;
+}
+
 .striven-editor .se-toolbar-group[data-open="true"] {
 	z-index: 1000;
 }

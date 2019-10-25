@@ -284,13 +284,13 @@ export default class StrivenEditor {
         this.toolbar.classList.remove('se-toolbar-close');
         setTimeout(() => {
             this.toolbarOptionsGroup.style.display = "flex";
-            this.toolbarTemplate.style.display = "flex";
+            this.toolbarTemplate && (this.toolbarTemplate.style.display = "flex");
         }, 200)
     }
 
     closeToolbar() {
         this.toolbarOptionsGroup.style.display = "none";
-        this.toolbarTemplate.style.display = "none";
+        this.toolbarTemplate && (this.toolbarTemplate.style.display = "none");
         this.toolbar.classList.add('se-toolbar-close');
     }
 
