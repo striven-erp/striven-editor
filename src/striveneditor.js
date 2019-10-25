@@ -123,6 +123,9 @@ export default class StrivenEditor {
 
         this.editor.classList.add("striven-editor");
 
+        // Stop events from bubbling up the DOM
+        this.editor.onkeypress = e => e.stopPropagation();
+
         // Initialze with the value property in the options
         this.setContent(this.options.value || '')
 

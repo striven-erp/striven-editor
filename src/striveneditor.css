@@ -73,10 +73,13 @@
 	padding: 8px;
 }
 
+.striven-editor .se-toolbar-group[data-open="true"] {
+	z-index: 1000;
+}
+
 .striven-editor .se-toolbar-group[data-open="true"] .se-toolbar-option {
 	background-color: #fff;
 	border: 1px solid #ddd;
-	margin: 0 2px;	
 }
 
 .striven-editor .se-toolbar-group[data-open="true"] .se-toolbar-option:hover {
@@ -84,7 +87,7 @@
 }
 
 .striven-editor .se-toolbar-option > svg {
-	transform: scale(1);
+	transform: scale(1); /* chrome bug fix */
 	vertical-align: middle;
 }
 
