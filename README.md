@@ -282,7 +282,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |placeholder|```String```|```null```|Default text to display when the editor is empty|
 |sanitizePaste|```Boolean```|```false```|*Clean* pasted content of any HTML styles|
 |imageUrl|```String```|```null```|An endpoint to make a ```POST``` request for writing encoded images to the server. <br /> See [Referencing Encoded Images](#writing-encoded-images-to-a-server)|
-|customToolbarButton|```DOM Node```|```null```|A custom HTML DOM Node option can be passed to append to the toolbar|
+|toolbarTemplate|```DOM Node```|```null```|A custom HTML DOM Node option can be passed to append to the toolbar|
 |activeOptionColor|```String```|```#ddd```|Fill color for the toolbar action to change to when active.|
 |onEnter(```e```)|```Function```|```null```|Handler function that fires when the the enter key is pressed|
 
