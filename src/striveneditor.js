@@ -128,7 +128,7 @@ export default class StrivenEditor {
 
         // Toolbar Hide
         if (this.options.toolbarHide) {
-            this.customToolbarButton && (this.customToolbarButton.style.display = "none");
+            this.toolbarTemplate && (this.toolbarTemplate.style.display = "none");
             this.toolbarOptionsGroup.style.display = "none";
 
             const bodyFocus = this.body.onfocus;
@@ -151,7 +151,7 @@ export default class StrivenEditor {
                     ) {
                         this.toolbarSlideDown();
                     }
-                }, 500);
+                }, 200);
             };
         }
 
@@ -283,8 +283,7 @@ export default class StrivenEditor {
 
         function frame() {
             if (height >= 40) {
-                const customButton = that.toolbar.querySelector('#custom-button');
-                customButton && (customButton.style.display = "flex");
+                that.toolbarTemplate && (that.toolbarTemplate.style.display = "flex");
                 that.toolbarOptionsGroup.style.display = "flex";
                 clearInterval(id);
             } else {
@@ -297,8 +296,7 @@ export default class StrivenEditor {
     toolbarSlideDown() {
         const that = this;
 
-        const customButton = this.toolbar.querySelector('#custom-button');
-        customButton && (customButton.style.display = "none");
+        this.toolbarTemplate && (this.toolbarTemplate.style.display = "none");
         this.toolbarOptionsGroup.style.display = "none";
 
         let height = 40;
@@ -417,20 +415,22 @@ export default class StrivenEditor {
 
         toolbar.appendChild(this.toolbarOptionsGroup);
 
-        // Custom toolbar button
-        if(this.options.customToolbarButton) {
-            const customButton = document.createElement('div');
-            customButton.id = 'custom-button';
-            customButton.appendChild(this.options.customToolbarButton);
-            toolbar.appendChild(customButton);
+        // Custom toolbar template
+        if(this.options.toolbarTemplate) {
+            const toolbarTemplate = document.createElement('div');
+            toolbarTemplate.id = 'toolbar-template';
 
-            this.options.toolbarHide && (customButton.style.display = "none");
+            toolbarTemplate.appendChild(this.options.toolbarTemplate);
+            toolbar.appendChild(toolbarTemplate);
+
+            this.options.toolbarHide && (toolbarTemplate.style.display = "none");
+            this.toolbarTemplate = toolbarTemplate;
         }
 
         this.toolbarOptions = toolbar.querySelectorAll("span");
         this.toolbarGroups = [...toolbar.getElementsByClassName("se-toolbar-group")];
         this.toolbarMenus = [...toolbar.getElementsByClassName("se-toolbar-menu")];
-        this.customToolbarButton = toolbar.querySelector("#custom-toolbar-button");
+        // this.customToolbarButton = toolbar.querySelector("#custom-toolbar-button");
 
         this.toolbarMenus.push(this.customToolbarMenu);
         this.toolbarGroups.push(this.customToolbarGroup);
@@ -577,7 +577,9 @@ export default class StrivenEditor {
 
             if (this.options.onEnter && e.keyCode === 13) {
 
-                if (!document.queryCommandState('insertOrderedList') && !document.queryCommandState('insertUnorderedList')) {
+                this.options.onEnter(e);
+
+                // if (!document.queryCommandState('insertOrderedList') && !document.queryCommandState('insertUnorderedList')) {
                     // const hasText = !!this.getTextContent();
                     // const hasImage = !!body.querySelector('img');
 
@@ -588,8 +590,7 @@ export default class StrivenEditor {
                     //     divBreak && divBreak.remove();
                     // }
 
-                    this.options.onEnter(e);
-                }
+                // }
 
             }
             this.toolbarState();

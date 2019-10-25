@@ -11,7 +11,7 @@
       :placeholder="'Type something in here...'"
       style="min-height:300px; width: 800px;"
       meta-url="metaUrl"
-      :custom-toolbar-button="customButton"
+      :toolbar-template="customButton"
       :on-enter="submitOnEnter"
     ></striven-editor>
     <div class="custom-button" ref="customButton" @click="sendContent">Send</div>
@@ -41,7 +41,7 @@ export default {
       },
       placeholder: "Begin typing in this editor...",
       submitOnEnter: (e) => {
-        if(e.keyCode === 13 && e.ctrlKey) {
+        if(e.ctrlKey) {
           const content = this.editor.getContent();
           const files = this.editor.getFiles();
 
@@ -67,7 +67,7 @@ export default {
       if (content || files.length) {
         console.log({ content, files });
         this.editor.clearContent();
-        this.editor.clearFiles();
+        this.editor.clearFiles(); 
       }
       this.editor.body.blur();
     }

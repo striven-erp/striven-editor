@@ -94,8 +94,10 @@
 	background-color: #ddd;
 }
 
-.striven-editor .se-toolbar #custom-button {
+.striven-editor .se-toolbar #toolbar-template {
 	height: 40px;
+	flex-grow: 1;
+	justify-content: flex-end;
 }
 
 /** File Element **/

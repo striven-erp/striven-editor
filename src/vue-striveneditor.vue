@@ -22,12 +22,12 @@ export default {
     activeOptionColor: String,
     onEnter: Function,
     value: String,
-    customToolbarButton: Function
+    toolbarTemplate: Function
   },
   mounted() {
     let vm = this;
     // Create new object to avoid mutating props
-    let config = { ...vm.$props, customToolbarButton: (vm.customToolbarButton && vm.customToolbarButton()) };
+    let config = { ...vm.$props, toolbarTemplate: (vm.toolbarTemplate && vm.toolbarTemplate()) };
 
     vm.editor = new StrivenEditor(vm.$refs.editor, config);
 

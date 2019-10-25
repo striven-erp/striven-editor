@@ -22,7 +22,7 @@ export default class KoStrivenEditor {
 
                 let editor = new StrivenEditor(element, { 
                     ...options(), 
-                    customToolbarButton: (options().customToolbarButton && options().customToolbarButton()) 
+                    toolbarTemplate: (options().toolbarTemplate && options().toolbarTemplate()) 
                 });
                 let pauseUpdate = false;
 
