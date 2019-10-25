@@ -10,7 +10,7 @@
       :toolbar-bottom="true"
       :placeholder="'Type something in here...'"
       style="min-height:300px; width: 800px;"
-      meta-url="metaUrl"
+      :meta-url="metaUrl"
       :toolbar-template="customButton"
       :on-enter="submitOnEnter"
     ></striven-editor>

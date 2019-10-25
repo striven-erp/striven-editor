@@ -118,8 +118,8 @@ export default class StrivenEditor {
         this.body = this.initBody();
         this.linkMenu = this.initLinkMenu();
         this.imageMenu = this.initImageMenu();
-        this.metaDataSection = this.initMetaDataSection();
-        this.filesSection = this.options.fileUpload && this.initFilesSection();
+        this.metaDataSection = this.options.metaUrl ? this.initMetaDataSection() : null;
+        this.filesSection = this.options.fileUpload ? this.initFilesSection() : null;
 
         this.editor.classList.add("striven-editor");
 
