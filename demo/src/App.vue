@@ -7,7 +7,7 @@
       ref="editor"
       :toolbar-hide="toolbarHide"
       :minimal="minimal"
-      :toolbar-bottom="true"
+      :toolbar-bottom="toolbarBottom"
       :placeholder="'Type something in here...'"
       style="min-height: 300px; width: 800px;"
       :meta-url="metaUrl"
@@ -31,7 +31,7 @@ export default {
     return {
       metaUrl: "https://mighty-anchorage-82390.herokuapp.com/meta", // metaserver.js
       // imageUrl: "http://localhost:4200/image", // imageserver.js
-      minimal: false,
+      minimal: true,
       uploadOnPaste: false,
       toolbarBottom: true,
       toolbarHide: true,
