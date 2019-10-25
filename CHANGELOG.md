@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0]
+
+### Changed
+
+- Custom Button is not Toolbar Tempalte and can be used to manage the remaining real estate of the toolbar
+
 ## [Released]
 
 ## [2.1.5] - 2019-10-24
