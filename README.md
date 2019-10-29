@@ -95,12 +95,16 @@ new KoStrivenEditor(ko);
 We other optional react integration
 ```js
 import React from 'react';
-import {render} from 'react-dom';
 import {createEditor} from '@striven-erp/striven-editor/dist/react-integration'
 
 const Editor = createEditor({toolbarBottom: true, minimal: true,});
 
-render( <Editor />, document.getElementById('app'))
+const App = () => {
+    return <>
+        <p>Happy editing 🎉</p>
+        <Editor />
+    </>
+}
 ```
 Note, that the editor options can't be changed, when mounted. Therefore, we currently do not support setting them via props.
 If you want to change them, create a new editor component.
