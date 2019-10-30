@@ -180,7 +180,7 @@ export default class StrivenEditor {
 
                 window.getSelection().removeAllRanges();
                 window.getSelection().addRange(this.range);
-
+                
                 const command = optionEl.id.split("-")[1];
 
                 switch (command) {
@@ -250,11 +250,10 @@ export default class StrivenEditor {
                         else {
                             document.execCommand(command, true);
                         }
-
-                        this.toolbarState();
                         break;
                 }
 
+                this.toolbarState();
                 optionElClick && optionElClick();
             };
 
@@ -537,7 +536,7 @@ export default class StrivenEditor {
                 this.options.onEnter(e);
 
             }
-            
+
             this.toolbarState();
         }
 
@@ -545,6 +544,19 @@ export default class StrivenEditor {
         body.onmouseup = e => {
             bodyMouseUp && bodyMouseUp();
             this.range = this.getRange();
+        }
+
+        const bodyFocus = body.onfocus;
+        body.onfocus = () => {
+            window.getSelection().removeAllRanges();
+            this.toolbarState();
+            bodyFocus && bodyFocus();
+        }
+
+        const bodyBlur = body.onblur;
+        body.onblur = () => {
+            this.toolbarState();
+            bodyBlur && bodyBlur();
         }
 
         return body;
@@ -1171,7 +1183,7 @@ export default class StrivenEditor {
     toolbarState() {
         this.options.toolbarOptions.forEach(option => {
             const toolbarOption = this.toolbar.querySelector(`#toolbar-${option}`);
-            if (!option.includes('justify') && !option.includes('list')) {
+            if (!option.toLowerCase().includes('justify') && !option.toLowerCase().includes('list')) {
                 if (document.queryCommandState(option)) {
                     toolbarOption.querySelector('path').setAttribute('fill', this.options.activeOptionColor);
                 } else {
