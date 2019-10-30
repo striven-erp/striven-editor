@@ -584,6 +584,8 @@ export default class StrivenEditor {
         linkMenuFormInput.type = "text";
         linkMenuFormInput.placeholder = "Insert a Link";
 
+        linkMenuButton.type = "button";
+        linkMenuCloseButton.type = "button";
 
         linkMenuButtons.classList.add('se-popup-button-container');
 
@@ -671,6 +673,9 @@ export default class StrivenEditor {
         imageMenuFormSourceInput.placeholder = "Insert a Link";
 
         imageMenuButtons.classList.add('se-popup-button-container');
+
+        imageMenuButton.type = "button";
+        imageMenuCloseButton.type = "button";
 
         imageMenuButton.classList.add('se-popup-button', 'se-button-primary');
         imageMenuButton.textContent = "Insert Image";
