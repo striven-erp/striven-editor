@@ -555,24 +555,12 @@ export default class StrivenEditor {
 
             this.range = this.getRange();
 
-            if (this.options.onEnter && e.keyCode === 13) {
+            if (this.options.onEnter && e.key === 'Enter') {
 
                 this.options.onEnter(e);
 
-                // if (!document.queryCommandState('insertOrderedList') && !document.queryCommandState('insertUnorderedList')) {
-                // const hasText = !!this.getTextContent();
-                // const hasImage = !!body.querySelector('img');
-
-                // // remove break from enter
-                // if (hasText || hasImage) {
-                //     const breaks = body.querySelectorAll('div');
-                //     const divBreak = breaks[breaks.length ? breaks.length - 1 : 0];
-                //     divBreak && divBreak.remove();
-                // }
-
-                // }
-
             }
+            
             this.toolbarState();
         }
 
