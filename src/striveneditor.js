@@ -442,29 +442,6 @@ export default class StrivenEditor {
 
         this.options.placeholder && (body.dataset.placeholder = this.options.placeholder);
 
-        // Placeholder logic
-        // if (this.options.placeholder) {
-        //     const placeholderNode = document.createElement("p");
-        //     placeholderNode.id = "placeholder-node";
-        //     placeholderNode.style.color = "#5f6368";
-        //     placeholderNode.style.margin = "0";
-        //     placeholderNode.textContent = this.options.placeholder;
-
-        //     body.append(placeholderNode);
-
-        //     const bodyFocus = body.onfocus;
-        //     body.onfocus = () => {
-        //         bodyFocus && bodyFocus();
-        //         (body.querySelector("#placeholder-node") === placeholderNode) && this.clearContent();
-        //     }
-
-        //     const bodyBlur = body.onblur;
-        //     body.onblur = () => {
-        //         bodyBlur && bodyBlur();
-        //         (this.getContent().trim() === "") && body.append(placeholderNode);
-        //     }
-        // }
-
         // Paste Handler
         body.onpaste = e => {
             function dataURLtoFile(dataurl, filename) {
