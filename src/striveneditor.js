@@ -252,6 +252,16 @@ export default class StrivenEditor {
                         break;
                 }
 
+                // keep enabled options on initial selection
+                if(!this.body.innerHTML) {
+                    this.toolbarOptions.forEach((opt) => {
+                        const path = opt.getElementsByTagName('path')[0];
+                        if(path.getAttribute('fill') === this.options.activeOptionColor) {
+                            document.execCommand(opt.id.split('-')[1], true);
+                        }
+                    })
+                }
+
                 this.toolbarState();
                 optionElClick && optionElClick();
             };
@@ -517,7 +527,7 @@ export default class StrivenEditor {
 
             }
 
-            this.toolbarState();
+            body.innerHTML && this.toolbarState();
         }
 
         const bodyMouseUp = body.onmouseup;
@@ -529,13 +539,13 @@ export default class StrivenEditor {
         const bodyFocus = body.onfocus;
         body.onfocus = () => {
             this.setRange();
-            this.toolbarState();
+            body.innerHTML && this.toolbarState();
             bodyFocus && bodyFocus();
         }
 
         const bodyBlur = body.onblur;
         body.onblur = () => {
-            this.toolbarState();
+            body.innerHTML && this.toolbarState();
             bodyBlur && bodyBlur();
         }
 
