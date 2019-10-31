@@ -148,6 +148,7 @@ export default class StrivenEditor {
             this.body.onblur = () => {
                 bodyBlur && bodyBlur();
                 this.overflow();
+
                 setTimeout(() => {
                     if (
                         this.linkMenu.dataset.active !== "true"
@@ -549,7 +550,7 @@ export default class StrivenEditor {
 
         const bodyFocus = body.onfocus;
         body.onfocus = () => {
-            this.setRange();
+            !this.browser.isEdge() && this.setRange();
             body.textContent && this.toolbarState();
             bodyFocus && bodyFocus();
         }
@@ -621,14 +622,16 @@ export default class StrivenEditor {
                 }
 
                 // insert link on no selection
-                if (this.browser.isFirefox() && this.range.startOffset === this.range.endOffset) {
-                    const link = document.createElement('a');
-                    link.href = linkValue;
-                    link.textContent = linkValue;
+                if (this.browser.isFirefox() || this.browser.isEdge()) {
+                    if (this.range.startOffset === this.range.endOffset) {
+                        const link = document.createElement('a');
+                        link.href = linkValue;
+                        link.textContent = linkValue;
 
-                    this.range.insertNode(link);
-                    this.range.selectNode(link);
-                    this.range.collapse();
+                        this.range.insertNode(link);
+                        this.range.selectNode(link);
+                        this.range.collapse();
+                    }
                 }
 
                 const bodyLinks = this.body.querySelectorAll("a");
