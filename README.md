@@ -296,6 +296,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |clearContent|None|Clear the editor of its current contents|
 |clearFiles|None|Clear the files currently attached to the editor|
 |getRange|```Range```|Get the current [Range](https://developer.mozilla.org/en-US/docs/Web/API/Range) of the window at index ```0```|
+|setRange(```Range```)|None|Clears the current range of the ```window``` and sets it to the range option that is passed. If no option is passed, then the current editor instance of the range is used.|
 |attachFile(```File```)|None|Attaches given file to the editor|
 |openLinkMenu|None|Opens the ```insertLink``` menu|
 |closeLinkMenu|None|Closes the ```insertLink``` menu|
