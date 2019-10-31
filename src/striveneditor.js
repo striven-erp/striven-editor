@@ -532,7 +532,7 @@ export default class StrivenEditor {
                         setTimeout(() => {
                             body.focus();
                             this.toolbarState();
-                        }, 100)
+                        }, 25)
                     }
                 default:
                     break;
