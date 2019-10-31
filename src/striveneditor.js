@@ -766,6 +766,7 @@ export default class StrivenEditor {
         }, false);
 
         this.body.ondragenter = e => {
+            console.log(e)
             if (!this.body.querySelector('.se-file-drop-dropzone')) {
                 const dropzone = document.createElement("div");
                 const dropzoneTextEl = document.createElement("p");
@@ -1069,8 +1070,12 @@ export default class StrivenEditor {
     }
 
     validateFile(file) {
-        const extension = file.type.split('/').pop();
-        return this.options.extensions.includes(`.${extension}`);
+        const extension = (file && file.type.split('/').pop());
+        if(extension) {
+            return this.options.extensions.includes(`.${extension}`);
+        } else {
+            return false;
+        }
     }
 
     attachFile(file) {
