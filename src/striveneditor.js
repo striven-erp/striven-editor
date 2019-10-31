@@ -339,25 +339,6 @@ export default class StrivenEditor {
             })
 
             this.toolbarOptionsGroup.appendChild(toolbarGroup);
-
-            // FONT AWESOME IMPORTED ICONS
-            // this.optionGroups[group].group.forEach((option) => {
-            //     const toolbarCommand = Object.keys(option)[0];
-            //     if(this.options.toolbarOptions.includes(toolbarCommand)){
-            //         const optionSpan = this.constructSVG(option[toolbarCommand]);
-            //         // const optionIcon = document.createElement("i");
-
-            //         optionSpan.id = `toolbar-${toolbarCommand}`;
-            //         optionSpan.style.margin = "0 10px";
-            //         // optionIcon.classList.add(this.options.fontPack);
-            //         // optionIcon.classList.add(option[toolbarCommand]);
-
-            //         // optionSpan.appendChild(optionIcon);
-            //         toolbarGroup.appendChild(optionSpan);
-            //     }
-            // })
-
-            // this.toolbarOptionsGroup.appendChild(toolbarGroup);
         })
 
         // toolbar group for custom options
@@ -549,6 +530,7 @@ export default class StrivenEditor {
         const bodyFocus = body.onfocus;
         body.onfocus = () => {
             window.getSelection().removeAllRanges();
+            window.getSelection().addRange(this.range);            
             this.toolbarState();
             bodyFocus && bodyFocus();
         }
@@ -598,9 +580,10 @@ export default class StrivenEditor {
         linkMenuButton.onclick = e => {
             const linkValue = linkMenuFormInput.value;
 
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(this.range);
+
             if (linkValue) {
-                window.getSelection().removeAllRanges();
-                window.getSelection().addRange(this.range);
 
                 if (this.browser.isFirefox() || this.browser.isEdge()) {
                     document.execCommand("createLink", false, linkValue)
@@ -617,6 +600,17 @@ export default class StrivenEditor {
                             title &&
                             this.createMetaDataElement(url, image, title, description);
                     });
+                }
+
+                // insert link on no selection
+                if (this.browser.isFirefox && this.range.startOffset === this.range.endOffset) {
+                    const link = document.createElement('a');
+                    link.href = linkValue;
+                    link.textContent = linkValue;
+
+                    this.range.insertNode(link);
+                    this.range.selectNode(link);
+                    this.range.collapse();
                 }
 
                 const bodyLinks = this.body.querySelectorAll("a");
@@ -788,7 +782,7 @@ export default class StrivenEditor {
         }
 
         this.body.ondrop = e => {
-            const dropzone = this.body.querySelector('.se-file-drop-dropzone'); 
+            const dropzone = this.body.querySelector('.se-file-drop-dropzone');
             dropzone && dropzone.remove();
 
             e.preventDefault();
@@ -1009,7 +1003,10 @@ export default class StrivenEditor {
     }
 
     getRange() {
-        return window.getSelection().getRangeAt(0);
+        const selection = window.getSelection();
+        if (selection) {
+            return window.getSelection().getRangeAt(0);
+        }
     }
 
     getMeta(url) {
