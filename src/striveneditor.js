@@ -253,10 +253,10 @@ export default class StrivenEditor {
                 }
 
                 // keep enabled options on initial selection
-                if(!this.body.innerHTML) {
+                if (!this.body.textContent) {
                     this.toolbarOptions.forEach((opt) => {
                         const path = opt.getElementsByTagName('path')[0];
-                        if(path.getAttribute('fill') === this.options.activeOptionColor) {
+                        if (path.getAttribute('fill') === this.options.activeOptionColor) {
                             document.execCommand(opt.id.split('-')[1], true);
                         }
                     })
@@ -521,13 +521,24 @@ export default class StrivenEditor {
 
             this.range = this.getRange();
 
-            if (this.options.onEnter && e.key === 'Enter') {
-
-                this.options.onEnter(e);
-
+            switch (e.key) {
+                case 'Enter':
+                    this.options.onEnter && this.options.onEnter(e);
+                    break;
+                case 'Backspace':
+                    // reset the toolbar state of the editor
+                    if (!body.textContent) {
+                        body.blur();
+                        setTimeout(() => {
+                            body.focus();
+                            this.toolbarState();
+                        }, 100)
+                    }
+                default:
+                    break;
             }
 
-            body.innerHTML && this.toolbarState();
+            body.textContent && this.toolbarState();
         }
 
         const bodyMouseUp = body.onmouseup;
@@ -539,13 +550,13 @@ export default class StrivenEditor {
         const bodyFocus = body.onfocus;
         body.onfocus = () => {
             this.setRange();
-            body.innerHTML && this.toolbarState();
+            body.textContent && this.toolbarState();
             bodyFocus && bodyFocus();
         }
 
         const bodyBlur = body.onblur;
         body.onblur = () => {
-            body.innerHTML && this.toolbarState();
+            body.textContent && this.toolbarState();
             bodyBlur && bodyBlur();
         }
 
@@ -1172,7 +1183,7 @@ export default class StrivenEditor {
     }
 
     setRange(range) {
-        if(range) {
+        if (range) {
             window.getSelection().removeAllRanges();
             window.getSelection().addRange(range);
         } else {
