@@ -43,6 +43,7 @@
 	margin: auto;
 	position: absolute;
 	border: 5px dashed #ddd;
+	background-color: rgba(0, 0, 0, .025);
 	display: flex;
 	justify-content: center;
 	align-items: center;

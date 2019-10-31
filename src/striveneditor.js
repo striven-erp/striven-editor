@@ -180,7 +180,7 @@ export default class StrivenEditor {
 
                 window.getSelection().removeAllRanges();
                 window.getSelection().addRange(this.range);
-                
+
                 const command = optionEl.id.split("-")[1];
 
                 switch (command) {
@@ -766,8 +766,7 @@ export default class StrivenEditor {
         }, false);
 
         this.body.ondragenter = e => {
-            console.log(e)
-            if (!this.body.querySelector('.se-file-drop-dropzone')) {
+            if (!this.body.querySelector('.se-file-drop-dropzone') && e.dataTransfer.types.includes('Files')) {
                 const dropzone = document.createElement("div");
                 const dropzoneTextEl = document.createElement("p");
 
@@ -789,14 +788,16 @@ export default class StrivenEditor {
         }
 
         this.body.ondrop = e => {
-            const dropzone = this.body.querySelector('.se-file-drop-dropzone');
+            const dropzone = this.body.querySelector('.se-file-drop-dropzone'); 
             dropzone && dropzone.remove();
 
             e.preventDefault();
 
-            const file = (e.dataTransfer.files.length && e.dataTransfer.files[0]);
+            if (e.dataTransfer.types.includes('Files')) {
+                const file = (e.dataTransfer.files.length && e.dataTransfer.files[0]);
 
-            this.attachFile(file);
+                this.attachFile(file);
+            }
         }
 
         this.isEdge && (this.body.ondragover = e => e.preventDefault());
@@ -1071,7 +1072,7 @@ export default class StrivenEditor {
 
     validateFile(file) {
         const extension = (file && file.type.split('/').pop());
-        if(extension) {
+        if (extension) {
             return this.options.extensions.includes(`.${extension}`);
         } else {
             return false;
