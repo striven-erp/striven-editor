@@ -178,8 +178,7 @@ export default class StrivenEditor {
 
                 this.body.focus();
 
-                window.getSelection().removeAllRanges();
-                window.getSelection().addRange(this.range);
+                this.setRange();
 
                 const command = optionEl.id.split("-")[1];
 
@@ -529,8 +528,7 @@ export default class StrivenEditor {
 
         const bodyFocus = body.onfocus;
         body.onfocus = () => {
-            window.getSelection().removeAllRanges();
-            window.getSelection().addRange(this.range);            
+            this.setRange();
             this.toolbarState();
             bodyFocus && bodyFocus();
         }
@@ -580,8 +578,7 @@ export default class StrivenEditor {
         linkMenuButton.onclick = e => {
             const linkValue = linkMenuFormInput.value;
 
-            window.getSelection().removeAllRanges();
-            window.getSelection().addRange(this.range);
+            this.setRange();
 
             if (linkValue) {
 
@@ -603,7 +600,7 @@ export default class StrivenEditor {
                 }
 
                 // insert link on no selection
-                if (this.browser.isFirefox && this.range.startOffset === this.range.endOffset) {
+                if (this.browser.isFirefox() && this.range.startOffset === this.range.endOffset) {
                     const link = document.createElement('a');
                     link.href = linkValue;
                     link.textContent = linkValue;
@@ -702,8 +699,7 @@ export default class StrivenEditor {
             const widthValue = imageMenuWidthFormInput.value;
 
             if (linkValue) {
-                window.getSelection().removeAllRanges();
-                window.getSelection().addRange(this.range);
+                this.setRange();
 
                 if (this.browser.isFirefox() || this.browser.isEdge()) { document.execCommand("insertImage", false, linkValue) }
                 else { document.execCommand("insertImage", true, linkValue) }
@@ -1163,6 +1159,16 @@ export default class StrivenEditor {
     setContent(html) {
         this.clearContent();
         this.body.innerHTML = html;
+    }
+
+    setRange(range) {
+        if(range) {
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+        } else {
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(this.range);
+        }
     }
 
     clearContent() {
