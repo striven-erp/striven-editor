@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Released]
 
+## [2.3.0] - 2019-10-31
+
+### Added
+
+- Toolbar now reset appropriately and displays state more responsive
+- Set the editors range instance helper method
+
+### Changed
+
+- Firefox editors will now insert an entire link when no selection is in the range
+
 ## [2.2.0] - 2019-10-25
 
 ### Changed
