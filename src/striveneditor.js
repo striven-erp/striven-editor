@@ -1051,18 +1051,14 @@ export default class StrivenEditor {
             this.toolbar.querySelector("#group-textAlign").style.display = "none";
             this.toolbar.querySelector("#toolbar-removeFormat").style.display = "none";
 
-            if(this.editor.offsetWidth < 300) {
-                responsiveMinimal(true);
-            } else {
-                setResponsive();
+            setResponsive();
 
-                const windowResize = window.onresize;
-                window.onresize = () => {
-                    this.closeLinkMenu();
-                    this.closeImageMenu();
-                    setResponsive();
-                    windowResize && windowResize();
-                }
+            const windowResize = window.onresize;
+            window.onresize = () => {
+                this.closeLinkMenu();
+                this.closeImageMenu();
+                setResponsive();
+                windowResize && windowResize();
             }
 
         }

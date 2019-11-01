@@ -9,7 +9,7 @@
       :minimal="minimal"
       :toolbar-bottom="toolbarBottom"
       :placeholder="'Type something in here...'"
-      style="min-height: 300px; width: 600px;"
+      style="min-height: 300px; width: 800px;"
       :meta-url="metaUrl"
       :toolbar-template="customButton"
       :on-enter="submitOnEnter"
