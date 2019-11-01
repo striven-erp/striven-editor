@@ -62,6 +62,7 @@ export default {
   methods: {
     sendContent() {
       console.log(this.editor.getContent());
+      this.editor.clearContent();
     }
   }
 };
