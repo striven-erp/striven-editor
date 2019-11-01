@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Minimal options toolbar responsive text decoration menu
 - Covert valid url text into links on paste
+- Pass a handler for when valid files are attached to the editor
 
 ## [2.3.0] - 2019-10-31
 
