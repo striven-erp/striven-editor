@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Released]
 
+## [2.4.0] - 2019-11-1
+
+### Added
+
+- Minimal options toolbar responsive text decoration menu
+- Covert valid url text into links on paste
+
 ## [2.3.0] - 2019-10-31
 
 ### Added
