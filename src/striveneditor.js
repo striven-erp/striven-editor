@@ -996,8 +996,7 @@ export default class StrivenEditor {
             const windowResize = window.onresize;
             window.onresize = () => {
                 this.toolbarGroups.forEach(group => (group && (group.style.padding = "0")));
-                this.closeLinkMenu();
-                this.closeImageMenu();
+                this.closeAllMenus();
                 setResponsive();
                 windowResize && windowResize();
             }
@@ -1007,6 +1006,8 @@ export default class StrivenEditor {
                 const textDecorationGroup = that.toolbar.querySelector('#group-textDecoration');
 
                 textDecorationMenu.onclick = () => {
+                    that.closeAllMenus();
+                    
                     let isOpen = (textDecorationMenu.dataset.open === 'true');
                     textDecorationMenu.dataset.open = (isOpen ? 'false' : 'true');
                     isOpen = (textDecorationMenu.dataset.open === 'true');
@@ -1051,8 +1052,7 @@ export default class StrivenEditor {
 
                 const windowResize = window.onresize;
                 window.onresize = () => {
-                    this.closeLinkMenu();
-                    this.closeImageMenu();
+                    this.closeAllMenus();
                     setResponsive();
                     windowResize && windowResize();
                 }
@@ -1206,11 +1206,11 @@ export default class StrivenEditor {
     }
 
     openLinkMenu() {
+        this.closeAllMenus();
+
         this.setMenuOffset(this.toolbar.querySelector('#toolbar-link'), this.linkMenu);
         this.linkMenu.classList.add('se-popup-open');
 
-        //close other open popups
-        this.closeImageMenu();
         this.linkMenu.dataset.active = "true";
         this.addPopupEscapeHandler();
     }
@@ -1220,7 +1220,7 @@ export default class StrivenEditor {
         this.imageMenu.classList.add('se-popup-open');
 
         //close other open popups
-        this.closeLinkMenu();
+        this.closeAllMenus();
         this.imageMenu.dataset.active = "true";
         this.addPopupEscapeHandler();
     }
@@ -1237,11 +1237,15 @@ export default class StrivenEditor {
         this.removePopupEscapeHandler();
     }
 
+    closeAllMenus() {
+        const popups = this.editor.getElementsByClassName('se-popup');
+        [...popups].forEach(popup => popup.classList.remove('se-popup-open'));
+    }
+
     popupEscapeHandler(evt) {
         if (evt.which === 27) {
             //close all open popups
-            this.closeImageMenu();
-            this.closeLinkMenu();
+            this.closeAllMenus();
         }
     }
 
