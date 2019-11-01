@@ -1174,6 +1174,7 @@ export default class StrivenEditor {
         if (this.validateFile(file)) {
             this.files.push(file);
             this.createFileElement(file.name, this.formatBytes(file.size));
+            this.options.onValidFile && this.option.onValidFile();
         } else {
             this.fileInvalid();
         }

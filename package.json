@@ -1,7 +1,7 @@
 {
   "name": "@striven-erp/striven-editor",
   "private": false,
-  "version": "2.4.0",
+  "version": "2.4.3",
   "description": "The lightweight Striven WYSIWYG editor built with pure JavaScript.",
   "main": "./dist",
   "scripts": {
