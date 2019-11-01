@@ -256,8 +256,7 @@ export default class StrivenEditor {
                 // keep enabled options on initial selection
                 if (!this.body.textContent) {
                     this.toolbarOptions.forEach((opt) => {
-                        const path = opt.getElementsByTagName('path')[0];
-                        if (path.getAttribute('fill') === this.options.activeOptionColor) {
+                        if (opt.classList.contains('se-toolbar-option-active')) {
                             if(this.browser.isFirefox() || this.browser.isEdge()) {
                                 document.execCommand(opt.id.split('-')[1]);
                             } else {
@@ -565,6 +564,11 @@ export default class StrivenEditor {
             bodyBlur && bodyBlur();
         }
 
+        const bodyClick = body.onclick;
+        body.onclick = () => {
+            body.textContent && this.toolbarState();
+            bodyClick && bodyClick;
+        }
         return body;
     }
 
@@ -596,7 +600,7 @@ export default class StrivenEditor {
         linkMenuButtons.classList.add('se-popup-button-container');
 
         linkMenuButton.classList.add('se-popup-button', 'se-button-primary');
-        linkMenuButton.textContent = "Insert Link";
+        linkMenuButton.textContent = "Insert";
 
         linkMenuCloseButton.classList.add('se-popup-button', 'se-button-secondary');
         linkMenuCloseButton.textContent = "Close";
@@ -657,7 +661,7 @@ export default class StrivenEditor {
             this.closeLinkMenu();
         }
 
-        linkMenuForm.appendChild(linkMenuFormLabel);
+        // linkMenuForm.appendChild(linkMenuFormLabel);
         linkMenuForm.appendChild(linkMenuFormInput);
 
         linkMenu.appendChild(linkMenuForm);
@@ -1227,9 +1231,11 @@ export default class StrivenEditor {
             const toolbarOption = this.toolbar.querySelector(`#toolbar-${option}`);
             if (!option.toLowerCase().includes('justify') && !option.toLowerCase().includes('list')) {
                 if (document.queryCommandState(option)) {
-                    toolbarOption.querySelector('path').setAttribute('fill', this.options.activeOptionColor);
+                    toolbarOption.classList.add('se-toolbar-option-active');
+                    // toolbarOption.querySelector('path').setAttribute('fill', this.options.activeOptionColor);
                 } else {
-                    toolbarOption.querySelector('path').setAttribute('fill', '#333');
+                    toolbarOption.classList.remove('se-toolbar-option-active');
+                    // toolbarOption.querySelector('path').setAttribute('fill', '#333');
                 }
             }
         })

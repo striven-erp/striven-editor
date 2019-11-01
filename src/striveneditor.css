@@ -62,7 +62,7 @@
 .striven-editor .se-toolbar {
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
+	align-items: flex-end;
 	flex-wrap: wrap;
 	height: 40px;
 	transition: height 200ms;
@@ -73,11 +73,22 @@
 }
 
 .striven-editor .se-toolbar-options {
-	margin: 0 10px;
+	margin-right: 10px;
 }
 
 .striven-editor .se-toolbar-option {
+	border: 1px solid transparent;
+	display: inline-block;
 	padding: 8px;
+}
+
+.striven-editor .se-toolbar-option.se-toolbar-option-active {
+	border: 1px solid rgba(0, 0, 0, .25);
+	background-color: #d4e7fc;
+}
+
+.striven-editor .se-toolbar-option:hover.se-toolbar-option-active {
+	background-color: #b6d6fa;
 }
 
 .striven-editor .se-toolbar-group {
@@ -94,7 +105,7 @@
 }
 
 .striven-editor .se-toolbar-group[data-open="true"] .se-toolbar-option:hover {
-	background-color: #ddd;
+	background-color: #eee;
 }
 
 .striven-editor .se-toolbar-option > svg {
@@ -105,7 +116,7 @@
 .striven-editor .se-toolbar-option:hover,
 .striven-editor .se-toolbar-option:focus,
 .striven-editor .se-toolbar-option:active {
-	background-color: #ddd;
+	background-color: #eee;
 }
 
 .striven-editor .se-toolbar #toolbar-template {
@@ -186,10 +197,10 @@
 	position: absolute;
 	background-color: #fff;
 	border: 1px solid #ddd;
-	padding: 10px 20px;
+	padding: 5px;
 	z-index: 1000;
 	opacity: 0;
-	transition: opacity 500ms, transform 500ms;
+	transition: opacity, transform, box-shadow, 500ms;
 }
 
 .striven-editor .se-popup.se-popup-top {
@@ -205,6 +216,7 @@
 .striven-editor .se-popup.se-popup-open {
 	visibility: visible;
 	transform: translateY(0);
+	box-shadow: 5px 5px 5px #ddd;
 	opacity: 1;
 }
 
@@ -224,7 +236,7 @@
 
 .striven-editor .se-popup > .se-popup-form >.se-form-input {
 	outline: none;
-	padding: 0 5px;
+	padding: 5px;
 }
 
 
