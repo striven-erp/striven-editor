@@ -92,6 +92,8 @@
 }
 
 .striven-editor .se-toolbar-group {
+	z-index: 1500;
+	background-color: #fff;
 	display: inline-block;
 }
 
