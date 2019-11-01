@@ -171,7 +171,6 @@ export default class StrivenEditor {
             // Execute Toolbar Commands
             const optionElClick = optionEl.onclick;
             optionEl.onclick = e => {
-
                 const indents = () => {
                     const indents = this.body.querySelectorAll('blockquote');
                     [...indents].forEach(indent => indent.style.margin = "0 0 0 40px"); // make the margin an option
@@ -186,33 +185,33 @@ export default class StrivenEditor {
                 switch (command) {
                     case "insertOrderedList":
                         if (this.browser.isFirefox()) {
-                            document.execCommand("indent");
+                            // document.execCommand("indent");
                             document.execCommand(command);
 
-                            indents();
+                            // indents();
                         }
                         else if (this.browser.isEdge()) {
                             document.execCommand(command);
-                            [...document.querySelectorAll('ol')].forEach(ol => ol.style.marginLeft = "40px");
+                            // [...document.querySelectorAll('ol')].forEach(ol => ol.style.marginLeft = "40px");
                         }
                         else {
-                            document.execCommand("indent", true);
+                            // document.execCommand("indent", true);
                             document.execCommand(command, true);
                         }
                         break;
                     case "insertUnorderedList":
                         if (this.browser.isFirefox()) {
-                            document.execCommand("indent");
+                            // document.execCommand("indent");
                             document.execCommand(command);
 
-                            indents();
+                            // indents();
                         }
                         else if (this.browser.isEdge()) {
                             document.execCommand(command);
-                            [...document.querySelectorAll('ul')].forEach(ul => ul.style.marginLeft = "40px");
+                            // [...document.querySelectorAll('ul')].forEach(ul => ul.style.marginLeft = "40px");
                         }
                         else {
-                            document.execCommand("indent", true);
+                            // document.execCommand("indent", true);
                             document.execCommand(command, true);
                         }
                         break;
@@ -245,7 +244,7 @@ export default class StrivenEditor {
                     default:
                         if (this.browser.isFirefox() || this.browser.isEdge()) {
                             document.execCommand(command);
-                            (command === 'indent') && indents();
+                            // (command === 'indent') && indents();
                         }
                         else {
                             document.execCommand(command, true);
