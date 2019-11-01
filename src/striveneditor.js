@@ -258,7 +258,11 @@ export default class StrivenEditor {
                     this.toolbarOptions.forEach((opt) => {
                         const path = opt.getElementsByTagName('path')[0];
                         if (path.getAttribute('fill') === this.options.activeOptionColor) {
-                            document.execCommand(opt.id.split('-')[1], true);
+                            if(this.browser.isFirefox() || this.browser.isEdge()) {
+                                document.execCommand(opt.id.split('-')[1]);
+                            } else {
+                                document.execCommand(opt.id.split('-')[1], true);
+                            }
                         }
                     })
                 }
