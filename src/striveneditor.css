@@ -127,12 +127,6 @@
 	justify-content: flex-end;
 }
 
-@media (max-width: 700px) {
-	.striven-editor .se-toolbar-group-minimal {
-		border: 1px solid #ddd;
-	}
-}
-
 /** Toolbar Menu **/
 
 .striven-editor .se-toolbar-menu {

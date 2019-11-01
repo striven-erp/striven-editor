@@ -1006,34 +1006,27 @@ export default class StrivenEditor {
                 const textDecorationMenu = that.toolbar.querySelector('#menu-textDecoration');
                 const textDecorationGroup = that.toolbar.querySelector('#group-textDecoration');
 
-                textDecorationMenu.style.display = responsive ? 'inline-block' : 'none';
-                textDecorationGroup.style.display = responsive ? 'none' : 'inline-block';
-
                 textDecorationMenu.onclick = () => {
                     let isOpen = (textDecorationMenu.dataset.open === 'true');
                     textDecorationMenu.dataset.open = (isOpen ? 'false' : 'true');
                     isOpen = (textDecorationMenu.dataset.open === 'true');
 
                     if (responsive) {
-                        textDecorationGroup.style.position = isOpen ? 'absolute' : 'relative';
-                        textDecorationGroup.style.display = isOpen ? 'block' : 'none';
+                        if (isOpen) {
+                            textDecorationGroup.classList.add('se-popup-open');
+                        } else {
+                            textDecorationGroup.classList.remove('se-popup-open');
+                        }
                     }
                 }
 
                 if (responsive) {
-                    textDecorationGroup.classList.add('se-toolbar-group-minimal');
-                    !that.options.toolbarBottom && (textDecorationGroup.style.top = '50px');
-                    that.options.toolbarBottom && (textDecorationGroup.style.bottom = '50px');
-                    textDecorationGroup.style.left = '10px';
+                    textDecorationMenu.style.display = 'inline-block';
+                    textDecorationGroup.classList.add('se-popup');
+                    textDecorationGroup.classList.add(that.options.toolbarBottom ? 'se-popup-bottom' : 'se-popup-top');
                 } else {
-                    textDecorationGroup.classList.remove('se-toolbar-group-minimal');
-
-                    textDecorationGroup.style.position = 'relative';
-                    textDecorationGroup.style.display = 'inline-block';
-
-                    !that.options.toolbarBottom && (textDecorationGroup.style.top = '0px');
-                    that.options.toolbarBottom && (textDecorationGroup.style.bottom = '0px');
-                    textDecorationGroup.style.left = '0px';
+                    textDecorationMenu.style.display = 'none';
+                    textDecorationGroup.classList.remove('se-popup');
                 }
             }
 
