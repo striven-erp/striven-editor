@@ -256,7 +256,7 @@ export default class StrivenEditor {
                 if (!this.body.textContent) {
                     this.toolbarOptions.forEach((opt) => {
                         if (opt.classList.contains('se-toolbar-option-active')) {
-                            if(this.browser.isFirefox() || this.browser.isEdge()) {
+                            if (this.browser.isFirefox() || this.browser.isEdge()) {
                                 document.execCommand(opt.id.split('-')[1]);
                             } else {
                                 document.execCommand(opt.id.split('-')[1], true);
@@ -328,7 +328,8 @@ export default class StrivenEditor {
             // toolbarMenuIcon.classList.add(this.options.fontPack);
             // toolbarMenuIcon.classList.add(this.optionGroups[group].menu);
 
-            toolbarMenu.appendChild(this.constructSVG(this.optionGroups[group].menu));
+            const svgSpan = this.constructSVG(this.optionGroups[group].menu);
+            toolbarMenu.appendChild(svgSpan.getElementsByTagName('svg')[0]);
             this.toolbarOptionsGroup.appendChild(toolbarMenu);
 
             // add group to toolbarOptions
@@ -501,8 +502,15 @@ export default class StrivenEditor {
                 e.clipboardData.items.length > 0 &&
                 e.clipboardData.items[0].type === "text/plain"
             ) {
-                e.clipboardData.items[0].getAsString(string => {
-                    if (this.options.metaUrl && this.validURL(string)) {
+                const string = e.clipboardData.getData('text/plain');
+
+                if (this.validURL(string)) {
+                    e.preventDefault();
+
+                    document.execCommand('insertHTML', true, `<a href="${string}">${string}</a>`);
+
+                    // get meta data
+                    if (this.options.metaUrl) {
                         this.getMeta(string).then(res => {
                             const { url, title, image, description } = res;
                             url &&
@@ -511,7 +519,7 @@ export default class StrivenEditor {
                                 this.createMetaDataElement(url, image, title, description);
                         });
                     }
-                });
+                }
             }
 
             this.overflow();
@@ -918,9 +926,9 @@ export default class StrivenEditor {
     initResponsive() {
         const that = this;
 
-        if (!this.options.minimal) {
-            let responsive = window.matchMedia("(max-width: 700px)").matches;
+        let responsive = window.matchMedia("(max-width: 700px)").matches;
 
+        if (!this.options.minimal) {
             function responsiveGroups(isResponsive) {
 
                 that.toolbarGroups.forEach(group => {
@@ -984,20 +992,75 @@ export default class StrivenEditor {
             }
 
             setResponsive();
+
+            const windowResize = window.onresize;
             window.onresize = () => {
                 this.toolbarGroups.forEach(group => (group && (group.style.padding = "0")));
                 this.closeLinkMenu();
                 this.closeImageMenu();
                 setResponsive();
+                windowResize && windowResize();
             }
         } else {
+            function responsiveMinimal(responsive) {
+                const textDecorationMenu = that.toolbar.querySelector('#menu-textDecoration');
+                const textDecorationGroup = that.toolbar.querySelector('#group-textDecoration');
+
+                textDecorationMenu.style.display = responsive ? 'inline-block' : 'none';
+                textDecorationGroup.style.display = responsive ? 'none' : 'inline-block';
+
+                textDecorationMenu.onclick = () => {
+                    let isOpen = (textDecorationMenu.dataset.open === 'true');
+                    textDecorationMenu.dataset.open = (isOpen ? 'false' : 'true');
+                    isOpen = (textDecorationMenu.dataset.open === 'true');
+
+                    if (responsive) {
+                        textDecorationGroup.style.position = isOpen ? 'absolute' : 'relative';
+                        textDecorationGroup.style.display = isOpen ? 'block' : 'none';
+                    }
+                }
+
+                if (responsive) {
+                    textDecorationGroup.classList.add('se-toolbar-group-minimal');
+                    !that.options.toolbarBottom && (textDecorationGroup.style.top = '50px');
+                    that.options.toolbarBottom && (textDecorationGroup.style.bottom = '50px');
+                    textDecorationGroup.style.left = '10px';
+                } else {
+                    textDecorationGroup.classList.remove('se-toolbar-group-minimal');
+
+                    textDecorationGroup.style.position = 'relative';
+                    textDecorationGroup.style.display = 'inline-block';
+
+                    !that.options.toolbarBottom && (textDecorationGroup.style.top = '0px');
+                    that.options.toolbarBottom && (textDecorationGroup.style.bottom = '0px');
+                    textDecorationGroup.style.left = '0px';
+                }
+            }
+
+            function setResponsive() {
+                responsive = window.matchMedia("(max-width: 700px)").matches;
+                responsiveMinimal(responsive);
+            }
+
             this.toolbarMenus.forEach(menu => (menu && (menu.style.display = "none")));
+
             this.toolbar.querySelector("#toolbar-strikethrough").style.display = "none";
             this.toolbar.querySelector("#toolbar-image").style.display = "none";
             this.toolbar.querySelector("#toolbar-insertOrderedList").style.display =
                 "none";
             this.toolbar.querySelector("#group-textAlign").style.display = "none";
             this.toolbar.querySelector("#toolbar-removeFormat").style.display = "none";
+
+            setResponsive();
+
+            const windowResize = window.onresize;
+            window.onresize = () => {
+                this.closeLinkMenu();
+                this.closeImageMenu();
+                setResponsive();
+                windowResize && windowResize();
+            }
+
         }
     }
 
@@ -1026,7 +1089,14 @@ export default class StrivenEditor {
     }
 
     getContent() {
-        return this.pruneScripts(this.body).innerHTML;
+        const cleanBody = this.pruneScripts(this.body);
+        const text = cleanBody.textContent;
+
+        if (text || cleanBody.getElementsByTagName('img').length) {
+            return cleanBody.innerHTML;
+        } else {
+            return null;
+        }
     }
 
     getRange() {

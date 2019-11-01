@@ -40,12 +40,12 @@ export default {
         alert("invalid file");
       },
       placeholder: "Begin typing in this editor...",
-      submitOnEnter: (e) => {
-        if(e.ctrlKey) {
+      submitOnEnter: e => {
+        if (e.ctrlKey) {
           const content = this.editor.getContent();
           const files = this.editor.getFiles();
 
-          if(content || files.length) {
+          if (content || files.length) {
             console.log({ content, files });
             this.editor.clearContent();
             this.editor.clearFiles();
@@ -61,15 +61,7 @@ export default {
   },
   methods: {
     sendContent() {
-      const content = this.editor.getContent();
-      const files = this.editor.getFiles();
-
-      if (content || files.length) {
-        console.log({ content, files });
-        this.editor.clearContent();
-        this.editor.clearFiles(); 
-      }
-      this.editor.body.blur();
+      console.log(this.editor.getContent());
     }
   }
 };

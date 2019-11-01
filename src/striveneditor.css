@@ -125,6 +125,30 @@
 	justify-content: flex-end;
 }
 
+@media (max-width: 700px) {
+	.striven-editor .se-toolbar-group-minimal {
+		border: 1px solid #ddd;
+	}
+}
+
+/** Toolbar Menu **/
+
+.striven-editor .se-toolbar-menu {
+	border: 1px solid transparent;
+	display: inline-block;
+	padding: 8px;
+	cursor: pointer;
+}
+
+.striven-editor .se-toolbar-menu:hover {
+	background-color: #eee;
+}
+
+.striven-editor .se-toolbar-menu > svg {
+	transform: scale(1); /* chrome bug fix */
+	vertical-align: middle;
+}
+
 /** File Element **/
 
 .striven-editor .se-file {
