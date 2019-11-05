@@ -308,6 +308,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |getImage(```String```)|```Promise```|Returns a promise containing data from ```POST``` request to ```imageUrl``` and passes ```imageEncoding``` in the body <br /> ```const { imageRef } = res```|
 |toolbarSlideUp|None|Manually trigger the toolbar open animation|
 |toolbarSlideDown|None|Manually trigger the toolbar close animation|
+|getAcitveOptions|```Array``` of ```String```|Returns an array of currently active toolbar options|
 |getTextContent|```String```|Returns the text content of the editor with no HTML|
 |toolbarState|None|Updates the toolbars state based on the options passed in by ```toolbarOptions```|
 |linkMenuSlideIn|None|Manually open the link menu with animation.|
