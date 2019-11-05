@@ -254,13 +254,11 @@ export default class StrivenEditor {
 
                 // keep enabled options on initial selection
                 if (!this.body.textContent) {
-                    this.toolbarOptions.forEach((opt) => {
-                        if (opt.classList.contains('se-toolbar-option-active')) {
-                            if (this.browser.isFirefox() || this.browser.isEdge()) {
-                                document.execCommand(opt.id.split('-')[1]);
-                            } else {
-                                document.execCommand(opt.id.split('-')[1], true);
-                            }
+                    this.getActiveOptions().forEach((opt) => {
+                        if (this.browser.isFirefox() || this.browser.isEdge()) {
+                            document.execCommand(opt);
+                        } else {
+                            document.execCommand(opt, true);
                         }
                     })
                 }
@@ -1007,7 +1005,7 @@ export default class StrivenEditor {
 
                 textDecorationMenu.onclick = () => {
                     that.closeAllMenus();
-                    
+
                     let isOpen = (textDecorationMenu.dataset.open === 'true');
                     textDecorationMenu.dataset.open = (isOpen ? 'false' : 'true');
                     isOpen = (textDecorationMenu.dataset.open === 'true');
@@ -1117,6 +1115,12 @@ export default class StrivenEditor {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ imageEncoding })
         }).then((res) => res.json())
+    }
+
+    getActiveOptions() {
+        return [...this.toolbarOptions]
+            .filter(opt => opt.classList.contains('se-toolbar-option-active'))
+            .map(opt => opt.id.split('-').pop())
     }
 
     validURL(str) {
