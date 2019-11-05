@@ -80,6 +80,8 @@
 	border: 1px solid transparent;
 	display: inline-block;
 	padding: 8px;
+	cursor: pointer;
+	user-select: none;
 }
 
 .striven-editor .se-toolbar-option.se-toolbar-option-active {

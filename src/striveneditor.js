@@ -147,6 +147,7 @@ export default class StrivenEditor {
             const bodyBlur = this.body.onblur;
             this.body.onblur = () => {
                 bodyBlur && bodyBlur();
+
                 this.overflow();
 
                 setTimeout(() => {
@@ -163,107 +164,35 @@ export default class StrivenEditor {
 
         // Toolbar Options
         this.toolbarOptions.forEach(optionEl => {
-            // Assign Styles
-            // optionEl.style.padding = "0 10px";
-            optionEl.style.cursor = "pointer";
-            optionEl.style.userSelect = "none";
 
             // Execute Toolbar Commands
             const optionElClick = optionEl.onclick;
             optionEl.onclick = e => {
-                const indents = () => {
-                    const indents = this.body.querySelectorAll('blockquote');
-                    [...indents].forEach(indent => indent.style.margin = "0 0 0 40px"); // make the margin an option
-                }
-
-                this.body.focus();
-
-                this.setRange();
-
-                const command = optionEl.id.split("-")[1];
+                const command = optionEl.id.split('-').pop();
 
                 switch (command) {
-                    case "insertOrderedList":
-                        if (this.browser.isFirefox()) {
-                            // document.execCommand("indent");
-                            document.execCommand(command);
+                    case 'bold':
+                    case 'underline':
+                    case 'italic':
+                        if (optionEl.classList.contains('se-toolbar-option-active')) {
+                            optionEl.classList.remove('se-toolbar-option-active');
 
-                            // indents();
-                        }
-                        else if (this.browser.isEdge()) {
-                            document.execCommand(command);
-                            // [...document.querySelectorAll('ol')].forEach(ol => ol.style.marginLeft = "40px");
-                        }
-                        else {
-                            // document.execCommand("indent", true);
-                            document.execCommand(command, true);
-                        }
-                        break;
-                    case "insertUnorderedList":
-                        if (this.browser.isFirefox()) {
-                            // document.execCommand("indent");
-                            document.execCommand(command);
+                            this.setRange();
+                            this.body.focus();
 
-                            // indents();
-                        }
-                        else if (this.browser.isEdge()) {
-                            document.execCommand(command);
-                            // [...document.querySelectorAll('ul')].forEach(ul => ul.style.marginLeft = "40px");
-                        }
-                        else {
-                            // document.execCommand("indent", true);
-                            document.execCommand(command, true);
-                        }
-                        break;
-                    case "attachment":
-                        const attachmentInput = document.createElement("input");
-                        attachmentInput.style.display = "none";
-                        attachmentInput.type = "file";
-                        attachmentInput.onchange = e => this.attachFile(attachmentInput.files[0])
-                        attachmentInput.click();
-                        break;
-                    case "link":
-                        if (this.linkMenu.dataset.active === "true") {
-                            this.closeLinkMenu();
+                            document.queryCommandState(command) && this.executeCommand(command);
                         } else {
-                            this.openLinkMenu();
+                            optionEl.classList.add('se-toolbar-option-active');
 
-                            this.linkMenu.querySelector('input').focus();
-                        }
-                        break;
-                    case "image":
-                        if (this.imageMenu.dataset.active === "true") {
-                            this.closeImageMenu();
-                        } else {
-                            this.openImageMenu();
-
-                            this.range = this.getRange();
-                            this.imageMenu.querySelector('input').focus();
+                            this.setRange();
+                            this.body.focus();
                         }
                         break;
                     default:
-                        if (this.browser.isFirefox() || this.browser.isEdge()) {
-                            document.execCommand(command);
-                            // (command === 'indent') && indents();
-                        }
-                        else {
-                            document.execCommand(command, true);
-                        }
+                        this.executeCommand(command);
                         break;
                 }
 
-                // keep enabled options on initial selection
-                if (!this.body.textContent) {
-                    this.getActiveOptions().forEach((opt) => {
-                        if (this.browser.isFirefox() || this.browser.isEdge()) {
-                            document.execCommand(opt);
-                        } else {
-                            document.execCommand(opt, true);
-                        }
-                    })
-                }
-
-                this.toolbarState();
                 optionElClick && optionElClick();
             };
 
@@ -527,27 +456,17 @@ export default class StrivenEditor {
         const bodyKeyup = body.onkeyup;
         body.onkeyup = e => {
             bodyKeyup && bodyKeyup();
-
             this.range = this.getRange();
 
             switch (e.key) {
                 case 'Enter':
                     this.options.onEnter && this.options.onEnter(e);
                     break;
-                case 'Backspace':
-                    // reset the toolbar state of the editor
-                    if (!body.textContent) {
-                        body.blur();
-                        setTimeout(() => {
-                            body.focus();
-                            this.toolbarState();
-                        }, 25)
-                    }
                 default:
                     break;
             }
 
-            body.textContent && this.toolbarState();
+            this.toolbarState();
         }
 
         const bodyMouseUp = body.onmouseup;
@@ -559,19 +478,12 @@ export default class StrivenEditor {
         const bodyFocus = body.onfocus;
         body.onfocus = () => {
             !this.browser.isEdge() && this.setRange();
-            body.textContent && this.toolbarState();
-
+            
             this.getActiveOptions().forEach(opt => {
-                !document.queryCommandState(opt) && document.execCommand(opt, true);
+                !document.queryCommandState(opt) && this.executeCommand(opt);
             })
 
             bodyFocus && bodyFocus();
-        }
-
-        const bodyBlur = body.onblur;
-        body.onblur = () => {
-            body.textContent && this.toolbarState();
-            bodyBlur && bodyBlur();
         }
 
         const bodyClick = body.onclick;
@@ -1401,5 +1313,67 @@ export default class StrivenEditor {
             return el.parentNode && isEditor(el.parentNode);
         };
         return isEditor(activeEl);
+    }
+
+    executeCommand(command) {
+        switch (command) {
+            case "insertOrderedList":
+                if (this.browser.isFirefox()) {
+                    document.execCommand(command);
+                }
+                else if (this.browser.isEdge()) {
+                    document.execCommand(command);
+                }
+                else {
+                    document.execCommand(command, true);
+                }
+                break;
+            case "insertUnorderedList":
+                if (this.browser.isFirefox()) {
+                    document.execCommand(command);
+
+                }
+                else if (this.browser.isEdge()) {
+                    document.execCommand(command);
+                }
+                else {
+                    document.execCommand(command, true);
+                }
+                break;
+            case "attachment":
+                const attachmentInput = document.createElement("input");
+                attachmentInput.style.display = "none";
+                attachmentInput.type = "file";
+                attachmentInput.onchange = e => this.attachFile(attachmentInput.files[0])
+                attachmentInput.click();
+                break;
+            case "link":
+                if (this.linkMenu.dataset.active === "true") {
+                    this.closeLinkMenu();
+                } else {
+                    this.openLinkMenu();
+
+                    this.linkMenu.querySelector('input').focus();
+                }
+                break;
+            case "image":
+                if (this.imageMenu.dataset.active === "true") {
+                    this.closeImageMenu();
+                } else {
+                    this.openImageMenu();
+
+                    this.range = this.getRange();
+                    this.imageMenu.querySelector('input').focus();
+                }
+                break;
+            default:
+                if (this.browser.isFirefox() || this.browser.isEdge()) {
+                    document.execCommand(command);
+                }
+                else {
+                    document.execCommand(command, true);
+                }
+                break;
+        }
     }
 }
