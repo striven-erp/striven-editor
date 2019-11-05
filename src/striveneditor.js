@@ -560,6 +560,11 @@ export default class StrivenEditor {
         body.onfocus = () => {
             !this.browser.isEdge() && this.setRange();
             body.textContent && this.toolbarState();
+
+            this.getActiveOptions().forEach(opt => {
+                !document.queryCommandState(opt) && document.execCommand(opt, true);
+            })
+
             bodyFocus && bodyFocus();
         }
 
