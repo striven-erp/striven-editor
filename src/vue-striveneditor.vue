@@ -10,6 +10,7 @@ export default {
   props: {
     toolbarHide: Boolean,
     toolbarBottom: Boolean,
+    toolbarOptions: Array,
     minimal: Boolean,
     metaUrl: String,
     extensions: Array,

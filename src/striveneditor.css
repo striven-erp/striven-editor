@@ -84,6 +84,11 @@
 	user-select: none;
 }
 
+.striven-editor .se-toolbar.option svg {
+	width: 16px;
+	height: 14px;
+}
+
 .striven-editor .se-toolbar-option.se-toolbar-option-active {
 	border: 1px solid rgba(0, 0, 0, .25);
 	background-color: #d4e7fc;

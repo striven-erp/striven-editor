@@ -92,6 +92,19 @@ export default class StrivenEditor {
             options.toolbarOptions || (this.options.toolbarOptions = DEFAULTOPTIONS);
             options.activeOptionColor || (this.options.activeOptionColor = ACTIVEOPTIONCOLOR);
             (options.fileUpload !== false) && (this.options.fileUpload = true);
+
+            if (options.toolbarOptions && options.minimal) {
+                const customs = options.toolbarOptions.filter(opt => typeof opt === 'object');
+                this.options.toolbarOptions = [
+                    'bold', 
+                    'italic', 
+                    'underline', 
+                    'insertUnorderedList', 
+                    'attachment', 
+                    'link', 
+                    ...customs
+                ]
+            }
         } else {
             this.options = {
                 fontPack: FONTPACK,
@@ -284,34 +297,32 @@ export default class StrivenEditor {
         // toolbar group for custom options
         const customOptions = this.options.toolbarOptions.filter(option => typeof option === "object");
         if (customOptions.length > 0) {
-            this.customToolbarMenu = document.createElement("div");
+            customOptions.forEach(opt => {
+                const { icon, handler } = opt;
 
-            this.customToolbarMenu.classList.add("se-toolbar-menu");
-            this.customToolbarMenu.id = `menu-custom`;
+                this.customOptionsGroup = document.createElement('div');
+                this.customOptionsGroup.classList.add('se-toolbar-group');
 
-            const customSVGViewBox = "0 0 1792 1792";
-            const customSVGD = "M1088 1248v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68zm0-512v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68zm0-512v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68z";
+                if (typeof icon === 'object') {
+                    const option = this.constructSVG({ viewBox: icon.viewBox, d: icon.d });
+                    option.classList.add('se-toolbar-option');
 
-            this.customToolbarMenu.appendChild(this.constructSVG({ viewBox: customSVGViewBox, d: customSVGD }));
-            this.toolbarOptionsGroup.appendChild(this.customToolbarMenu);
+                    option.onclick = () => handler();
 
-            this.customToolbarGroup = document.createElement("div");
+                    this.customOptionsGroup.appendChild(option);
+                } else {
+                    const option = document.createElement('img');
+                    option.setAttribute('src', opt.icon);
+                    option.setAttribute('alt', 'custom option');
+                    option.classList.add('se-toolbar-option');
 
-            this.customToolbarGroup.classList.add("se-toolbar-group");
-            this.customToolbarGroup.id = "group-custom";
+                    option.onclick = () => handler();
 
-            customOptions.forEach((customOption) => {
-                const { icon, handler } = customOption;
-                const optionSpan = this.constructSVG(icon);
+                    this.customOptionsGroup.appendChild(option);
+                }
 
-                optionSpan.id = `toolbar-customOption`;
-                optionSpan.style.margin = "0 10px";
-                optionSpan.onclick = () => handler();
-
-                this.customToolbarGroup.appendChild(optionSpan);
+                this.toolbarOptionsGroup.appendChild(this.customOptionsGroup);
             })
-
-            this.toolbarOptionsGroup.appendChild(this.customToolbarGroup);
         }
 
         toolbar.appendChild(this.toolbarOptionsGroup);
@@ -339,7 +350,7 @@ export default class StrivenEditor {
         this.toolbarGroups.forEach((group) => {
             if (group && group.children.length < 1) {
                 const groupName = group.id.split("-")[1];
-                const menu = this.toolbarMenus.filter((menu) => menu.id.split("-")[1] === groupName)[0];
+                const menu = this.toolbarMenus.filter((menu) => (menu && menu.id.split("-")[1] === groupName))[0];
                 menu.remove();
             }
         })
@@ -476,9 +487,9 @@ export default class StrivenEditor {
         }
 
         const bodyFocus = body.onfocus;
-        body.onfocus = () => {
+        body.onfocus = (e) => {
             !this.browser.isEdge() && this.setRange();
-            
+
             this.getActiveOptions().forEach(opt => {
                 !document.queryCommandState(opt) && this.executeCommand(opt);
             })
@@ -951,14 +962,18 @@ export default class StrivenEditor {
                 responsiveMinimal(responsive);
             }
 
+            function hideOption(option) {
+                const optionEl = that.toolbar.querySelector(`#toolbar-${option}`);
+                optionEl && (optionEl.style.display = 'none');
+            }
+
             this.toolbarMenus.forEach(menu => (menu && (menu.style.display = "none")));
 
-            this.toolbar.querySelector("#toolbar-strikethrough").style.display = "none";
-            this.toolbar.querySelector("#toolbar-image").style.display = "none";
-            this.toolbar.querySelector("#toolbar-insertOrderedList").style.display =
-                "none";
-            this.toolbar.querySelector("#group-textAlign").style.display = "none";
-            this.toolbar.querySelector("#toolbar-removeFormat").style.display = "none";
+            hideOption('strikethrough');
+            hideOption('image');
+            hideOption('insertOrderedList');
+            hideOption('textAlign');
+            hideOption('removeFormat');
 
             if (this.editor.offsetWidth < 300) {
                 responsiveMinimal(true);
@@ -1220,14 +1235,16 @@ export default class StrivenEditor {
 
     toolbarState() {
         this.options.toolbarOptions.forEach(option => {
-            const toolbarOption = this.toolbar.querySelector(`#toolbar-${option}`);
-            if (!option.toLowerCase().includes('justify') && !option.toLowerCase().includes('list')) {
-                if (document.queryCommandState(option)) {
-                    toolbarOption.classList.add('se-toolbar-option-active');
-                    // toolbarOption.querySelector('path').setAttribute('fill', this.options.activeOptionColor);
-                } else {
-                    toolbarOption.classList.remove('se-toolbar-option-active');
-                    // toolbarOption.querySelector('path').setAttribute('fill', '#333');
+            if(typeof option === 'string') {
+                const toolbarOption = this.toolbar.querySelector(`#toolbar-${option}`);
+                if (!option.toLowerCase().includes('justify') && !option.toLowerCase().includes('list')) {
+                    if (document.queryCommandState(option)) {
+                        toolbarOption.classList.add('se-toolbar-option-active');
+                        // toolbarOption.querySelector('path').setAttribute('fill', this.options.activeOptionColor);
+                    } else {
+                        toolbarOption.classList.remove('se-toolbar-option-active');
+                        // toolbarOption.querySelector('path').setAttribute('fill', '#333');
+                    }
                 }
             }
         })
