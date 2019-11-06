@@ -96,12 +96,12 @@ export default class StrivenEditor {
             if (options.toolbarOptions && options.minimal) {
                 const customs = options.toolbarOptions.filter(opt => typeof opt === 'object');
                 this.options.toolbarOptions = [
-                    'bold', 
-                    'italic', 
-                    'underline', 
-                    'insertUnorderedList', 
-                    'attachment', 
-                    'link', 
+                    'bold',
+                    'italic',
+                    'underline',
+                    'insertUnorderedList',
+                    'attachment',
+                    'link',
                     ...customs
                 ]
             }
@@ -151,10 +151,10 @@ export default class StrivenEditor {
 
             const bodyFocus = this.body.onfocus;
             this.body.onfocus = () => {
-                bodyFocus && bodyFocus();
-
                 this.overflow();
                 this.openToolbar();
+
+                bodyFocus && bodyFocus();
             };
 
             const bodyBlur = this.body.onblur;
@@ -957,11 +957,6 @@ export default class StrivenEditor {
                 }
             }
 
-            function setResponsive() {
-                responsive = window.matchMedia("(max-width: 700px)").matches;
-                responsiveMinimal(responsive);
-            }
-
             function hideOption(option) {
                 const optionEl = that.toolbar.querySelector(`#toolbar-${option}`);
                 optionEl && (optionEl.style.display = 'none');
@@ -978,14 +973,20 @@ export default class StrivenEditor {
             if (this.editor.offsetWidth < 300) {
                 responsiveMinimal(true);
             } else {
-                setResponsive();
+                responsiveMinimal(false);
+            }
 
-                const windowResize = window.onresize;
-                window.onresize = () => {
-                    this.closeAllMenus();
-                    setResponsive();
-                    windowResize && windowResize();
+            const windowResize = window.onresize;
+            window.onresize = () => {
+                this.closeAllMenus();
+
+                if (this.editor.offsetWidth < 300) {
+                    responsiveMinimal(true);
+                } else {
+                    responsiveMinimal(false);
                 }
+
+                windowResize && windowResize();
             }
 
         }
@@ -1235,7 +1236,7 @@ export default class StrivenEditor {
 
     toolbarState() {
         this.options.toolbarOptions.forEach(option => {
-            if(typeof option === 'string') {
+            if (typeof option === 'string') {
                 const toolbarOption = this.toolbar.querySelector(`#toolbar-${option}`);
                 if (!option.toLowerCase().includes('justify') && !option.toLowerCase().includes('list')) {
                     if (document.queryCommandState(option)) {
