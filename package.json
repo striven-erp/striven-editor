@@ -1,8 +1,8 @@
 {
   "name": "@striven-erp/striven-editor",
   "private": false,
-  "version": "2.4.7",
-  "description": "The lightweight Striven WYSIWYG editor built with pure JavaScript.",
+  "version": "2.5.0",
+  "description": "The lightweight zero-dependency Striven WYSIWYG editor.",
   "main": "./dist",
   "scripts": {
     "start": "cd demo && npm run serve",

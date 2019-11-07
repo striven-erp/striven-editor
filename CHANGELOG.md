@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Minimal mode now supports custom toolbar options
+- Editor resizes in minimal mode based off of offset width
+- Floating menu options are consistently responsive
 
 ## [Released]
 
