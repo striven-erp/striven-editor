@@ -492,7 +492,9 @@ export default class StrivenEditor {
 
             // disables all states
             this.options.toolbarOptions.forEach(opt => {
-                document.queryCommandState(opt) && this.executeCommand(opt);
+                if(typeof opt === 'string' && opt.includes('list')){
+                    document.queryCommandState(opt) && this.executeCommand(opt);
+                }
             })
 
             // enable only active states
