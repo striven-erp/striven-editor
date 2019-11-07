@@ -490,6 +490,12 @@ export default class StrivenEditor {
         body.onfocus = (e) => {
             !this.browser.isEdge() && this.setRange();
 
+            // disables all states
+            this.options.toolbarOptions.forEach(opt => {
+                document.queryCommandState(opt) && this.executeCommand(opt);
+            })
+
+            // enable only active states
             this.getActiveOptions().forEach(opt => {
                 !document.queryCommandState(opt) && this.executeCommand(opt);
             })
