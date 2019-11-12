@@ -772,7 +772,7 @@ export default class StrivenEditor {
             e.preventDefault();
 
             if (e.dataTransfer.types.includes('Files')) {
-                if(e.dataTransfer.files.length) {
+                if (e.dataTransfer.files.length) {
                     [...e.dataTransfer.files].forEach(file => this.attachFile(file));
                 }
             }
@@ -993,7 +993,7 @@ export default class StrivenEditor {
             hideOption('textAlign');
             hideOption('removeFormat');
 
-            if (this.editor.offsetWidth < 300) {
+            if ((this.toolbarTemplate.offsetWidth + this.toolbar.offsetWidth) > this.editor.offsetWidth) {
                 responsiveMinimal(true);
             } else {
                 responsiveMinimal(false);
