@@ -15,9 +15,9 @@
       :toolbar-template="customButton"
       :on-enter="submitOnEnter"
     ></striven-editor>
-    <div class="custom-button" ref="customButton" @click="sendContent">Send</div>
-    <br />
-    <i>ctrl + enter to submit</i>
+    <div ref="customButton" style="display: flex; align-items: flex-end;">
+      <div class="custom-button" @click="sendContent">Send</div>
+    </div>
   </div>
 </template>
 
