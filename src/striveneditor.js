@@ -400,6 +400,7 @@ export default class StrivenEditor {
                 });
 
             if (
+                e.clipboardData.files &&
                 e.clipboardData.files.length > 0 &&
                 e.clipboardData.files[0].type.includes("image")
             ) {
@@ -442,6 +443,7 @@ export default class StrivenEditor {
 
             // meta extraction on paste
             if (
+                e.clipboardData.items &&
                 e.clipboardData.items.length > 0 &&
                 e.clipboardData.items[0].type === "text/plain"
             ) {
@@ -450,7 +452,8 @@ export default class StrivenEditor {
                 if (this.validURL(string)) {
                     e.preventDefault();
 
-                    if(this.browser.isEdge() || this.browser.isFirefox()) {
+                    if (this.browser.isEdge() || this.browser.isFirefox()) {
+                        console.log(string)
                         document.execCommand('insertHTML', false, `<a href="${string}">${string}</a>`);
                     } else {
                         document.execCommand('insertHTML', true, `<a href="${string}">${string}</a>`);
@@ -501,7 +504,10 @@ export default class StrivenEditor {
 
             // disables all states
             this.options.toolbarOptions.forEach(opt => {
-                if(typeof opt === 'string' && opt.includes('list')){
+                if (typeof opt === 'string') {
+                    if (document.queryCommandState('insertUnorderedList')) { return false };
+                    if (document.queryCommandState('insertOrderedList')) { return false };
+
                     document.queryCommandState(opt) && this.executeCommand(opt);
                 }
             })
@@ -766,9 +772,9 @@ export default class StrivenEditor {
             e.preventDefault();
 
             if (e.dataTransfer.types.includes('Files')) {
-                const file = (e.dataTransfer.files.length && e.dataTransfer.files[0]);
-
-                this.attachFile(file);
+                if(e.dataTransfer.files.length) {
+                    [...e.dataTransfer.files].forEach(file => this.attachFile(file));
+                }
             }
         }
 
@@ -1379,7 +1385,8 @@ export default class StrivenEditor {
                 const attachmentInput = document.createElement("input");
                 attachmentInput.style.display = "none";
                 attachmentInput.type = "file";
-                attachmentInput.onchange = e => this.attachFile(attachmentInput.files[0])
+                attachmentInput.multiple = true;
+                attachmentInput.onchange = e => [...attachmentInput.files].forEach(file => this.attachFile(file));
                 attachmentInput.click();
                 break;
             case "link":
