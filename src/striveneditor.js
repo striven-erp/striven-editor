@@ -445,7 +445,11 @@ export default class StrivenEditor {
                 if (this.validURL(string)) {
                     e.preventDefault();
 
-                    document.execCommand('insertHTML', true, `<a href="${string}">${string}</a>`);
+                    if(this.browser.isEdge() || this.browser.isFirefox()) {
+                        document.execCommand('insertHTML', false, `<a href="${string}">${string}</a>`);
+                    } else {
+                        document.execCommand('insertHTML', true, `<a href="${string}">${string}</a>`);
+                    }
 
                     // get meta data
                     if (this.options.metaUrl) {
