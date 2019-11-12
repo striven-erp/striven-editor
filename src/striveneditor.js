@@ -992,8 +992,10 @@ export default class StrivenEditor {
             hideOption('insertOrderedList');
             hideOption('textAlign');
             hideOption('removeFormat');
-
-            if ((this.toolbarTemplate.offsetWidth + this.toolbar.offsetWidth) > this.editor.offsetWidth) {
+            if (
+                this.toolbarTemplate ? 
+                (this.toolbarTemplate.offsetWidth + this.toolbarOptionsGroup.offsetWidth) > this.editor.offsetWidth :
+                (this.toolbarOptionsGroup.offsetWidth > this.editor.offsetWidth)) {
                 responsiveMinimal(true);
             } else {
                 responsiveMinimal(false);
