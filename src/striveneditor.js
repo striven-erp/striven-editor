@@ -311,13 +311,18 @@ export default class StrivenEditor {
 
                     this.customOptionsGroup.appendChild(option);
                 } else {
-                    const option = document.createElement('img');
-                    option.setAttribute('src', opt.icon);
-                    option.setAttribute('alt', 'custom option');
+                    const option = document.createElement('span');
+                    const image = document.createElement('img');
+                    image.setAttribute('src', opt.icon);
+                    image.setAttribute('alt', 'custom option');
+
+                    option.style.paddingTop = '6px';
+                    option.style.paddingBottom = '8px';
                     option.classList.add('se-toolbar-option');
 
                     option.onclick = () => handler();
 
+                    option.append(image);
                     this.customOptionsGroup.appendChild(option);
                 }
 

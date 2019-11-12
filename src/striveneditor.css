@@ -79,14 +79,20 @@
 .striven-editor .se-toolbar-option {
 	border: 1px solid transparent;
 	display: inline-block;
-	padding: 8px;
+	padding: 7px;
 	cursor: pointer;
 	user-select: none;
 }
 
-.striven-editor .se-toolbar.option svg {
+.striven-editor .se-toolbar-option svg {
 	width: 16px;
 	height: 14px;
+}
+
+.striven-editor .se-toolbar-option img {
+	width: 16px;
+	height: 14px;
+	vertical-align: middle;
 }
 
 .striven-editor .se-toolbar-option.se-toolbar-option-active {
@@ -100,7 +106,7 @@
 
 .striven-editor .se-toolbar-group {
 	z-index: 1500;
-	background-color: #fff;
+	background-color: transparent;
 	display: inline-block;
 }
 
@@ -126,6 +132,7 @@
 .striven-editor .se-toolbar-option:focus,
 .striven-editor .se-toolbar-option:active {
 	background-color: #eee;
+	border-color: transparent;
 }
 
 .striven-editor .se-toolbar #toolbar-template {
