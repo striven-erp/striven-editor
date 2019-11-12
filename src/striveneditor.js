@@ -505,8 +505,8 @@ export default class StrivenEditor {
             // disables all states
             this.options.toolbarOptions.forEach(opt => {
                 if (typeof opt === 'string') {
-                    if (document.queryCommandState('insertUnorderedList')) { return false };
-                    if (document.queryCommandState('insertOrderedList')) { return false };
+                    if (document.queryCommandState('insertUnorderedList') && opt === 'insertUnorderedList') { return false };
+                    if (document.queryCommandState('insertOrderedList') && opt === 'insertOrderedList') { return false };
 
                     document.queryCommandState(opt) && this.executeCommand(opt);
                 }
