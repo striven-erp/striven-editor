@@ -595,6 +595,9 @@ export default class StrivenEditor {
                         this.range.insertNode(link);
                         this.range.selectNode(link);
                         this.range.collapse();
+
+                        // trigger input event
+                        this.body.oninput();
                     }
                 }
 
@@ -992,6 +995,7 @@ export default class StrivenEditor {
             hideOption('insertOrderedList');
             hideOption('textAlign');
             hideOption('removeFormat');
+            
             if (
                 this.toolbarTemplate ? 
                 (this.toolbarTemplate.offsetWidth + this.toolbarOptionsGroup.offsetWidth) > this.editor.offsetWidth :
