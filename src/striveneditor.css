@@ -26,6 +26,7 @@
 	min-height: auto;
 	max-height: auto;
 	height: auto;
+	word-break: break-word;
 }
 
 .striven-editor .se-body:empty::after {
