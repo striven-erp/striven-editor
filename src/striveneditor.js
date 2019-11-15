@@ -517,7 +517,16 @@ export default class StrivenEditor {
                 !document.queryCommandState(opt) && this.executeCommand(opt);
             })
 
+            this.editor.classList.add("se-focus");
+
             bodyFocus && bodyFocus();
+        }
+
+        const bodyBlur =body.onblur;
+        body.onblur =(e) =>{
+            this.editor.classList.remove("se-focus");
+
+            bodyBlur && bodyBlur();
         }
 
         const bodyClick = body.onclick;
