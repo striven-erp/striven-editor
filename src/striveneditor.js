@@ -1227,7 +1227,7 @@ export default class StrivenEditor {
 
     setContent(html) {
         this.clearContent();
-        html && this.body.innerHTML = html;
+        html && (this.body.innerHTML = html);
     }
 
     setRange(range) {
