@@ -453,7 +453,6 @@ export default class StrivenEditor {
                     e.preventDefault();
 
                     if (this.browser.isEdge() || this.browser.isFirefox()) {
-                        console.log(string)
                         document.execCommand('insertHTML', false, `<a href="${string}">${string}</a>`);
                     } else {
                         document.execCommand('insertHTML', true, `<a href="${string}">${string}</a>`);
@@ -472,6 +471,7 @@ export default class StrivenEditor {
                 }
             }
 
+            this.setLinks();
             this.overflow();
         };
 
@@ -525,6 +525,7 @@ export default class StrivenEditor {
         const bodyBlur =body.onblur;
         body.onblur =(e) =>{
             this.editor.classList.remove("se-focus");
+            this.setLinks();
 
             bodyBlur && bodyBlur();
         }
@@ -534,6 +535,13 @@ export default class StrivenEditor {
             body.textContent && this.toolbarState();
             bodyClick && bodyClick;
         }
+
+        const bodyKeyPress = body.onkeypress;
+        body.onkeypress = () => {
+            bodyKeyPress && bodyKeyPress();
+            this.setLinks();
+        }
+    
         return body;
     }
 
@@ -1369,6 +1377,11 @@ export default class StrivenEditor {
             return el.parentNode && isEditor(el.parentNode);
         };
         return isEditor(activeEl);
+    }
+
+    setLinks() {
+        const links = [...this.body.querySelectorAll('a')];
+        links.length && links.forEach(link => link.setAttribute('target', 'blank'))
     }
 
     executeCommand(command) {

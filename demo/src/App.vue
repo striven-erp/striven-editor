@@ -5,6 +5,7 @@
   >
     <striven-editor
       ref="editor"
+      v-model="content"
       :toolbar-hide="toolbarHide"
       :minimal="minimal"
       :toolbar-bottom="toolbarBottom"
@@ -14,9 +15,10 @@
       :meta-url="metaUrl"
       :on-enter="submitOnEnter"
     ></striven-editor>
-    <div ref="customButton" style="display: flex; align-items: flex-end;">
-      <div class="custom-button" @click="sendContent">Send</div>
-    </div>
+    <div v-html="content"></div>
+    <!-- <div ref="customButton" style="display: flex; align-items: flex-end;"> -->
+      <!-- <div class="custom-button" @click="sendContent">Send</div> -->
+    <!-- </div> -->
   </div>
 </template>
 
@@ -64,7 +66,8 @@ export default {
         }
       },
       customButton: () => this.$refs.customButton,
-      editor: null
+      editor: null,
+      content: ""
     };
   },
   mounted() {
