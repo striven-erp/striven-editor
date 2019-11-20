@@ -6,12 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.7.0]
+## [2.7.1]
 
 ### Changed
 
 - iOS Safari attachment fix
 - Any links inserted into the editor will open a new tab
+- Prevent default image pasting for chromebook fix
+
+## [Released]
 
 ## [2.7.0]
 
@@ -26,8 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimal mode now supports custom toolbar options
 - Editor resizes in minimal mode based off of offset width
 - Floating menu options are consistently responsive
-
-## [Released]
 
 ## [2.4.0] - 2019-11-1
 
