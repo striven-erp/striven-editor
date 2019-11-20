@@ -404,6 +404,7 @@ export default class StrivenEditor {
                 e.clipboardData.files.length > 0 &&
                 e.clipboardData.files[0].type.includes("image")
             ) {
+                e.preventDefault();
                 convertImage(e.clipboardData.files[0]).then(res => {
                     if (this.options.imageUrl) {
                         this.getImage(res)
