@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- iOS Safari attachment fix
+- Any links inserted into the editor will open a new tab
+
+## [2.7.0]
+
+### Changed
+
 - Edge support fixes
 
 ## [2.5.0]
