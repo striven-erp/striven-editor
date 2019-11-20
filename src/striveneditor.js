@@ -522,8 +522,8 @@ export default class StrivenEditor {
             bodyFocus && bodyFocus();
         }
 
-        const bodyBlur =body.onblur;
-        body.onblur =(e) =>{
+        const bodyBlur = body.onblur;
+        body.onblur = (e) => {
             this.editor.classList.remove("se-focus");
             this.setLinks();
 
@@ -541,7 +541,7 @@ export default class StrivenEditor {
             bodyKeyPress && bodyKeyPress();
             this.setLinks();
         }
-    
+
         return body;
     }
 
@@ -1012,11 +1012,11 @@ export default class StrivenEditor {
             hideOption('insertOrderedList');
             hideOption('textAlign');
             hideOption('removeFormat');
-            
+
             if (
-                this.toolbarTemplate ? 
-                (this.toolbarTemplate.offsetWidth + this.toolbarOptionsGroup.offsetWidth) > this.editor.offsetWidth :
-                (this.toolbarOptionsGroup.offsetWidth > this.editor.offsetWidth)) {
+                this.toolbarTemplate ?
+                    (this.toolbarTemplate.offsetWidth + this.toolbarOptionsGroup.offsetWidth) > this.editor.offsetWidth :
+                    (this.toolbarOptionsGroup.offsetWidth > this.editor.offsetWidth)) {
                 responsiveMinimal(true);
             } else {
                 responsiveMinimal(false);
@@ -1414,7 +1414,13 @@ export default class StrivenEditor {
                 attachmentInput.style.display = "none";
                 attachmentInput.type = "file";
                 attachmentInput.multiple = true;
-                attachmentInput.onchange = e => [...attachmentInput.files].forEach(file => this.attachFile(file));
+                attachmentInput.style.visibility = 'hidden';
+                attachmentInput.style.display = 'none';
+                document.body.append(attachmentInput);
+                attachmentInput.onchange = e => {
+                    [...attachmentInput.files].forEach(file => this.attachFile(file));
+                    attachmentInput.remove();
+                }
                 attachmentInput.click();
                 break;
             case "link":
