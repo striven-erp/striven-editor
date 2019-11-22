@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [Released]
+
+## [2.7.2]
+
+### Changed
+
+- Only pasted and inserted links open new tabs
+- Inputs focus on popups
+
 ## [2.7.1]
 
 ### Changed
@@ -14,7 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Any links inserted into the editor will open a new tab
 - Prevent default image pasting for chromebook fix
 
-## [Released]
 
 ## [2.7.0]
 
