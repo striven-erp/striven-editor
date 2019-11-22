@@ -475,6 +475,7 @@ export default class StrivenEditor {
                 }
             }
 
+            this.body.oninput();
             this.overflow();
         };
 
@@ -616,9 +617,6 @@ export default class StrivenEditor {
                         this.range.insertNode(link);
                         this.range.selectNode(link);
                         this.range.collapse();
-
-                        // trigger input event
-                        this.body.oninput();
                     }
                 }
 
@@ -627,6 +625,9 @@ export default class StrivenEditor {
                 if (!this.browser.isFirefox()) {
                     [...bodyLinks].forEach(link => (link.contentEditable = 'false'));
                 }
+
+                // trigger input event
+                this.body.oninput();
 
                 linkMenuFormInput.value = "";
                 this.closeLinkMenu();
