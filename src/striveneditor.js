@@ -459,6 +459,9 @@ export default class StrivenEditor {
                         document.execCommand('insertHTML', true, `<a href="${string}">${string}</a>`);
                     }
 
+                    const links = [...this.body.querySelectorAll(`a[href="${string}"]`)];
+                    links.forEach(link => link.setAttribute('target', '_blank'));
+
                     // get meta data
                     if (this.options.metaUrl) {
                         this.getMeta(string).then(res => {
@@ -472,7 +475,6 @@ export default class StrivenEditor {
                 }
             }
 
-            this.setLinks();
             this.overflow();
         };
 
@@ -526,7 +528,6 @@ export default class StrivenEditor {
         const bodyBlur = body.onblur;
         body.onblur = (e) => {
             this.editor.classList.remove("se-focus");
-            this.setLinks();
 
             bodyBlur && bodyBlur();
         }
@@ -540,7 +541,6 @@ export default class StrivenEditor {
         const bodyKeyPress = body.onkeypress;
         body.onkeypress = () => {
             bodyKeyPress && bodyKeyPress();
-            this.setLinks();
         }
 
         return body;
@@ -590,8 +590,11 @@ export default class StrivenEditor {
                     document.execCommand("createLink", false, linkValue)
                 }
                 else {
-                    document.execCommand("createLink", true, linkValue)
+                    document.execCommand("createLink", true, linkValue);
                 }
+
+                const links = [...this.body.querySelectorAll(`a[href="${linkValue}"]`)];
+                links.forEach(link => link.setAttribute('target', '_blank'));
 
                 if (this.options.metaUrl && this.validURL(linkValue)) {
                     this.getMeta(linkValue).then(res => {
@@ -1064,6 +1067,8 @@ export default class StrivenEditor {
     }
 
     getContent() {
+        // this.setLinkTarget();
+
         const cleanBody = this.pruneScripts(this.body);
         const text = cleanBody.textContent;
 
@@ -1380,9 +1385,15 @@ export default class StrivenEditor {
         return isEditor(activeEl);
     }
 
-    setLinks() {
+    setLinkTarget() {
         const links = [...this.body.querySelectorAll('a')];
-        links.length && links.forEach(link => link.setAttribute('target', 'blank'))
+        if (links.length) {
+            links.forEach(link => {
+                if (!link.onclick || link.href) {
+                    link.setAttribute('target', '_blank');
+                }
+            })
+        }
     }
 
     executeCommand(command) {
@@ -1430,7 +1441,7 @@ export default class StrivenEditor {
                 } else {
                     this.openLinkMenu();
 
-                    this.linkMenu.querySelector('input').focus();
+                    setTimeout(() => this.linkMenu.querySelector('input').focus(), 100)
                 }
                 break;
             case "image":
@@ -1440,7 +1451,7 @@ export default class StrivenEditor {
                     this.openImageMenu();
 
                     this.range = this.getRange();
-                    this.imageMenu.querySelector('input').focus();
+                    setTimeout(() => this.imageMenu.querySelector('input').focus(), 100)
                 }
                 break;
             default:

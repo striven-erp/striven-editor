@@ -35,7 +35,6 @@ export default {
     // Listen to input event for v-model support
     vm.editor.body.oninput = e => {
       vm.pauseUpdate = true;
-      vm.editor.setLinks();
       vm.$emit("input", vm.editor.getContent());
     };
   },
