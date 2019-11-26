@@ -381,6 +381,8 @@ export default class StrivenEditor {
 
         // Paste Handler
         body.onpaste = e => {
+
+            // Convert envoding to file
             function dataURLtoFile(dataurl, filename) {
                 var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
                     bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
@@ -392,6 +394,7 @@ export default class StrivenEditor {
                 return new File([u8arr], `${file.name}.${file.type.split('/').pop()}`, { type: file.type });
             }
 
+            // Converty file to encoding
             const convertImage = file =>
                 new Promise((resolve, reject) => {
                     const reader = new FileReader();
@@ -400,14 +403,26 @@ export default class StrivenEditor {
                     reader.onerror = error => reject(error);
                 });
 
+            // Paste image for logic for Edge
+            if (
+                this.browser.isEdge() &&
+                e.clipboardData.items &&
+                e.clipboardData.items.length > 0 &&
+                e.clipboardData.items[0].type.includes("image")
+            ) {
+                convertImage(e.clipboardData.items[0].getAsFile()).then(res => {
+                    document.execCommand('insertImage', false, res);
+                })
+            }
+
+            // Paste image logic
             if (
                 e.clipboardData.files &&
                 e.clipboardData.files.length > 0 &&
                 e.clipboardData.files[0].type.includes("image")
             ) {
 
-                // firefox handles its own pasting 
-                !this.browser.isFirefox() && e.preventDefault();
+                e.preventDefault();
 
                 convertImage(e.clipboardData.files[0]).then(res => {
                     if (this.options.imageUrl) {
@@ -419,7 +434,12 @@ export default class StrivenEditor {
                                 document.execCommand("insertImage", true, res);
                             })
                     } else {
-                        document.execCommand("insertImage", true, res);
+                        if (this.browser.isFirefox() || this.browser.isEdge()) {
+                            debugger;
+                            document.execCommand("insertImage", false, res);
+                        } else {
+                            document.execCommand("insertImage", true, res);
+                        }
                         this.options.uploadOnPaste && this.attachFile(dataURLtoFile(res, "pastedimage"));
                     }
                     this.overflow();
