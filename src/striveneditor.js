@@ -405,7 +405,7 @@ export default class StrivenEditor {
                 e.clipboardData.files[0].type.includes("image")
             ) {
 
-                //
+                // firefox handles its own pasting 
                 !this.browser.isFirefox() && e.preventDefault();
 
                 convertImage(e.clipboardData.files[0]).then(res => {
@@ -1403,10 +1403,7 @@ export default class StrivenEditor {
     executeCommand(command) {
         switch (command) {
             case "insertOrderedList":
-                if (this.browser.isFirefox()) {
-                    document.execCommand(command);
-                }
-                else if (this.browser.isEdge()) {
+                if (this.browser.isFirefox() || this.browser.isEdge()) {
                     document.execCommand(command);
                 }
                 else {
@@ -1414,11 +1411,7 @@ export default class StrivenEditor {
                 }
                 break;
             case "insertUnorderedList":
-                if (this.browser.isFirefox()) {
-                    document.execCommand(command);
-
-                }
-                else if (this.browser.isEdge()) {
+                if (this.browser.isFirefox() || this.browser.isEdge()) {
                     document.execCommand(command);
                 }
                 else {
