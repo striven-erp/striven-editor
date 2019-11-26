@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.7.3]
+
+### Changed
+
+- Safari and Chrome iOS insertUnorderedLink fix 
+- Firefox image pasting fix
+
 ## [Released]
 
 ## [2.7.2]
