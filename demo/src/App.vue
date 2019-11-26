@@ -15,7 +15,13 @@
       :meta-url="metaUrl"
       :on-enter="submitOnEnter"
     ></striven-editor>
-    <div v-html="content"></div>
+
+    <!-- TESTING -->
+    <!-- <button @click="safariOut">isSafari</button> -->
+    <!-- <button @click="chromeOut">isChrome</button> -->
+    <!-- <button @click="insertList">insertUnorderedList</button> -->
+
+    <!-- <div v-html="content"></div> -->
     <!-- <div ref="customButton" style="display: flex; align-items: flex-end;"> -->
       <!-- <div class="custom-button" @click="sendContent">Send</div> -->
     <!-- </div> -->
@@ -77,6 +83,15 @@ export default {
     sendContent() {
       console.log(this.editor.getContent());
       this.editor.clearContent();
+    },
+    safariOut() {
+      this.editor.setContent(`${this.editor.browser.isSafari()}`)
+    },
+    chromeOut() {
+      this.editor.setContent(`${this.editor.browser.isChrome()}`)
+    },
+    insertList() {
+      document.execCommand('insertUnorderedList');
     }
   }
 };

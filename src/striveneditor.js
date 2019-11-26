@@ -202,6 +202,7 @@ export default class StrivenEditor {
                         }
                         break;
                     default:
+                        this.body.focus();
                         this.executeCommand(command);
                         break;
                 }
@@ -1407,7 +1408,7 @@ export default class StrivenEditor {
                     document.execCommand(command);
                 }
                 else {
-                    document.execCommand(command, true);
+                    document.execCommand(command);
                 }
                 break;
             case "insertUnorderedList":
@@ -1415,7 +1416,7 @@ export default class StrivenEditor {
                     document.execCommand(command);
                 }
                 else {
-                    document.execCommand(command, true);
+                    document.execCommand(command);
                 }
                 break;
             case "attachment":
