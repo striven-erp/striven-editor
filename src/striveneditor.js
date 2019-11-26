@@ -1176,7 +1176,7 @@ export default class StrivenEditor {
     }
 
     validateFile(file) {
-        const extension = (file && file.name.split('.').pop());
+        const extension = (file && file.name.split('.').pop().toLowerCase());
         if (extension) {
             return this.options.extensions.includes(`.${extension}`);
         } else {
