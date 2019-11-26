@@ -435,7 +435,6 @@ export default class StrivenEditor {
                             })
                     } else {
                         if (this.browser.isFirefox() || this.browser.isEdge()) {
-                            debugger;
                             document.execCommand("insertImage", false, res);
                         } else {
                             document.execCommand("insertImage", true, res);
