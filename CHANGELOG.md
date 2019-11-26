@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Safari and Chrome iOS insertUnorderedLink fix 
 - Firefox image pasting fix
+- Handles uppercase file extensions
 
 ## [Released]
 
