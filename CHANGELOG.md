@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [Released]
+
+## [2.7.4]
+
+### Added
+
+- Sanitize content of script tags
+- Sanitize content of style tags
+- Sanitize content of position inline styles 
+
 ## [2.7.3]
 
 ### Added
@@ -17,8 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Safari and Chrome iOS insertUnorderedLink fix 
 - Firefox image pasting fix
 - Handles uppercase file extensions
-
-## [Released]
 
 ## [2.7.2]
 
