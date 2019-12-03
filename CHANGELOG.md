@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Released]
 
+## [2.7.6]
+
+### Added 
+
+- Editor documentation (JSDoc)
+
 ## [2.7.4]
 
 ### Added
