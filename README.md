@@ -282,6 +282,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |toolbarOptionFillColor|```String```|```#333```|Fill color for the toolbar option SVGs|
 |placeholder|```String```|```null```|Default text to display when the editor is empty|
 |sanitizePaste|```Boolean```|```false```|*Clean* pasted content of any HTML styles|
+|sanitizePaste|```Boolean```|```false```|*Clean* pasted content of any HTML styles|
 |imageUrl|```String```|```null```|An endpoint to make a ```POST``` request for writing encoded images to the server. <br /> See [Referencing Encoded Images](#writing-encoded-images-to-a-server)|
 |toolbarTemplate|```DOM Node```|```null```|A custom HTML DOM Node option can be passed to append to the toolbar|
 |activeOptionColor|```String```|```#ddd```|Fill color for the toolbar action to change to when active.|
@@ -314,3 +315,7 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |executeCommand(```String```)|```None```|Executes an document command from the [toolbar options list](#list-of-toolbar-options)|
 |linkMenuSlideIn|None|Manually open the link menu with animation.|
 |imageMenuSlideIn|None|Manually open image menu with animation.|
+|pruneScripts|```HTML Node```|Return element with all ```<script>``` tags removed|
+|pruneStyles|```HTML Node```|Return element with all ```<style>``` tags removed|
+|pruneInlineStyles|```HTML Node```|Return element with all inline styles with ```position``` on child nodes removed|
+
