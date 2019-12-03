@@ -318,4 +318,3 @@ Then take the SVG element's ```viewBox``` attribute data and the path element's 
 |pruneScripts|```HTML Node```|Return element with all ```<script>``` tags removed|
 |pruneStyles|```HTML Node```|Return element with all ```<style>``` tags removed|
 |pruneInlineStyles|```HTML Node```|Return element with all inline styles with ```position``` on child nodes removed|
-
