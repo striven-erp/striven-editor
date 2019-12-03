@@ -78,6 +78,12 @@ const DEFAULTOPTIONS = [
 const ACTIVEOPTIONCOLOR = "#777777";
 
 export default class StrivenEditor {
+
+    /**
+     * Instantiate the StrivenEditor
+     * @param {HTMLElement} el The element to initialize StrivenEditor on 
+     * @param {Object} options StrivenEditor options to initialize the editor with
+     */
     constructor(el, options) {
         this.establishBrowser();
 
@@ -125,6 +131,10 @@ export default class StrivenEditor {
         this.bound_popupEscapeHandler = this.popupEscapeHandler.bind(this);
     }
 
+    /**
+     * Initiliaze the StrivenEditor on the passed element.
+     * @param {HTMLElement} el 
+     */
     initEditor(el) {
         this.editor = el;
         this.toolbar = this.initToolbar();
@@ -232,6 +242,9 @@ export default class StrivenEditor {
         }
     }
 
+    /**
+     * Open the toolbar for when the toolbarHide option is set to true
+     */
     openToolbar() {
         this.toolbar.classList.remove('se-toolbar-close');
         setTimeout(() => {
@@ -239,13 +252,19 @@ export default class StrivenEditor {
             this.toolbarTemplate && (this.toolbarTemplate.style.display = "flex");
         }, 200)
     }
-
+    /**
+    * Close the toolbar for when the toolbarHide option is set to true
+    */
     closeToolbar() {
         this.toolbarOptionsGroup.style.display = "none";
         this.toolbarTemplate && (this.toolbarTemplate.style.display = "none");
         this.toolbar.classList.add('se-toolbar-close');
     }
 
+    /**
+     * Initialized the toolbar for StrivenEditor
+     * @returns {HTMLElement} The StrivenEditor toolbar
+     */
     initToolbar() {
         const toolbar = document.createElement("div");
         this.toolbarOptionsGroup = document.createElement("div");
@@ -364,6 +383,10 @@ export default class StrivenEditor {
         return toolbar;
     }
 
+    /**
+     * Initialized the StrivenEditor body
+     * @returns {HTMLElement} The StrivenEditor body 
+     */
     initBody() {
         const body = document.createElement("div");
 
@@ -570,6 +593,10 @@ export default class StrivenEditor {
         return body;
     }
 
+    /**
+     * Intializes the StrivenEditor link menu popup
+     * @returns {HTMLElement} The StrivenEditor link menu
+     */
     initLinkMenu() {
         const linkMenu = document.createElement("div");
         const linkMenuForm = document.createElement("div");
@@ -677,6 +704,10 @@ export default class StrivenEditor {
         return linkMenu;
     }
 
+    /**
+     * Initializes the StrivenEditor image menu popup
+     * @returns {HTMLElement} The StrivenEditor image menu
+     */
     initImageMenu() {
         const imageMenu = document.createElement("div");
         const imageMenuForm = document.createElement("div");
@@ -770,6 +801,10 @@ export default class StrivenEditor {
         return imageMenu;
     }
 
+    /**
+     * Initializes the StrivenEditor meta data section for inserted links into the editor
+     * @returns {HTMLElement} The StrivenEditor meta data section
+     */
     initMetaDataSection() {
         const metaDataSection = document.createElement("div");
         metaDataSection.classList.add("se-metadata-section");
@@ -777,6 +812,10 @@ export default class StrivenEditor {
         return metaDataSection;
     }
 
+    /**
+     * Initializes the StrivenEditor meta data section for attached files
+     * @returns {HTMLElement} The StrivenEditor attached file section
+     */
     initFilesSection() {
         const filesSection = document.createElement("div");
         filesSection.classList.add("se-files-section");
@@ -831,6 +870,11 @@ export default class StrivenEditor {
         return filesSection;
     }
 
+    /**
+     * Creates a file element and appends it to the attached files seciton of the editor
+     * @param {String} name Name of the file
+     * @param {Number} size Size of the file in bytes
+     */
     createFileElement(name, size) {
         const fileEl = document.createElement("div");
         const fileNameEl = document.createElement("p");
@@ -863,6 +907,13 @@ export default class StrivenEditor {
         this.filesSection.appendChild(fileEl);
     }
 
+    /**
+     * Creates a meta data element and appends it to the meta data section of the editor
+     * @param {String} url Url of the inserted link 
+     * @param {String} img Image to use for the meta data item
+     * @param {String} title Title of the meta data item
+     * @param {String} description Description of the meta data item
+     */
     createMetaDataElement(url, img, title, description) {
         const metaItemEl = document.createElement("div");
         const metaLinkEl = document.createElement("a");
@@ -904,6 +955,11 @@ export default class StrivenEditor {
         this.metaDataSection.appendChild(metaItemEl);
     }
 
+    /**
+     * Constructs an svg given an object with the viewBox and d property
+     * @param {Object} svgData ViewBox and D attributes to use for the <svg>
+     * @returns {HTMLElement} Returns the constructed svg
+     */
     constructSVG(svgData) {
         const { viewBox, d } = svgData;
         const fillColor = (this.options.toolbarOptionFillColor ? this.options.toolbarOptionFillColor : "#333");
@@ -920,6 +976,9 @@ export default class StrivenEditor {
         return icon;
     }
 
+    /**
+     * Initialize the responsive properties of the editor
+     */
     initResponsive() {
         const that = this;
 
@@ -1066,6 +1125,9 @@ export default class StrivenEditor {
         }
     }
 
+    /**
+     * Initilizes the overflow properties of the editor
+     */
     initOverflow() {
         const onFocus = this.body.onfocus;
         this.body.onfocus = () => {
@@ -1086,10 +1148,18 @@ export default class StrivenEditor {
         }
     }
 
+    /**
+     * Gets the attached files of the editor
+     * @returns {Array} Returns an array of attached files to the editor
+     */
     getFiles() {
         return this.files;
     }
 
+    /**
+     * Gets the content of the editor after sanitization
+     * @returns {String} Returns the HTML String of the editor's content
+     */
     getContent() {
         // this.setLinkTarget();
 
@@ -1107,6 +1177,10 @@ export default class StrivenEditor {
         }
     }
 
+    /**
+     * Get the range of the window
+     * @returns {Range} Range of the window 
+     */
     getRange() {
         const selection = window.getSelection();
         if (selection) {
@@ -1114,6 +1188,10 @@ export default class StrivenEditor {
         }
     }
 
+    /**
+     * 
+     * @param {String} url Url to fetch meta data from 
+     */
     getMeta(url) {
         return fetch(this.options.metaUrl, {
             method: "POST",
@@ -1174,7 +1252,7 @@ export default class StrivenEditor {
     }
 
     pruneInlineStyles(el) {
-        let inlineStyleNodes = [...el.querySelectorAll("[style]")]; 
+        let inlineStyleNodes = [...el.querySelectorAll("[style]")];
         inlineStyleNodes = inlineStyleNodes.filter(node => node.style.position);
         inlineStyleNodes.forEach(node => node.style.position = 'static');
         return el;
