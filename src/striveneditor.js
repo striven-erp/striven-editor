@@ -521,6 +521,7 @@ export default class StrivenEditor {
                 }
             }
 
+            setTimeout(() => this.pruneInlineStyles(this.body), 0);
             this.body.oninput();
             this.overflow();
         };
@@ -1157,21 +1158,14 @@ export default class StrivenEditor {
     }
 
     /**
-     * Gets the content of the editor after sanitization
+     * Gets the content of the editor if there are attached files or provided content
      * @returns {String} Returns the HTML String of the editor's content
      */
     getContent() {
-        // this.setLinkTarget();
+        const text = this.body.textContent;
 
-        let cleanBody = this.body;
-        cleanBody = this.pruneScripts(cleanBody);
-        cleanBody = this.pruneStyles(cleanBody);
-        cleanBody = this.pruneInlineStyles(cleanBody);
-
-        const text = cleanBody.textContent;
-
-        if (text || cleanBody.getElementsByTagName('img').length) {
-            return cleanBody.innerHTML;
+        if (text || this.body.getElementsByTagName('img').length) {
+            return this.body.innerHTML;
         } else {
             return null;
         }
@@ -1189,8 +1183,9 @@ export default class StrivenEditor {
     }
 
     /**
-     * 
-     * @param {String} url Url to fetch meta data from 
+     * Gets the meta data from the metaUrl option 
+     * @param {String} url Url to fetch meta data from
+     * @returns {Promise} Returns a promise that has the resolves with the meta data object 
      */
     getMeta(url) {
         return fetch(this.options.metaUrl, {
@@ -1200,6 +1195,11 @@ export default class StrivenEditor {
         }).then((res) => res.json())
     }
 
+    /**
+     * Gets the image path from the imageUrl option 
+     * @param {String} imageEncoding Encoded image string
+     * @returns {Promise} Returns a promise that resolves with the image path
+     */
     getImage(imageEncoding) {
         return fetch(this.options.imageUrl, {
             method: "POST",
@@ -1208,12 +1208,21 @@ export default class StrivenEditor {
         }).then((res) => res.json())
     }
 
+    /**
+     * Gets the editors active options based on UI
+     * @returns {Array} Returns an array with the toolbar commands currently active
+     */
     getActiveOptions() {
         return [...this.toolbarOptions]
             .filter(opt => opt.classList.contains('se-toolbar-option-active'))
             .map(opt => opt.id.split('-').pop())
     }
 
+    /**
+     * String to validate url pattern
+     * @param {String} str 
+     * @returns {Boolean} Returns true if url is valid
+     */
     validURL(str) {
         var pattern = new RegExp(
             "^(https?:\\/\\/)?" +
@@ -1227,6 +1236,9 @@ export default class StrivenEditor {
         return !!pattern.test(str);
     }
 
+    /**
+     * Checks if the content overflows and removes or provides scrollbar
+     */
     overflow() {
         const body = this.body;
         body.scrollHeight > body.clientHeight
@@ -1237,6 +1249,11 @@ export default class StrivenEditor {
             : (body.style.overflowX = "hidden");
     }
 
+    /**
+     * Prunes scripts from an elemenet
+     * @param {HTMLElement} el Element to prune scripts from
+     * @returns {HTMLElement} Returns the sanitized element
+     */
     pruneScripts(el) {
         const scripts = [...el.querySelectorAll('script')];
         scripts.forEach(script => script.remove());
@@ -1244,6 +1261,11 @@ export default class StrivenEditor {
         return el;
     }
 
+    /**
+     * Prunes styles from an element
+     * @param {HTMLElement} el Element to prune styles from
+     * @returns {HTMLElemenet} Returns the sanitized element 
+     */
     pruneStyles(el) {
         const styles = [...el.querySelectorAll('style')];
         styles.forEach(style => style.remove());
@@ -1251,6 +1273,11 @@ export default class StrivenEditor {
         return el;
     }
 
+    /**
+     * Prunes inline position styles from elements
+     * @param {HTMLElement} el Element to prune inline styles from
+     * @returns {HTMLElement} Reutrns the sanitized element 
+     */
     pruneInlineStyles(el) {
         let inlineStyleNodes = [...el.querySelectorAll("[style]")];
         inlineStyleNodes = inlineStyleNodes.filter(node => node.style.position);
@@ -1258,6 +1285,12 @@ export default class StrivenEditor {
         return el;
     }
 
+    /**
+     * Denormalizes provided bytes into human readable string
+     * @param {Number} bytes 
+     * @param {Number} decimals 
+     * @returns {String} Human readable file size string
+     */
     formatBytes(bytes, decimals = 2) {
         if (bytes === 0) return '0 Bytes';
 
@@ -1270,6 +1303,12 @@ export default class StrivenEditor {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
 
+    /**
+     * Validates file based on provided extensions. If no extensions are provided, defaults
+     * to a predefined array.
+     * @param {File} file File to validate
+     * @returns {Boolean} Returns true if file is valid 
+     */
     validateFile(file) {
         const extension = (file && file.name.split('.').pop().toLowerCase());
         if (extension) {
@@ -1279,6 +1318,10 @@ export default class StrivenEditor {
         }
     }
 
+    /**
+     * Attaches file to the editor
+     * @param {File} file File to attach to editor
+     */
     attachFile(file) {
         if (this.validateFile(file)) {
             this.files.push(file);
@@ -1289,6 +1332,9 @@ export default class StrivenEditor {
         }
     }
 
+    /**
+     * Fires the file invalid animation on the editor
+     */
     fileInvalid() {
         this.options.onInvalidFile && this.options.onInvalidFile();
         this.body.style.transition = "background-color .5s";
@@ -1299,6 +1345,11 @@ export default class StrivenEditor {
         }, 500);
     }
 
+    /**
+     * Sets the offset of the popup menu based on the button
+     * @param {HTMLElement} button Button to set offset for
+     * @param {HTMLElement} menu Popup menu to set offset on
+     */
     setMenuOffset(button, menu) {
         const editorRect = this.editor.getClientRects()[0];
         const buttonRect = button.getClientRects()[0];
@@ -1315,6 +1366,9 @@ export default class StrivenEditor {
         menu.style.left = `${offset}px`;
     }
 
+    /**
+     * Opens the editor's link menu popup
+     */
     openLinkMenu() {
         this.closeAllMenus();
 
@@ -1325,6 +1379,9 @@ export default class StrivenEditor {
         this.addPopupEscapeHandler();
     }
 
+    /**
+     * Opens the editor's image menu popup
+     */
     openImageMenu() {
         this.setMenuOffset(this.toolbar.querySelector('#toolbar-image'), this.imageMenu);
         this.imageMenu.classList.add('se-popup-open');
@@ -1335,23 +1392,36 @@ export default class StrivenEditor {
         this.addPopupEscapeHandler();
     }
 
+    /**
+     * Closes the editor's link menu popup
+     */
     closeLinkMenu() {
         this.linkMenu.classList.remove('se-popup-open');
         this.linkMenu.dataset.active = "false";
         this.removePopupEscapeHandler();
     }
 
+    /**
+     * Closes the editor's image menu popup
+     */
     closeImageMenu() {
         this.imageMenu.classList.remove('se-popup-open');
         this.imageMenu.dataset.active = "false";
         this.removePopupEscapeHandler();
     }
 
+    /**
+     * Closes all menus opended on the editor instance
+     */
     closeAllMenus() {
         const popups = this.editor.getElementsByClassName('se-popup');
         [...popups].forEach(popup => popup.classList.remove('se-popup-open'));
     }
 
+    /**
+     * Binds the escape handler event
+     * @param {Event} evt Event to bind to 
+     */
     popupEscapeHandler(evt) {
         if (evt.which === 27) {
             //close all open popups
@@ -1359,20 +1429,34 @@ export default class StrivenEditor {
         }
     }
 
+    /**
+     * Binds the escape handler to the editor for popup menus
+     */
     addPopupEscapeHandler() {
         this.removePopupEscapeHandler();
         this.editor.addEventListener('keyup', this.bound_popupEscapeHandler);
     }
 
+    /**
+     * Removes the escape handler on the editor for popup menus
+     */
     removePopupEscapeHandler() {
         this.editor.removeEventListener('keyup', this.bound_popupEscapeHandler);
     }
 
+    /**
+     * Clears the editor and sets the its content with html string
+     * @param {String} html Html string to set the content with 
+     */
     setContent(html) {
         this.clearContent();
         html && (this.body.innerHTML = html);
     }
 
+    /**
+     * Removes ranges on the window and sets it to the provided range
+     * @param {Range} range Range to set the window with 
+     */
     setRange(range) {
         if (range) {
             window.getSelection().removeAllRanges();
@@ -1383,19 +1467,34 @@ export default class StrivenEditor {
         }
     }
 
+    /**
+     * Clears the editors content
+     */
     clearContent() {
         this.body.innerHTML = "";
     }
 
+    /**
+     * Clears all attached files to the editor
+     */
     clearFiles() {
         this.files = [];
         this.filesSection.innerHTML = '';
     }
 
+    /**
+     * Gets the text content of the editor
+     * @returns {String} Returns text content of the editor
+     */
     getTextContent() {
         return this.body.textContent;
     }
 
+    /**
+     * Sanitizes the provided element
+     * @param {HTMLElement} html Element to sanitize
+     * @returns {HTMLElement} Cleaned HTML node 
+     */
     scrubHTML(html) {
         const dirtyNode = document.createElement("div");
         const cleanNode = document.createElement("div");
@@ -1406,6 +1505,9 @@ export default class StrivenEditor {
         return cleanNode;
     }
 
+    /**
+     * Sets the toolbars stated based on which options are enabled on the document
+     */
     toolbarState() {
         this.options.toolbarOptions.forEach(option => {
             if (typeof option === 'string') {
@@ -1491,6 +1593,10 @@ export default class StrivenEditor {
         };
     }
 
+    /**
+     * Checks if editor is being focused on (inclusive to children and relative elements)
+     * @returns {Boolean} Returns true if editor is being focused
+     */
     isEditorInFocus() {
         let activeEl = document.activeElement;
         var isEditor = (el) => {
@@ -1505,6 +1611,9 @@ export default class StrivenEditor {
         return isEditor(activeEl);
     }
 
+    /**
+     * Sets links in the editor to open new windows
+     */
     setLinkTarget() {
         const links = [...this.body.querySelectorAll('a')];
         if (links.length) {
@@ -1516,6 +1625,10 @@ export default class StrivenEditor {
         }
     }
 
+    /**
+     * Executes a command on the document with respect to browser
+     * @param {String} command Command to execute on the document 
+     */
     executeCommand(command) {
         switch (command) {
             case "insertOrderedList":
