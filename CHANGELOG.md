@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Editor documentation (JSDoc)
 
+### Changed
+
+- Pruning position inline styles is being done only on paste
+- Pruning scripts and styles has been removed from get content
+
 ## [2.7.4]
 
 ### Added
