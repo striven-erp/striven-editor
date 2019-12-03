@@ -1093,7 +1093,11 @@ export default class StrivenEditor {
     getContent() {
         // this.setLinkTarget();
 
-        const cleanBody = this.pruneScripts(this.body);
+        let cleanBody = this.body;
+        cleanBody = this.pruneScripts(cleanBody);
+        cleanBody = this.pruneStyles(cleanBody);
+        cleanBody = this.pruneInlineStyles(cleanBody);
+
         const text = cleanBody.textContent;
 
         if (text || cleanBody.getElementsByTagName('img').length) {
@@ -1156,9 +1160,23 @@ export default class StrivenEditor {
     }
 
     pruneScripts(el) {
-        const scripts = el.querySelectorAll('script');
+        const scripts = [...el.querySelectorAll('script')];
         scripts.forEach(script => script.remove());
 
+        return el;
+    }
+
+    pruneStyles(el) {
+        const styles = [...el.querySelectorAll('style')];
+        styles.forEach(style => style.remove());
+
+        return el;
+    }
+
+    pruneInlineStyles(el) {
+        let inlineStyleNodes = [...el.querySelectorAll("[style]")]; 
+        inlineStyleNodes = inlineStyleNodes.filter(node => node.style.position);
+        inlineStyleNodes.forEach(node => node.style.position = 'static');
         return el;
     }
 
