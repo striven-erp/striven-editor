@@ -521,8 +521,11 @@ export default class StrivenEditor {
                 }
             }
 
-            setTimeout(() => this.pruneInlineStyles(this.body), 0);
-            this.body.oninput();
+            setTimeout(() => {
+                this.body = this.pruneInlineStyles(this.body);
+                this.body.oninput();
+            }, 10)
+
             this.overflow();
         };
 

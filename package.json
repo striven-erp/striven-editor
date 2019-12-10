@@ -1,7 +1,7 @@
 {
   "name": "@striven-erp/striven-editor",
   "private": false,
-  "version": "2.7.6",
+  "version": "2.7.9",
   "description": "The lightweight zero-dependency Striven WYSIWYG editor.",
   "main": "./dist",
   "scripts": {
@@ -47,13 +47,11 @@
     "metascraper-url": "^5.7.4",
     "shortid": "^2.2.15",
     "style-loader": "^1.0.0",
-    "terser-webpack-plugin": "^2.0.1",
+    "terser-webpack-plugin": "^2.2.2",
     "vue-loader": "^15.7.1",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.9"
   },
-  "dependencies": {
-    
-  }
+  "dependencies": {}
 }
