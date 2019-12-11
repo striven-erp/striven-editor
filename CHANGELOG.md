@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.8.1]
+
+### Added
+
+- Added resize observer to watch when editor size changed
+
+### Removed
+
+- No longer binding to the onresize event for window
+
 ## [Released]
 
 ## [2.8.0]
