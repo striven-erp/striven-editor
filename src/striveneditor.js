@@ -1113,8 +1113,7 @@ export default class StrivenEditor {
                 responsiveMinimal(false);
             }
 
-            const windowResize = window.onresize;
-            window.onresize = () => {
+            const ro = new ResizeObserver(e => {
                 this.closeAllMenus();
 
                 if (this.editor.offsetWidth < 300) {
@@ -1122,10 +1121,8 @@ export default class StrivenEditor {
                 } else {
                     responsiveMinimal(false);
                 }
-
-                windowResize && windowResize();
-            }
-
+            });
+            ro.observe(this.editor);
         }
     }
 

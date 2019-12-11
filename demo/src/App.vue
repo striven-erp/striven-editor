@@ -14,6 +14,7 @@
       style="min-height: 300px; width: 800px;"
       :meta-url="metaUrl"
       :on-enter="submitOnEnter"
+      :toolbar-template="customButton"
     ></striven-editor>
 
     <!-- TESTING -->
@@ -21,10 +22,10 @@
     <!-- <button @click="chromeOut">isChrome</button> -->
     <!-- <button @click="insertList">insertUnorderedList</button> -->
 
-    <!-- <div v-html="content"></div> -->
-    <!-- <div ref="customButton" style="display: flex; align-items: flex-end;"> -->
-      <!-- <div class="custom-button" @click="sendContent">Send</div> -->
-    <!-- </div> -->
+    <div v-html="content"></div>
+    <div ref="customButton" style="display: flex; align-items: flex-end;">
+      <div class="custom-button" @click="sendContent">Send</div>
+    </div>
   </div>
 </template>
 
