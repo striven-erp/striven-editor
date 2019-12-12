@@ -8,7 +8,6 @@
 <img src="https://img.shields.io/npm/v/@striven-erp/striven-editor" alt="version">
 <img src="https://img.shields.io/github/issues/striven-erp/striven-editor" alt="GitHub issus">
 <img src="https://img.shields.io/github/languages/top/striven-erp/striven-editor" alt="GitHub top language">
-<img src="https://img.shields.io/github/size/striven-erp/striven-editor/dist/striveneditor.js" alt="GitHub file size in bytes">
 </p>
 
 <p align="center">
