@@ -45,6 +45,7 @@
     "metascraper-image": "^5.7.4",
     "metascraper-title": "^5.7.4",
     "metascraper-url": "^5.7.4",
+    "resize-observer-polyfill": "^1.5.1",
     "shortid": "^2.2.15",
     "style-loader": "^1.0.0",
     "terser-webpack-plugin": "^2.2.2",
