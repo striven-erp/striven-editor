@@ -6,7 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.8.1]
+## [Released]
+
+## [2.8.1] - 2019-12-13
 
 ### Added
 
@@ -16,15 +18,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - No longer binding to the onresize event for window
 
-## [Released]
 
-## [2.8.0]
+## [2.8.0] - 2019-12-11
 
 ### Changed
 
 - seralize-javascript vulnerability fix
 
-## [2.7.6]
+## [2.7.6] - 2019-12-11
 
 ### Added 
 
@@ -35,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pruning position inline styles is being done only on paste
 - Pruning scripts and styles has been removed from get content
 
-## [2.7.4]
+## [2.7.4] - 2019-12-11
 
 ### Added
 
@@ -43,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sanitize content of style tags
 - Sanitize content of position inline styles 
 
-## [2.7.3]
+## [2.7.3] - 2019-12-11
 
 ### Added
 
@@ -55,14 +56,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Firefox image pasting fix
 - Handles uppercase file extensions
 
-## [2.7.2]
+## [2.7.2] - 2019-12-11
 
 ### Changed
 
 - Only pasted and inserted links open new tabs
 - Inputs focus on popups
 
-## [2.7.1]
+## [2.7.1] - 2019-12-11
 
 ### Changed
 
@@ -70,14 +71,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Any links inserted into the editor will open a new tab
 - Prevent default image pasting for chromebook fix
 
-
-## [2.7.0]
+## [2.7.0] - 2019-12-11
 
 ### Changed
 
 - Edge support fixes
 
-## [2.5.0]
+## [2.5.0] - 2019-12-11
 
 ### Changed
 
