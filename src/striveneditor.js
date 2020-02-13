@@ -29,7 +29,7 @@ export default class StrivenEditor {
    */
   constructor(el, options) {
     // Webpack inserts the package.json version
-    //this['_version'] = __VERSION__;
+    // this['_version'] = __VERSION__;
 
     // Establish the browser context
     this.establishBrowser();
@@ -101,7 +101,7 @@ export default class StrivenEditor {
     this.initEditor(el); // Core Editor Initialization
     this.initResponsive(); // Editor Reponsive Logic
     this.initOverflow(); // Overflow Content Logic
-    this.overflow(); // Overflow logic on init
+    this.overflow(); // Trigger overflow login on init
 
     // DOM Access to the Editor Instance
     el.StrivenEditor = () => this;
@@ -744,36 +744,8 @@ export default class StrivenEditor {
           se.body.oninput();
         }
 
-        // Convert links to anchors
-        linkify(se.body, {}, document);
-
-        // Select converted links and add ctrlKey events to them
-        const convertedLinks =  [...se.body.getElementsByTagName('a')];
-        convertedLinks.forEach(link => {
-          link.setAttribute('target', '_blank');
-          link.classList.remove('linkified');
-
-          link.onmousemove = e => {
-            e.ctrlKey && (link.style.cursor = 'pointer');
-          };
-
-          link.onclick = e => {
-            if (e.ctrlKey) {
-              const anchor = document.createElement('a');
-              anchor.setAttribute('href', link.getAttribute('href'));
-              anchor.setAttribute('target', '_blank');
-              document.body.append(anchor);
-              anchor.click();
-              anchor.remove();
-            }
-          };
-
-          link.onmouseleave = () => (link.style.cursor = null);
-        });
-
-        const pasterange = se.getRange();
-        pasterange.selectNode(convertedLinks.pop());
-        pasterange.collapse();
+        // Convert all the links
+        this.convertAndSelectLinks(); 
       }, 10);
 
       this.overflow();
@@ -799,43 +771,7 @@ export default class StrivenEditor {
         case 'Enter':
           se.options.onEnter && se.options.onEnter(e);
         case ' ':
-          if (this.validURL(se.textBuffer)) {
-            linkify(se.body, {}, document);
-
-            const linkifyEl = se.body.getElementsByClassName('linkified');
-
-            if (linkifyEl.length > 0) {
-              const links = [...linkifyEl];
-
-              links.forEach(link => {
-                link.classList.remove('linkified');
-                if (link.getAttribute('href').includes('mailto')) {
-                  link.outerHTML = link.textContent;
-                } else {
-                  link.onmousemove = e => {
-                    e.ctrlKey && (link.style.cursor = 'pointer');
-                  };
-
-                  link.onclick = e => {
-                    if (e.ctrlKey) {
-                      const anchor = document.createElement('a');
-                      anchor.setAttribute('href', link.getAttribute('href'));
-                      anchor.setAttribute('target', '_blank');
-                      document.body.append(anchor);
-                      anchor.click();
-                      anchor.remove();
-                    }
-                  };
-
-                  link.onmouseleave = () => (link.style.cursor = null);
-                }
-              });
-
-              const range = se.getRange();
-              range.selectNode(links.pop());
-              range.collapse();
-            }
-          }
+          this.validURL(se.textBuffer) && se.convertAndSelectLinks();
           se.textBuffer = null;
           break;
         case 'Semicolon':
@@ -1120,8 +1056,9 @@ export default class StrivenEditor {
           img => img.src === linkValue,
         );
         insertedImage = insertedImage[insertedImage.length - 1];
-        insertedImage && (insertedImage.style.height = `${heightValue}px`);
-        insertedImage && (insertedImage.style.width = `${widthValue}px`);
+        insertedImage &&
+          insertedImage.setAttribute('height', `${heightValue}px`);
+        insertedImage && insertedImage.setAttribute('width', `${widthValue}px`);
 
         imageMenuHeightFormInput.value = '';
         imageMenuWidthFormInput.value = '';
@@ -2241,6 +2178,54 @@ export default class StrivenEditor {
           link.setAttribute('target', '_blank');
         }
       });
+    }
+  }
+
+  /**
+   * Convert and select links
+   */
+  convertAndSelectLinks() {
+    const se = this;
+    linkify(se.body, {}, document);
+
+    const linkElements = se.body.getElementsByTagName('a');
+
+    if (linkElements.length > 0) {
+      const links = [...linkElements];
+      const convertedLinks = [];
+      links.forEach(link => {
+        
+        link.classList.remove('linkified');
+        link.setAttribute('target', '_blank');
+
+        const href = link.getAttribute('href');
+        if (href && href.includes('mailto')) {
+          link.outerHTML = link.textContent;
+        } else {
+          link.onmousemove = e => {
+            e.ctrlKey && (link.style.cursor = 'pointer');
+          };
+
+          link.onclick = e => {
+            if (e.ctrlKey) {
+              const anchor = document.createElement('a');
+              anchor.setAttribute('href', link.getAttribute('href'));
+              anchor.setAttribute('target', '_blank');
+              document.body.append(anchor);
+              anchor.click();
+              anchor.remove();
+            }
+          };
+
+          link.onmouseleave = () => (link.style.cursor = null);
+
+          convertedLinks.push(link);
+        }
+      });
+
+      const range = se.getRange();
+      range.selectNode(convertedLinks.pop());
+      range.collapse();
     }
   }
 
