@@ -1,8 +1,8 @@
 import StrivenEditor from './striveneditor';
 
 export default class KoStrivenEditor {
-    constructor(ko) {
-        ko.bindingHandlers.striveneditor = {
+    constructor(ko, bindingName = 'striveneditor') {
+        ko.bindingHandlers[bindingName] = {
             init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
                 // Get options
                 let options = valueAccessor();

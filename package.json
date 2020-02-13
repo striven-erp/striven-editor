@@ -1,7 +1,7 @@
 {
   "name": "@striven-erp/striven-editor",
   "private": false,
-  "version": "2.8.1",
+  "version": "2.9.94",
   "description": "The lightweight zero-dependency Striven WYSIWYG editor.",
   "main": "./dist",
   "scripts": {
@@ -54,5 +54,8 @@
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.9"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@simonwep/pickr": "^1.5.0",
+    "linkifyjs": "^2.1.9"
+  }
 }
