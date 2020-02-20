@@ -161,9 +161,8 @@ export default class StrivenEditor {
       const bodyBlur = this.body.onblur;
       this.body.onblur = () => {
         bodyBlur && bodyBlur();
-
         this.overflow();
-
+         
         // Do not close the toolbar is editor is active
         setTimeout(() => {
           if (
@@ -487,8 +486,8 @@ export default class StrivenEditor {
           const refocus = se.body.onfocus;
           se.body.onfocus = () => {
             se.body.textContent && se.setRange();
-
             se.execFontStates();
+            se.scrollPosition && se.body.scrollTo(se.scrollPosition.x, se.scrollPosition.y);
             se.body.onfocus = refocus;
           };
 
@@ -522,6 +521,7 @@ export default class StrivenEditor {
           se.body.onfocus = () => {
             se.body.textContent && se.setRange();
             se.execFontStates();
+            se.scrollPosition && se.body.scrollTo(se.scrollPosition.x, se.scrollPosition.y);
             se.body.onfocus = refocus;
           };
 
@@ -739,13 +739,13 @@ export default class StrivenEditor {
         // Prune inline styles
         se.pruneInlineStyles(se.body);
 
+        // Convert all the links
+        this.convertAndSelectLinks();
+
         // Trigger oninput event
         if (se.body.oninput) {
           se.body.oninput();
         }
-
-        // Convert all the links
-        this.convertAndSelectLinks(); 
       }, 10);
 
       this.overflow();
@@ -769,7 +769,6 @@ export default class StrivenEditor {
         case 'Alt':
           break;
         case 'Enter':
-          se.options.onEnter && se.options.onEnter(e);
         case ' ':
           this.validURL(se.textBuffer) && se.convertAndSelectLinks();
           se.textBuffer = null;
@@ -837,16 +836,22 @@ export default class StrivenEditor {
         !document.queryCommandState(opt) && this.executeCommand(opt);
       });
 
+
       this.execFontStates();
-
       this.editor.classList.add('se-focus');
-
+      this.scrollPosition && body.scrollTo(this.scrollPosition); 
+      
       bodyFocus && bodyFocus();
     };
 
     const bodyBlur = body.onblur;
     body.onblur = e => {
       this.editor.classList.remove('se-focus');
+
+      this.scrollPosition = { 
+        y: body.scrollTop, 
+        x: body.scrollWidth 
+      };
 
       bodyBlur && bodyBlur();
     };
@@ -879,6 +884,10 @@ export default class StrivenEditor {
     const linkMenuFormLabel = document.createElement('p');
     const linkMenuFormInput = document.createElement('input');
 
+    function resetInput() {
+      linkMenuFormInput.value = 'http://';
+    }
+
     linkMenu.id = 'link-menu';
     linkMenu.classList.add('se-popup', 'se-popup-top');
     linkMenu.dataset.active = 'false';
@@ -891,6 +900,7 @@ export default class StrivenEditor {
     linkMenuFormInput.classList.add('se-form-input');
     linkMenuFormInput.type = 'text';
     linkMenuFormInput.placeholder = 'Insert a Link';
+    resetInput();
 
     linkMenuButton.type = 'button';
     linkMenuCloseButton.type = 'button';
@@ -948,19 +958,23 @@ export default class StrivenEditor {
         }
 
         // trigger input event
-        this.body.oninput();
-
-        linkMenuFormInput.value = '';
+        if (this.body.oninput) {
+          this.body.oninput();
+        }
+        
         this.closeLinkMenu();
       } else {
         this.body.focus();
         this.closeLinkMenu();
       }
+
+      resetInput();
     };
 
     linkMenuCloseButton.onclick = e => {
       this.body.focus();
       this.closeLinkMenu();
+      resetFormInput();
     };
 
     // linkMenuForm.appendChild(linkMenuFormLabel);
@@ -1142,7 +1156,6 @@ export default class StrivenEditor {
     }
 
     tableMenuButton.onclick = () => {
-      this.body.focus();
       this.setRange();
 
       if (tableMenuFormColsInput.value && tableMenuRowsInput.value) {
@@ -1154,6 +1167,7 @@ export default class StrivenEditor {
 
       clearValues();
       this.closeAllMenus();
+      this.body.focus();
     };
 
     tableMenuCloseButton.onclick = () => {
@@ -2037,22 +2051,19 @@ export default class StrivenEditor {
       }
     });
 
-    table.setAttribute('style', 'width: 100%');
     table.setAttribute('data-init', true);
-    table.setAttribute('cellspacing', '0');
-
-    [...table.querySelectorAll('td')].forEach(td => {
-      td.setAttribute('style', 'border: 1px solid #ddd');
-    });
-
     this.executeCommand('insertHTML', table.outerHTML);
 
     table = this.body.querySelector('table[data-init="true"]');
     if (table) {
       table.removeAttribute('data-init');
-
+      table.setAttribute('cellspacing', '0');
+      table.setAttribute('style', 'width: 100%');
+      
       const tdCollection = [...table.getElementsByTagName('td')];
       tdCollection.forEach(td => {
+        td.setAttribute('style', 'border: 1px solid #ddd');
+
         td.onfocus = () => {
           this.toolbarState();
         };
@@ -2194,7 +2205,6 @@ export default class StrivenEditor {
       const links = [...linkElements];
       const convertedLinks = [];
       links.forEach(link => {
-        
         link.classList.remove('linkified');
         link.setAttribute('target', '_blank');
 

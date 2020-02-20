@@ -122,13 +122,13 @@
 }
 
 .striven-editor .se-toolbar-group {
-  z-index: 1500;
+  z-index: 500;
   background-color: transparent;
   display: inline-block;
 }
 
 .striven-editor .se-toolbar-group[data-open='true'] {
-  z-index: 1000;
+  z-index: 500;
 }
 
 /*
