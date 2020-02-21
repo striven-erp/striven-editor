@@ -1,7 +1,7 @@
 {
   "name": "@striven-erp/striven-editor",
   "private": false,
-  "version": "2.9.991",
+  "version": "2.9.994",
   "description": "The lightweight zero-dependency Striven WYSIWYG editor.",
   "main": "./dist",
   "scripts": {

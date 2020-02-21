@@ -20,9 +20,20 @@ export default class KoStrivenEditor {
                 // Pass the value to the editor in options
                 options().value = value();
 
-                let editor = new StrivenEditor(element, { 
-                    ...options(), 
-                    toolbarTemplate: (options().toolbarTemplate && options().toolbarTemplate()) 
+                let onChange = null;
+                let changeOpt = options().change
+                if (changeOpt) {
+                    if (ko.isObservable(changeOpt)) {
+                        onChange = (val) => changeOpt(val);
+                    } else {
+                        onChange = changeOpt;
+                    }
+                }
+
+                let editor = new StrivenEditor(element, {
+                    ...options(),
+                    change: onChange,
+                    toolbarTemplate: (options().toolbarTemplate && options().toolbarTemplate())
                 });
                 let pauseUpdate = false;
 

@@ -22,6 +22,22 @@ import '@simonwep/pickr/dist/themes/classic.min.css';
 import Pickr from '@simonwep/pickr';
 
 export default class StrivenEditor {
+
+  /*
+  * Bind onchange handler to contenteditable body
+  */
+  _bindContenteditableOnChange(el) {
+    const se = this;
+    el.addEventListener('focus', function () {
+      el.data_orig = el.innerHTML;
+    })
+    el.addEventListener('blur', function () {
+      if (el.innerHTML != el.data_orig)
+        se.options.change(se.getContent());
+      delete el.data_orig;
+    })
+  }
+
   /**
    * Instantiate the StrivenEditor
    * @param {HTMLElement} el The element to initialize StrivenEditor on
@@ -162,7 +178,7 @@ export default class StrivenEditor {
       this.body.onblur = () => {
         bodyBlur && bodyBlur();
         this.overflow();
-         
+
         // Do not close the toolbar is editor is active
         setTimeout(() => {
           if (
@@ -231,7 +247,7 @@ export default class StrivenEditor {
               (this.fontName.textContent = this.options.fontNames[0]);
             this.fontSize && (this.fontSize.textContent = '3');
             this.foreColor && this.foreColor.setAttribute('fill', '#000');
-            this.hiliteColor && this.hiliteColor.setAttribute('fill', '#000');
+            this.hiliteColor && this.hiliteColor.setAttribute('fill', '#fff');
             break;
           default:
             this.body.focus();
@@ -357,13 +373,13 @@ export default class StrivenEditor {
     );
     if (customOptions.length > 0) {
       customOptions.forEach(opt => {
-        const {icon, handler, title} = opt;
+        const { icon, handler, title } = opt;
 
         this.customOptionsGroup = document.createElement('div');
         this.customOptionsGroup.classList.add('se-toolbar-group');
 
         if (typeof icon === 'object') {
-          const option = this.constructSVG({viewBox: icon.viewBox, d: icon.d});
+          const option = this.constructSVG({ viewBox: icon.viewBox, d: icon.d });
           option.classList.add('se-toolbar-option');
 
           option.onclick = () => handler(option);
@@ -615,6 +631,10 @@ export default class StrivenEditor {
     this.options.placeholder &&
       (body.dataset.placeholder = this.options.placeholder);
 
+    if (this.options.change) {
+      this._bindContenteditableOnChange(body);
+    }
+
     // Paste Handler
     body.onpaste = e => {
       // Convert envoding to file
@@ -628,7 +648,7 @@ export default class StrivenEditor {
           u8arr[n] = bstr.charCodeAt(n);
         }
 
-        const file = new File([u8arr], filename, {type: mime});
+        const file = new File([u8arr], filename, { type: mime });
         return new File([u8arr], `${file.name}.${file.type.split('/').pop()}`, {
           type: file.type,
         });
@@ -724,7 +744,7 @@ export default class StrivenEditor {
           // get meta data
           if (this.options.metaUrl) {
             this.getMeta(string).then(res => {
-              const {url, title, image, description} = res;
+              const { url, title, image, description } = res;
               url &&
                 title &&
                 image &&
@@ -839,8 +859,8 @@ export default class StrivenEditor {
 
       this.execFontStates();
       this.editor.classList.add('se-focus');
-      this.scrollPosition && body.scrollTo(this.scrollPosition); 
-      
+      this.scrollPosition && body.scrollTo(this.scrollPosition);
+
       bodyFocus && bodyFocus();
     };
 
@@ -848,9 +868,9 @@ export default class StrivenEditor {
     body.onblur = e => {
       this.editor.classList.remove('se-focus');
 
-      this.scrollPosition = { 
-        y: body.scrollTop, 
-        x: body.scrollWidth 
+      this.scrollPosition = {
+        y: body.scrollTop,
+        x: body.scrollWidth
       };
 
       bodyBlur && bodyBlur();
@@ -930,7 +950,7 @@ export default class StrivenEditor {
 
         if (this.options.metaUrl && this.validURL(linkValue)) {
           this.getMeta(linkValue).then(res => {
-            const {url, image, title, description} = res;
+            const { url, image, title, description } = res;
             url &&
               image &&
               title &&
@@ -961,7 +981,7 @@ export default class StrivenEditor {
         if (this.body.oninput) {
           this.body.oninput();
         }
-        
+
         this.closeLinkMenu();
       } else {
         this.body.focus();
@@ -974,7 +994,7 @@ export default class StrivenEditor {
     linkMenuCloseButton.onclick = e => {
       this.body.focus();
       this.closeLinkMenu();
-      resetFormInput();
+      resetInput();
     };
 
     // linkMenuForm.appendChild(linkMenuFormLabel);
@@ -1205,7 +1225,7 @@ export default class StrivenEditor {
 
     window.addEventListener(
       'dragover',
-      function(e) {
+      function (e) {
         e = e || event;
         e.preventDefault();
       },
@@ -1214,7 +1234,7 @@ export default class StrivenEditor {
 
     window.addEventListener(
       'drop',
-      function(e) {
+      function (e) {
         e = e || event;
         e.preventDefault();
       },
@@ -1354,7 +1374,7 @@ export default class StrivenEditor {
    * @returns {HTMLElement} Returns the constructed svg
    */
   constructSVG(svgData) {
-    const {viewBox, d} = svgData;
+    const { viewBox, d } = svgData;
     const fillColor = this.options.toolbarOptionFillColor
       ? this.options.toolbarOptionFillColor
       : '#333';
@@ -1514,8 +1534,8 @@ export default class StrivenEditor {
       if (
         this.toolbarTemplate
           ? this.toolbarTemplate.offsetWidth +
-              this.toolbarOptionsGroup.offsetWidth >
-            this.editor.offsetWidth
+          this.toolbarOptionsGroup.offsetWidth >
+          this.editor.offsetWidth
           : this.toolbarOptionsGroup.offsetWidth > this.editor.offsetWidth
       ) {
         responsiveMinimal(true);
@@ -1601,8 +1621,8 @@ export default class StrivenEditor {
   getMeta(url) {
     return fetch(this.options.metaUrl, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({targetUrl: url}),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ targetUrl: url }),
     }).then(res => res.json());
   }
 
@@ -1614,8 +1634,8 @@ export default class StrivenEditor {
   getImage(imageEncoding) {
     return fetch(this.options.imageUrl, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({imageEncoding}),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageEncoding }),
     }).then(res => res.json());
   }
 
@@ -1637,11 +1657,11 @@ export default class StrivenEditor {
   validURL(str) {
     var pattern = new RegExp(
       '^(https?:\\/\\/)?' +
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' +
-        '((\\d{1,3}\\.){3}\\d{1,3}))' +
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
-        '(\\?[;&a-z\\d%_.~+=-]*)?' +
-        '(\\#[-a-z\\d_]*)?$',
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' +
+      '((\\d{1,3}\\.){3}\\d{1,3}))' +
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
+      '(\\?[;&a-z\\d%_.~+=-]*)?' +
+      '(\\#[-a-z\\d_]*)?$',
       'i',
     );
     return /^(?:https(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(
@@ -2059,7 +2079,7 @@ export default class StrivenEditor {
       table.removeAttribute('data-init');
       table.setAttribute('cellspacing', '0');
       table.setAttribute('style', 'width: 100%');
-      
+
       const tdCollection = [...table.getElementsByTagName('td')];
       tdCollection.forEach(td => {
         td.setAttribute('style', 'border: 1px solid #ddd');
@@ -2087,16 +2107,16 @@ export default class StrivenEditor {
     const vendor = ((navigator && navigator.vendor) || '').toLowerCase();
 
     const comparator = {
-      '<': function(a, b) {
+      '<': function (a, b) {
         return a < b;
       },
-      '<=': function(a, b) {
+      '<=': function (a, b) {
         return a <= b;
       },
-      '>': function(a, b) {
+      '>': function (a, b) {
         return a > b;
       },
-      '>=': function(a, b) {
+      '>=': function (a, b) {
         return a >= b;
       },
     };
@@ -2313,7 +2333,7 @@ export default class StrivenEditor {
               preview: true,
               palette: true,
               hue: true,
-              interaction: {hex: true, input: true},
+              interaction: { hex: true, input: true },
             },
           });
 
@@ -2337,7 +2357,10 @@ export default class StrivenEditor {
             se.body.focus();
           });
 
-          pickr.on('init', p => (colorOption.dataset.init = 'true'));
+          pickr.on('init', p => {
+            colorOption.dataset.init = 'true';
+            pickr.show();
+          });
 
           pickr.on('change', (h, p) => {
             const color = h.toHEXA().toString();
@@ -2350,6 +2373,11 @@ export default class StrivenEditor {
               .toHEXA()
               .toString();
           });
+
+          pickr.on('show', p => {
+            const { app } = p['_root'];
+            se.setMenuOffset(colorOption, app);
+          })
         }
         break;
       case 'insertOrderedList':
