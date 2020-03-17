@@ -3,3 +3,4 @@ images
 dist
 *.swp
 dependencies.txt
+*.zip
