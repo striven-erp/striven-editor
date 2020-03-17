@@ -48,14 +48,14 @@ const HILITECOLORICON = {
 
 const OPTIONGROUPS = {
   textDecoration: {
-        menu: {
+    menu: {
       viewBox: '0 0 18 16',
       d:
         'M13.62 9.08L12.1 3.66h-.06l-1.5 5.42h3.08zM5.7 10.13S4.68 6.52 4.53 6.02h-.08l-1.13 4.11H5.7zM17.31 14h-2.25l-.95-3.25h-4.07L9.09 14H6.84l-.69-2.33H2.87L2.17 14H0l3.3-9.59h2.5l2.17 6.34L10.86 2h2.52l3.94 12h-.01z',
     },
     group: [
-      { foreColor: FORECOLORICON },
-      { hiliteColor: HILITECOLORICON },
+      {foreColor: FORECOLORICON},
+      {hiliteColor: HILITECOLORICON},
       {
         bold: {
           viewBox: '0 0 1792 1792',
@@ -131,6 +131,13 @@ const OPTIONGROUPS = {
         },
       },
       {
+        outdent: {
+          viewBox: '0 0 1792 1792',
+          d:
+            'M384 544v576q0 13-9.5 22.5t-22.5 9.5q-14 0-23-9l-288-288q-9-9-9-23t9-23l288-288q9-9 23-9 13 0 22.5 9.5t9.5 22.5zm1408 768v192q0 13-9.5 22.5t-22.5 9.5h-1728q-13 0-22.5-9.5t-9.5-22.5v-192q0-13 9.5-22.5t22.5-9.5h1728q13 0 22.5 9.5t9.5 22.5zm0-384v192q0 13-9.5 22.5t-22.5 9.5h-1088q-13 0-22.5-9.5t-9.5-22.5v-192q0-13 9.5-22.5t22.5-9.5h1088q13 0 22.5 9.5t9.5 22.5zm0-384v192q0 13-9.5 22.5t-22.5 9.5h-1088q-13 0-22.5-9.5t-9.5-22.5v-192q0-13 9.5-22.5t22.5-9.5h1088q13 0 22.5 9.5t9.5 22.5zm0-384v192q0 13-9.5 22.5t-22.5 9.5h-1728q-13 0-22.5-9.5t-9.5-22.5v-192q0-13 9.5-22.5t22.5-9.5h1728q13 0 22.5 9.5t9.5 22.5z',
+        },
+      },
+      {
         justifyLeft: {
           viewBox: '0 0 1792 1792',
           d:
@@ -202,6 +209,7 @@ const DEFAULTOPTIONS = [
   'insertOrderedList',
   'insertUnorderedList',
   'indent',
+  'outdent',
   'justifyLeft',
   'justifyCenter',
   'justifyRight',
