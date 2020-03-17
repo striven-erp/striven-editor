@@ -2217,7 +2217,7 @@ export default class StrivenEditor {
       const convertedLinks = [];
       links.forEach(link => {
         const href = link.getAttribute('href');
-        const isEmail = href.includes('mailto');
+        const isEmail = href ? href.includes('mailto') : false;
         const isLinkified =
           link.classList.contains('linkified') &&
           !se.validURL(link.textContent);
