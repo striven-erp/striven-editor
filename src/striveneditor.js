@@ -12,6 +12,7 @@ import {
 
 // Helpers
 import denormalizeCamel from './denormalizeCamel';
+import computedStyleToInlineStyle from 'computed-style-to-inline-style';
 
 // Polyfills
 import ResizeObserver from 'resize-observer-polyfill';
@@ -552,6 +553,41 @@ export default class StrivenEditor {
       return menu;
     }
 
+    function initFontFormatMenu() {
+      const menu = initMenu('fontFormat');
+
+      const formats = [
+        {command: 'H1', option: '<h1 style="margin: 0; color: #000;">Heading 1</h1>'},
+        {command: 'H2', option: '<h2 style="margin: 0; color: #000;">Heading 2</h2>'},
+        {command: 'H3', option: '<h3 style="margin: 0; color: #000;">Heading 3</h4>'},
+        {command: 'H4', option: '<h4 style="margin: 0; color: #000;">Heading 4</h4>'},
+        {command: 'H5', option: '<h5 style="margin: 0; color: #000;">Heading 5</h5>'},
+        {command: 'H6', option: '<h6 style="margin: 0; color: #000;">Heading 6</h6>'},
+        {command: 'P', option: '<p style="margin: 0; color: #000;">Paragraph</p>'},
+      ];
+
+      formats.forEach(s => {
+        const fontOption = document.createElement('div');
+
+        fontOption.classList.add('se-toolbar-popup-option');
+        fontOption.innerHTML = s.option;
+
+        fontOption.onclick = e => {
+          menu.close();
+          se.body.focus();
+          se.executeCommand('formatBlock', s.command);
+          computedStyleToInlineStyle(se.body, {
+            recursive: true,
+            properties: ['color'],
+          });
+        };
+
+        menu.append(fontOption);
+      });
+
+      return menu;
+    }
+
     // Get enabled toolbar options
     const enabledOptions = this.options.toolbarOptions;
 
@@ -611,6 +647,30 @@ export default class StrivenEditor {
       fontSizeSelect.append(selectedFontSize);
       this.toolbarOptionsGroup.append(fontSizeSelect);
       this.fontSize = selectedFontSize;
+    }
+
+    if (enabledOptions.includes('fontFormat')) {
+      const fontFormatSelect = document.createElement('div');
+      const selectedFontFormat = document.createElement('p');
+      const menu = initFontFormatMenu();
+
+      fontFormatSelect.onclick = () => {
+        se.range = se.getRange();
+        if (menu.dataset.active === 'true') {
+          menu.close();
+        } else {
+          menu.open();
+        }
+      };
+
+      fontFormatSelect.setAttribute('id', 'toolbar-fontFormat');
+      selectedFontFormat.textContent = 'Format';
+
+      fontFormatSelect.classList.add('se-toolbar-selection');
+      selectedFontFormat.classList.add('se-toolbar-option');
+
+      fontFormatSelect.append(selectedFontFormat);
+      this.toolbarOptionsGroup.append(fontFormatSelect);
     }
   }
 
@@ -2351,7 +2411,7 @@ export default class StrivenEditor {
             pickr.hide();
 
             colorIcon.setAttribute('fill', color);
-            
+
             const refocus = se.body.onfocus;
             se.body.onfocus = () => {
               se.body.textContent && se.setRange(se.getRange());

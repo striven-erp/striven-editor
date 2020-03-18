@@ -199,6 +199,7 @@ const OPTIONGROUPS = {
 const DEFAULTOPTIONS = [
   'fontName',
   'fontSize',
+  'fontFormat',
   'foreColor',
   'hiliteColor',
   'bold',
