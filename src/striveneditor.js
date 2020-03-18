@@ -33,8 +33,10 @@ export default class StrivenEditor {
       el.data_orig = el.innerHTML;
     });
     el.addEventListener('blur', function() {
-      if (el.innerHTML != el.data_orig) se.options.change(se.getContent());
-      delete el.data_orig;
+      setTimeout(() => {
+        if (el.innerHTML != el.data_orig && (document.activeElement != se.body)) se.options.change(se.getContent());
+        delete el.data_orig;
+      }, 100); 
     });
   }
 
@@ -557,13 +559,34 @@ export default class StrivenEditor {
       const menu = initMenu('fontFormat');
 
       const formats = [
-        {command: 'H1', option: '<h1 style="margin: 0; color: #000;">Heading 1</h1>'},
-        {command: 'H2', option: '<h2 style="margin: 0; color: #000;">Heading 2</h2>'},
-        {command: 'H3', option: '<h3 style="margin: 0; color: #000;">Heading 3</h4>'},
-        {command: 'H4', option: '<h4 style="margin: 0; color: #000;">Heading 4</h4>'},
-        {command: 'H5', option: '<h5 style="margin: 0; color: #000;">Heading 5</h5>'},
-        {command: 'H6', option: '<h6 style="margin: 0; color: #000;">Heading 6</h6>'},
-        {command: 'P', option: '<p style="margin: 0; color: #000;">Paragraph</p>'},
+        {
+          command: 'H1',
+          option: '<h1 style="margin: 0; color: #000;">Heading 1</h1>',
+        },
+        {
+          command: 'H2',
+          option: '<h2 style="margin: 0; color: #000;">Heading 2</h2>',
+        },
+        {
+          command: 'H3',
+          option: '<h3 style="margin: 0; color: #000;">Heading 3</h4>',
+        },
+        {
+          command: 'H4',
+          option: '<h4 style="margin: 0; color: #000;">Heading 4</h4>',
+        },
+        {
+          command: 'H5',
+          option: '<h5 style="margin: 0; color: #000;">Heading 5</h5>',
+        },
+        {
+          command: 'H6',
+          option: '<h6 style="margin: 0; color: #000;">Heading 6</h6>',
+        },
+        {
+          command: 'P',
+          option: '<p style="margin: 0; color: #000;">Paragraph</p>',
+        },
       ];
 
       formats.forEach(s => {

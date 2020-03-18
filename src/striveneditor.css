@@ -29,17 +29,18 @@
   word-break: break-word;
 }
 
+.striven-editor .se-body h1,
+.striven-editor .se-body h2,
+.striven-editor .se-body h3,
+.striven-editor .se-body h4,
+.striven-editor .se-body h5,
+.striven-editor .se-body h6 {
+  color: #000;
+}
+
 .striven-editor .se-body:empty::after {
   content: attr(data-placeholder);
   color: #777;
-}
-
-.striven-editor .se-body table {
-  width: 100%;
-}
-
-.striven-editor .se-body td {
-  border: 1px solid #ddd;
 }
 
 .striven-editor .se-body .se-file-drop-dropzone {
@@ -128,7 +129,7 @@
 }
 
 .striven-editor .se-toolbar-group[data-open='true'] {
-  z-index: 500;
+  z-index: 1000;
 }
 
 /*
