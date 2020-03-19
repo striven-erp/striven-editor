@@ -34,9 +34,10 @@ export default class StrivenEditor {
     });
     el.addEventListener('blur', function() {
       setTimeout(() => {
-        if (el.innerHTML != el.data_orig && (document.activeElement != se.body)) se.options.change(se.getContent());
+        if (el.innerHTML != el.data_orig && document.activeElement != se.body)
+          se.options.change(se.getContent());
         delete el.data_orig;
-      }, 100); 
+      }, 100);
     });
   }
 
@@ -506,8 +507,9 @@ export default class StrivenEditor {
           se.body.onfocus = () => {
             se.body.textContent && se.setRange(se.range);
             se.execFontStates();
-            se.scrollPosition &&
+            if (se.scrollPosition && !se.browser.isEdge()) {
               se.body.scrollTo(se.scrollPosition.x, se.scrollPosition.y);
+            }
             se.body.onfocus = refocus;
           };
 
@@ -541,8 +543,9 @@ export default class StrivenEditor {
           se.body.onfocus = () => {
             se.body.textContent && se.setRange(se.range);
             se.execFontStates();
-            se.scrollPosition &&
+            if (se.scrollPosition && !se.browser.isEdge()) {
               se.body.scrollTo(se.scrollPosition.x, se.scrollPosition.y);
+            }
             se.body.onfocus = refocus;
           };
 
@@ -940,7 +943,10 @@ export default class StrivenEditor {
 
       this.execFontStates();
       this.editor.classList.add('se-focus');
-      this.scrollPosition && body.scrollTo(this.scrollPosition);
+      
+      if(this.scrollPosition && !this.browser.isEdge()) { 
+        body.scrollTo(this.scrollPosition);
+      }
 
       bodyFocus && bodyFocus();
     };
