@@ -8,11 +8,12 @@ import {
   FORECOLORICON,
   HILITECOLORICON,
   FONTNAMES,
+  FONTSIZES,
 } from './defaults.js';
 
 // Helpers
 import denormalizeCamel from './denormalizeCamel';
-import computedStyleToInlineStyle from 'computed-style-to-inline-style';
+// import computedStyleToInlineStyle from 'computed-style-to-inline-style';
 
 // Polyfills
 import ResizeObserver from 'resize-observer-polyfill';
@@ -29,15 +30,26 @@ export default class StrivenEditor {
    */
   _bindContenteditableOnChange(el) {
     const se = this;
+
     el.addEventListener('focus', function() {
-      el.data_orig = el.innerHTML;
+      if (el.data_orig === undefined) {
+        el.data_orig = el.innerHTML;
+      }
     });
     el.addEventListener('blur', function() {
-      setTimeout(() => {
-        if (el.innerHTML != el.data_orig && document.activeElement != se.body)
-          se.options.change(se.getContent());
+      if (el.innerHTML != el.data_orig && !se.toolbarClick) {
+        se.options.change(se.getContent());
         delete el.data_orig;
-      }, 100);
+      }
+    });
+
+    se.toolbarClick = false;
+    se.toolbar.addEventListener('mousedown', () => {
+      se.toolbarClick = true;
+    });
+
+    se.toolbar.addEventListener('mouseup', () => {
+      se.toolbarClick = false;
     });
   }
 
@@ -257,7 +269,7 @@ export default class StrivenEditor {
             this.executeCommand(command);
             break;
         }
-
+        
         optionElClick && optionElClick();
       };
     });
@@ -324,7 +336,9 @@ export default class StrivenEditor {
 
     this.toolbarOptionsGroup.classList.add('se-toolbar-options');
 
-    toolbar.onclick = () => this.body.focus();
+    toolbar.onclick = () => {
+      this.body.focus();
+    };
 
     // Append Font Options
     !this.options.minimal && this.initToolbarFontOptions();
@@ -341,8 +355,19 @@ export default class StrivenEditor {
       // toolbarMenuIcon.classList.add(this.options.fontPack);
       // toolbarMenuIcon.classList.add(this.optionGroups[group].menu);
 
+      const arrow = {
+        viewBox: '0 0 1792 1792',
+        d:
+          'M1395 736q0 13-10 23l-466 466q-10 10-23 10t-23-10l-466-466q-10-10-10-23t10-23l50-50q10-10 23-10t23 10l393 393 393-393q10-10 23-10t23 10l50 50q10 10 10 23z',
+      };
+
       const svgSpan = this.constructSVG(this.optionGroups[group].menu);
       toolbarMenu.appendChild(svgSpan.getElementsByTagName('svg')[0]);
+
+      const arrowSpan = this.constructSVG(arrow);
+      arrowSpan.classList.add('se-arrow-span');
+      toolbarMenu.appendChild(arrowSpan);
+
       this.toolbarOptionsGroup.appendChild(toolbarMenu);
 
       // add group to toolbarOptions
@@ -446,6 +471,19 @@ export default class StrivenEditor {
       }
     });
 
+    const attachmentOption = toolbar.querySelector('#toolbar-attachment');
+    const removeFormatOption = toolbar.querySelector('#toolbar-removeFormat');
+
+    if (attachmentOption) {
+      attachmentOption.remove();
+      this.toolbarOptionsGroup.append(attachmentOption);
+    }
+
+    if (removeFormatOption) {
+      removeFormatOption.remove();
+      this.toolbarOptionsGroup.append(removeFormatOption);
+    }
+
     return toolbar;
   }
 
@@ -525,7 +563,7 @@ export default class StrivenEditor {
     function initFontSizeMenu(select) {
       const menu = initMenu('fontSize');
 
-      const sizes = [1, 2, 3, 4, 5, 6, 7];
+      const sizes = FONTSIZES;
 
       sizes.forEach(s => {
         const fontOption = document.createElement('div');
@@ -601,11 +639,16 @@ export default class StrivenEditor {
         fontOption.onclick = e => {
           menu.close();
           se.body.focus();
+
+          se.setRange();
+          if (se.browser.isFirefox() || se.browser.isEdge()) {
+            document.execCommand('removeFormat', false);
+          } else {
+            document.execCommand('removeFormat', true);
+          }
+
           se.executeCommand('formatBlock', s.command);
-          computedStyleToInlineStyle(se.body, {
-            recursive: true,
-            properties: ['color'],
-          });
+          se.execFontStates();
         };
 
         menu.append(fontOption);
@@ -916,6 +959,10 @@ export default class StrivenEditor {
     body.onfocus = e => {
       !this.browser.isEdge() && this.setRange();
 
+      if (!this.getContent()) {
+        this.setContent('&nbsp;');
+      }
+
       // disables all states
       this.options.toolbarOptions.forEach(opt => {
         if (typeof opt === 'string') {
@@ -943,8 +990,8 @@ export default class StrivenEditor {
 
       this.execFontStates();
       this.editor.classList.add('se-focus');
-      
-      if(this.scrollPosition && !this.browser.isEdge()) { 
+
+      if (this.scrollPosition && !this.browser.isEdge()) {
         body.scrollTo(this.scrollPosition);
       }
 
@@ -954,6 +1001,10 @@ export default class StrivenEditor {
     const bodyBlur = body.onblur;
     body.onblur = e => {
       this.editor.classList.remove('se-focus');
+
+      if (this.getContent() === '&nbsp;') {
+        this.setContent('');
+      }
 
       this.scrollPosition = {
         y: body.scrollTop,
@@ -1559,7 +1610,7 @@ export default class StrivenEditor {
       function setResponsive() {
         let responsive = window.matchMedia('(max-width: 700px)').matches;
 
-        responsiveGroups(responsive || that.editor.offsetWidth < 700);
+        responsiveGroups(responsive || that.editor.offsetWidth < 900);
       }
 
       setResponsive();
@@ -2116,7 +2167,11 @@ export default class StrivenEditor {
       this.fontName &&
         document.execCommand('fontName', false, this.fontName.textContent);
       this.fontSize &&
-        document.execCommand('fontSize', false, this.fontSize.textContent);
+        document.execCommand(
+          'fontSize',
+          false,
+          this.fontSize.textContent.split(' ')[0],
+        );
     } else {
       this.foreColor &&
         document.execCommand(
@@ -2309,7 +2364,7 @@ export default class StrivenEditor {
         const isEmail = href ? href.includes('mailto') : false;
         const isLinkified =
           link.classList.contains('linkified') &&
-          !se.validURL(link.textContent);
+          !se.validURL(href || link.textContent);
 
         if (href && (isEmail || isLinkified)) {
           link.outerHTML = link.textContent;
@@ -2543,5 +2598,15 @@ export default class StrivenEditor {
         }
         break;
     }
+
+    if(command === 'indent'){
+      [...this.body.getElementsByTagName('blockquote')]
+        .forEach(bq => {
+          const wrapper = document.createElement('div');
+          wrapper.innerHTML = bq.outerHTML;
+          bq.replaceWith(wrapper);
+        })
+    }
+
   }
 }

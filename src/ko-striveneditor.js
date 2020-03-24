@@ -2,7 +2,7 @@ import StrivenEditor from './striveneditor';
 
 export default class KoStrivenEditor {
   constructor(ko, bindingName = 'striveneditor') {
-    ko.bindingHandlers[bindingName] = {
+    ko.bindingHandlers.striveneditor = {
       init: function(
         element,
         valueAccessor,
@@ -65,7 +65,9 @@ export default class KoStrivenEditor {
         // Set the editor in options
         options().api = editor;
 
-        return {controlsDescendantBindings: true};
+        ko.applyBindings(bindingContext, editor.toolbar);
+        return { controlsDescendantBindings: true };
+
       },
    };
   }
