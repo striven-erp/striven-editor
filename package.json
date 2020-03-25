@@ -56,7 +56,6 @@
   },
   "dependencies": {
     "@simonwep/pickr": "^1.5.0",
-    "computed-style-to-inline-style": "^3.0.0",
     "linkifyjs": "^2.1.9"
   }
 }
