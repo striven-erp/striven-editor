@@ -29,15 +29,6 @@
   word-break: break-word;
 }
 
-.striven-editor .se-body h1,
-.striven-editor .se-body h2,
-.striven-editor .se-body h3,
-.striven-editor .se-body h4,
-.striven-editor .se-body h5,
-.striven-editor .se-body h6 {
-  color: #000;
-}
-
 .striven-editor .se-body:empty::after {
   content: attr(data-placeholder);
   color: #777;
@@ -113,6 +104,14 @@
   vertical-align: middle;
 }
 
+.striven-editor .se-toolbar .se-arrow-span svg {
+  transform: translateY(2px);
+}
+
+.striven-editor .se-toolbar.se-toolbar-bottom .se-arrow-span svg {
+  transform: rotate(180deg) translateY(-3px);
+}
+
 .striven-editor .se-toolbar-option.se-toolbar-option-active {
   border: 1px solid rgba(0, 0, 0, 0.25);
   background-color: #d4e7fc;
@@ -156,7 +155,7 @@
 }
 
 .striven-editor .se-toolbar #toolbar-template {
-  height: 40px;
+  min-height: 40px;
   flex-grow: 1;
   justify-content: flex-end;
 }
@@ -178,6 +177,12 @@
 .striven-editor .se-toolbar .se-toolbar-selection p {
   margin: 0;
   background-color: transparent;
+}
+
+@media (max-width: 500px){
+  .striven-editor .se-toolbar .se-toolbar-selection {
+    display: none;
+  }
 }
 
 /*
@@ -230,9 +235,9 @@
 
 .striven-editor .se-toolbar-menu {
   border: 1px solid transparent;
-  display: inline-block;
   padding: 7px;
   cursor: pointer;
+  align-items: center;
 }
 
 .striven-editor .se-toolbar-menu:hover {
@@ -393,3 +398,4 @@
   background-color: #d4d4d4;
   border-color: #8c8c8c;
 }
+
