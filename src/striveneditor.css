@@ -64,8 +64,52 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  height: 40px; 
+  height: 40px;
   transition: height 200ms;
+}
+
+.striven-editor .se-toolbar .se-divider-section {
+  height: 100%;
+  width: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.striven-editor .se-toolbar .se-divider-section .se-divider-bar {
+  height: 50%;
+  width: 1px;
+  background-color: #ddd;
+}
+
+.striven-editor .se-html .se-toolbar-group {
+  display: none !important;
+}
+
+.striven-editor .se-html .se-toolbar-selection {
+  display: none !important;
+}
+
+.striven-editor .se-html .se-divider-section {
+  display: none !important;
+}
+
+.striven-editor .se-html .se-toolbar-menu {
+  display: none !important;
+}
+
+.striven-editor .se-html {
+  display: flex !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+}
+
+.striven-editor .se-html #toolbar-fullscreen{
+  display: block!important;
+}
+
+.striven-editor .se-toolbar-close {
+  height: 0px;
 }
 
 .striven-editor .se-toolbar.se-toolbar-top {
@@ -76,12 +120,8 @@
   align-items: flex-end;
 }
 
-.striven-editor .se-toolbar-close {
-  height: 0px;
-}
-
 .striven-editor .se-toolbar-options {
-  display: flex; 
+  display: flex;
   margin-right: 10px;
 }
 
@@ -131,6 +171,15 @@
   z-index: 1000;
 }
 
+/* 
+.striven-editor .se-toolbar-group:after {
+  content: '';
+  margin: 0 auto;
+  padding-bottom: 5px; 
+  border-right: 1px solid #ddd;
+}
+*/
+
 /*
 .striven-editor .se-toolbar-group[data-open='true'] .se-toolbar-option {
   background-color: #fff;
@@ -164,7 +213,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: transparent; 
+  background-color: transparent;
   cursor: pointer;
   padding: 0 5px;
   transition: background-color 100ms;
@@ -177,12 +226,6 @@
 .striven-editor .se-toolbar .se-toolbar-selection p {
   margin: 0;
   background-color: transparent;
-}
-
-@media (max-width: 500px){
-  .striven-editor .se-toolbar .se-toolbar-selection {
-    display: none;
-  }
 }
 
 /*
@@ -216,15 +259,15 @@
 }
 
 .striven-editor .se-toolbar .se-toolbar-colorholder:hover {
-  background-color: #ddd;  
+  background-color: #ddd;
 }
 
 .striven-editor .se-toolbar-popup-option {
- padding: 10px 15px; 
- background-color: transparent;
- transition: background-color 200ms;
- font-size: 16px; 
- cursor: pointer;
+  padding: 10px 15px;
+  background-color: transparent;
+  transition: background-color 200ms;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 .striven-editor .se-toolbar-popup-option:hover {
@@ -343,6 +386,14 @@
   opacity: 1;
 }
 
+.striven-editor .se-popup-header {
+  color: #888;
+  font-size: 12px;
+  margin: 0;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 3px;
+}
+
 .striven-editor .se-popup > .se-popup-form {
   display: flex;
   justify-content: space-between;
@@ -351,8 +402,7 @@
 
 .striven-editor .se-popup > .se-popup-form > .se-form-label {
   margin: 8px 10px 8px 0;
-  font-size: 14px;
-  width: 100%;
+  font-size: 12px;
   text-align: right;
   margin-right: 10px;
 }
@@ -360,6 +410,12 @@
 .striven-editor .se-popup > .se-popup-form > .se-form-input {
   outline: none;
   padding: 5px;
+}
+
+@media (min-width: 900px) {
+  .striven-editor .se-popup > .se-popup-form > .se-form-input {
+    width: 250px;
+  }
 }
 
 .striven-editor .se-popup-button-container {
@@ -377,8 +433,8 @@
 }
 
 .striven-editor .se-popup-button.se-button-primary {
-  border-color: #4cae4c;
-  background-color: #5cb85c;
+  border-color: #357ebd;
+  background-color: #428bca;
   color: #fff;
 }
 .striven-editor .se-popup-button.se-button-secondary {
@@ -389,8 +445,8 @@
 .striven-editor .se-popup-button.se-button-primary:hover,
 .striven-editor .se-popup-button.se-button-primary:active,
 .striven-editor .se-popup-button.se-button-primary:focus {
-  background-color: #4cae4c;
-  border-color: #398439;
+  background-color: #285e8e;
+  border-color: #285e8e;
 }
 .striven-editor .se-popup-button.se-button-secondary:hover,
 .striven-editor .se-popup-button.se-button-secondary:active,
@@ -398,4 +454,3 @@
   background-color: #d4d4d4;
   border-color: #8c8c8c;
 }
-
