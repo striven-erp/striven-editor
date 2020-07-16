@@ -24,8 +24,10 @@ import ResizeObserver from 'resize-observer-polyfill';
 
 // Plugins
 import linkify from 'linkifyjs/element';
-import '@simonwep/pickr/dist/themes/classic.min.css';
-import Pickr from '@simonwep/pickr';
+
+// Pickr
+import './classic.min.css';
+import Pickr from './pickr.min.js';
 
 /* Represents an instance of the Striven Editor */
 export default class StrivenEditor {
