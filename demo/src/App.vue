@@ -11,7 +11,7 @@
       :toolbar-bottom="toolbarBottom"
       :toolbar-options="toolbarOptions"
       :placeholder="'Type something in here...'"
-      style="min-height: 300px; width: 800px;"
+      style="min-height: 300px; width: 90%;"
       :meta-url="metaUrl"
       :on-enter="submitOnEnter"
       :toolbar-template="customButton"
@@ -23,9 +23,9 @@
     <!-- <button @click="insertList">insertUnorderedList</button> -->
 
     <div v-html="content"></div>
-    <div ref="customButton" style="display: flex; align-items: flex-end;">
-      <div class="custom-button" @click="sendContent">Send</div>
-    </div>
+    <!-- <div ref="customButton" style="display: flex; align-items: flex-end;"> -->
+    <!--   <div class="custom-button" @click="sendContent">Send</div>           -->
+    <!-- </div>                                                                 -->
   </div>
 </template>
 
@@ -40,25 +40,25 @@ export default {
     return {
       metaUrl: "https://mighty-anchorage-82390.herokuapp.com/meta", // metaserver.js
       // imageUrl: "http://localhost:4200/image", // imageserver.js
-      minimal: true,
+      minimal: false,
       uploadOnPaste: false,
-      toolbarBottom: true,
+      toolbarBottom: false,
       toolbarHide: true,
       sanitizePaste: true,
       onInvalidFile() {
         alert("invalid file");
       },
-      toolbarOptions: [
-        {
-          icon: 'https://innovate.test.striven.com/Images/striven-icon.svg',
-          handler: () => {
-            const range = this.editor.range;
-            if(range && range.startContainer !== document) {
-              range.insertNode(document.createTextNode('Created by a custom button!'))
-            }
-          }
-        }
-      ],
+      // toolbarOptions: [
+      //   {
+      //     icon: 'https://innovate.test.striven.com/Images/striven-icon.svg',
+      //     handler: () => {
+      //       const range = this.editor.range;
+      //       if(range && range.startContainer !== document) {
+      //         range.insertNode(document.createTextNode('Created by a custom button!'))
+      //       }
+      //     }
+      //   }
+      // ],
       placeholder: "Begin typing in this editor...",
       submitOnEnter: e => {
         if (e.ctrlKey) {
@@ -72,7 +72,7 @@ export default {
           }
         }
       },
-      customButton: () => this.$refs.customButton,
+      // customButton: () => this.$refs.customButton,
       editor: null,
       content: ""
     };

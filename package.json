@@ -1,18 +1,14 @@
 {
   "name": "@striven-erp/striven-editor",
   "private": false,
-  "version": "3.4.96",
-  "description": "The lightweight zero-dependency Striven WYSIWYG editor.",
+  "version": "3.5.02",
+  "description": "The editor used for the Striven ERP system.",
   "main": "./dist",
   "scripts": {
     "start": "cd demo && npm run serve",
     "prepare": "npm run build",
     "build": "npx webpack --mode=\"production\"",
-    "dev": "npx webpack -w",
-    "meta-server": "node metaserver",
-    "gh-pages": "cd demo && npm run build && cd .. && node gh-pages",
-    "new-publish": "npm publish --access=public",
-    "doc": "node doc"
+    "gh-pages": "cd demo && npm run build && cd .. && node gh-pages"
   },
   "repository": {
     "type": "git",
@@ -33,7 +29,7 @@
   "devDependencies": {
     "@babel/core": "^7.6.0",
     "@babel/plugin-transform-modules-umd": "^7.2.0",
-    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-env": "^7.10.4",
     "babel-loader": "^8.0.6",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",

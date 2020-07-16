@@ -1,7 +1,10 @@
 import StrivenEditor from './striveneditor';
 
+console.log('welcome');
+
 export default class KoStrivenEditor {
   constructor(ko, bindingName = 'striveneditor') {
+    
     ko.bindingHandlers.striveneditor = {
       init: function(
         element,
