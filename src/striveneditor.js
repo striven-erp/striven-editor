@@ -1012,6 +1012,9 @@ export default class StrivenEditor {
         }
       }
 
+      // Editor Paste Handler
+      this.options.onPaste && this.options.onPaste(e);
+
       // After the paste
       setTimeout(() => {
         // Prune inline styles
@@ -1019,6 +1022,9 @@ export default class StrivenEditor {
 
         // Convert all the links
         this.convertAndSelectLinks();
+
+        // Editor After Paste Handler
+        this.options.afterPaste && this.options.afterPaste(e);
       }, 10);
 
       this.overflow();

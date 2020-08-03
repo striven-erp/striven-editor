@@ -9,12 +9,11 @@
       :toolbar-hide="toolbarHide"
       :minimal="minimal"
       :toolbar-bottom="toolbarBottom"
-      :toolbar-options="toolbarOptions"
       :placeholder="'Type something in here...'"
       style="min-height: 300px; width: 90%;"
-      :meta-url="metaUrl"
       :on-enter="submitOnEnter"
-      :toolbar-template="customButton"
+      :on-paste="onPaste"
+      :after-paste="afterPaste"
     ></striven-editor>
 
     <!-- TESTING -->
@@ -38,7 +37,7 @@ export default {
   components: { StrivenEditor },
   data() {
     return {
-      metaUrl: "https://mighty-anchorage-82390.herokuapp.com/meta", // metaserver.js
+      // metaUrl: "https://mighty-anchorage-82390.herokuapp.com/meta", // metaserver.js
       // imageUrl: "http://localhost:4200/image", // imageserver.js
       minimal: false,
       uploadOnPaste: false,
@@ -73,14 +72,23 @@ export default {
         }
       },
       // customButton: () => this.$refs.customButton,
-      editor: null,
-      content: ""
+      content: "",
+      editor: null
     };
   },
   mounted() {
     this.editor = this.$refs.editor.editor;
   },
   methods: {
+    afterPaste() {
+      setTimeout(() => { 
+        [...this.editor.body.querySelectorAll('.striven-mention')]
+          .forEach(m => (m.outerHTML = m.textContent));
+      }, 0);
+    },
+    onPaste(e) {
+      console.log(e); 
+    },
     sendContent() {
       console.log(this.editor.getContent());
       this.editor.clearContent();
