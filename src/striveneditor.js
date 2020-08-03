@@ -136,7 +136,7 @@ export default class StrivenEditor {
           ...customs,
         ];
 
-        this.options.canTab = true;
+        this.options.canTab = false;
       }
     } else {
       // Set default options
@@ -147,7 +147,7 @@ export default class StrivenEditor {
         activeOptionColor: ACTIVEOPTIONCOLOR,
         fontNames: FONTNAMES,
         fileUpload: true,
-        canTab: true,
+        canTab: false
       };
     }
 
