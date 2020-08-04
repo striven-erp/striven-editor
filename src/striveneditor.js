@@ -895,6 +895,17 @@ export default class StrivenEditor {
 
     // Paste Handler
     body.onpaste = e => {
+       
+      // Editor Paste Handler
+      if(this.options.onPaste) {
+        const content = this.options.onPaste(e);
+        if(content) {
+          e.preventDefault(); 
+          this.executeCommand('insertHTML', content);
+          return true;
+        }
+      }
+
       // Convert envoding to file
       function dataURLtoFile(dataurl, filename) {
         var arr = dataurl.split(','),
@@ -1012,8 +1023,7 @@ export default class StrivenEditor {
         }
       }
 
-      // Editor Paste Handler
-      this.options.onPaste && this.options.onPaste(e);
+      
 
       // After the paste
       setTimeout(() => {
