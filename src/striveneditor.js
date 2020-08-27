@@ -2914,6 +2914,19 @@ export default class StrivenEditor {
         }
         break;
       case 'insertOrderedList':
+        if(!this.range && !this.getContent()) {
+          const list = document.createElement('ol');
+          list.append(document.createElement('li'));
+          
+          this.body.append(list); 
+          
+          const r = new Range();
+          window.getSelection().addRange(r);
+          r.selectNode(list);
+
+          return false;
+        }
+
         if (this.browser.isFirefox() || this.browser.isEdge()) {
           document.execCommand(command);
         } else {
@@ -2921,6 +2934,19 @@ export default class StrivenEditor {
         }
         break;
       case 'insertUnorderedList':
+        if(!this.range && !this.getContent()) {
+          const list = document.createElement('ul');
+          list.append(document.createElement('li'));
+          
+          this.body.append(list); 
+          
+          const r = new Range();
+          window.getSelection().addRange(r);
+          r.selectNode(list);
+
+          return false;
+        }
+
         if (this.browser.isFirefox() || this.browser.isEdge()) {
           document.execCommand(command);
         } else {
@@ -2978,6 +3004,7 @@ export default class StrivenEditor {
         }
         break;
       default:
+        console.log(command); 
         if (this.browser.isFirefox() || this.browser.isEdge()) {
           input
             ? document.execCommand(command, false, input)
