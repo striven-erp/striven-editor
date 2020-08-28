@@ -1985,7 +1985,8 @@ export default class StrivenEditor {
     const text = this.body.textContent;
 
     if (text || se.body.getElementsByTagName('img').length) {
-      return se.body.innerHTML;
+      const htmlView = !!se.editor.querySelector('.se-html'); 
+      return htmlView ? text : se.body.innerHTML;
     } else {
       return null;
     }
