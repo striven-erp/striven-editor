@@ -3004,7 +3004,6 @@ export default class StrivenEditor {
         }
         break;
       default:
-        console.log(command); 
         if (this.browser.isFirefox() || this.browser.isEdge()) {
           input
             ? document.execCommand(command, false, input)
