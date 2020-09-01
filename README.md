@@ -1,7 +1,7 @@
 <h1 align="center">Striven Editor</h1>
 
 <p align="center">
-    <img style="border: 1px solid #ddd" src="./img/striven-editor.gif" alt="stirven-editor" />
+    <img style="border: 1px solid #ddd" src="https://raw.githubusercontent.com/striven-erp/striven-editor/master/img/striven-editor.gif" alt="stirven-editor" />
 </p>
 
 <p align="center">
