@@ -1982,11 +1982,12 @@ export default class StrivenEditor {
    */
   getContent() {
     const se = this;
-    const text = this.body.textContent;
+    const body = se.pruneScripts(se.body);  
+    const text = body.textContent;
 
     if (text || se.body.getElementsByTagName('img').length) {
       const htmlView = !!se.editor.querySelector('.se-html'); 
-      return htmlView ? text : se.body.innerHTML;
+      return htmlView ? text : body.innerHTML;
     } else {
       return null;
     }
