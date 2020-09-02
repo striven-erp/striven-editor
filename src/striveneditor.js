@@ -80,7 +80,7 @@ export default class StrivenEditor {
    */
   constructor(el, options) {
     // Webpack inserts the package.json version
-    // this['_version'] = __VERSION__;
+    this['_version'] = __VERSION__;
 
     // Establish the browser context
     this.establishBrowser();
