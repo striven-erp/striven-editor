@@ -8,7 +8,8 @@
     "start": "cd demo && npm run serve",
     "prepare": "npm run build",
     "build": "npx webpack --mode=\"production\"",
-    "gh-pages": "cd demo && npm run build && node gh-pages"
+    "gh-pages": "cd demo && npm run build && node gh-pages",
+    "publish": "git checkout master && git merge dev && npm run build && npm publish --access=public && git checkout dev"
   },
   "repository": {
     "type": "git",
