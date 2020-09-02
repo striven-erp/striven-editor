@@ -82,6 +82,12 @@
   background-color: #ddd;
 }
 
+@media (max-width: 1000px) {
+  .striven-editor .se-toolbar .se-divider-section {
+    display: none;
+  }
+}
+
 .striven-editor .se-html .se-toolbar-group {
   display: none !important;
 }
@@ -92,20 +98,6 @@
 
 .striven-editor .se-html .se-divider-section {
   display: none !important;
-}
-
-.striven-editor .se-html .se-toolbar-menu {
-  display: none !important;
-}
-
-.striven-editor .se-html {
-  display: flex !important;
-  justify-content: flex-start !important;
-  align-items: center !important;
-}
-
-.striven-editor .se-html #toolbar-fullscreen{
-  display: block!important;
 }
 
 .striven-editor .se-toolbar-close {
@@ -226,6 +218,12 @@
 .striven-editor .se-toolbar .se-toolbar-selection p {
   margin: 0;
   background-color: transparent;
+}
+
+@media (max-width: 500px) {
+  .striven-editor .se-toolbar .se-toolbar-selection {
+    display: none;
+  }
 }
 
 /*

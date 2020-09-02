@@ -20,24 +20,16 @@ $ cd demo && npm install
 
 ## Symlink Development Package
 
-Initialize ```striven-editor``` symlink.
+Initialize ```@striven-erp/striven-editor``` symlink.
 
 ```sh
 $ npm link
 ```
 
-Symlink ```striven-editor``` in the development environment.
+Symlink ```@striven-erp/striven-editor``` in the development environment.
 
 ```sh
 $ npm link @striven-erp/striven-editor
-```
-
-## Start Webpack
-
-Run webpack in watch mode.
-
-```sh
-$ npm run dev
 ```
 
 ## Start Development Server
@@ -53,7 +45,7 @@ $ npm start
 Start the metadata server.
 
 ```sh
-$ npm run meta-server
+$ node demo-server/meta-server
 ```
 
 Pass the ```metaUrl``` to the editor.

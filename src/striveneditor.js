@@ -24,9 +24,10 @@ import ResizeObserver from 'resize-observer-polyfill';
 
 // Plugins
 import linkify from 'linkifyjs/element';
-import '@simonwep/pickr/dist/themes/classic.min.css';
-import Pickr from '@simonwep/pickr';
-import sourceFormatter from 'js-beautify';
+
+// Pickr
+import './classic.min.css';
+import Pickr from './pickr.min.js';
 
 /* Represents an instance of the Striven Editor */
 export default class StrivenEditor {
@@ -45,21 +46,19 @@ export default class StrivenEditor {
 
     el.addEventListener('blur', function() {
       setTimeout(() => {
-        if (!se.toolbar.classList.contains('se-html')) {
-          const menus = se.editor.getElementsByClassName('se-popup-open');
-          const inputs = se.editor.getElementsByTagName('input');
+        const menus = se.editor.getElementsByClassName('se-popup-open');
+        const inputs = se.editor.getElementsByTagName('input');
 
-          const actives = [...menus, ...inputs, se.body, se.toolbar, se.editor];
+        const actives = [...menus, ...inputs, se.body, se.toolbar, se.editor];
 
-          if (
-            el.innerHTML != el.data_orig &&
-            !se.toolbarClick &&
-            !actives.includes(document.activeElement) &&
-            !menus.length
-          ) {
-            se.options.change(se.getContent());
-            delete el.data_orig;
-          }
+        if (
+          el.innerHTML != el.data_orig &&
+          !se.toolbarClick &&
+          !actives.includes(document.activeElement) &&
+          !menus.length
+        ) {
+          se.options.change(se.getContent());
+          delete el.data_orig;
         }
       }, 500);
     });
@@ -136,6 +135,8 @@ export default class StrivenEditor {
           'link',
           ...customs,
         ];
+
+        this.options.canTab = false;
       }
     } else {
       // Set default options
@@ -146,7 +147,7 @@ export default class StrivenEditor {
         activeOptionColor: ACTIVEOPTIONCOLOR,
         fontNames: FONTNAMES,
         fileUpload: true,
-        canTab: true,
+        canTab: false
       };
     }
 
@@ -894,6 +895,17 @@ export default class StrivenEditor {
 
     // Paste Handler
     body.onpaste = e => {
+       
+      // Editor Paste Handler
+      if(this.options.onPaste) {
+        const content = this.options.onPaste(e);
+        if(content) {
+          e.preventDefault(); 
+          this.executeCommand('insertHTML', content);
+          return true;
+        }
+      }
+
       // Convert envoding to file
       function dataURLtoFile(dataurl, filename) {
         var arr = dataurl.split(','),
@@ -1011,6 +1023,8 @@ export default class StrivenEditor {
         }
       }
 
+      
+
       // After the paste
       setTimeout(() => {
         // Prune inline styles
@@ -1018,6 +1032,9 @@ export default class StrivenEditor {
 
         // Convert all the links
         this.convertAndSelectLinks();
+
+        // Editor After Paste Handler
+        this.options.afterPaste && this.options.afterPaste(e);
       }, 10);
 
       this.overflow();
@@ -1025,14 +1042,14 @@ export default class StrivenEditor {
 
     body.onkeydown = e => {
       switch (e.key) {
-        // case 'Tab':
-        //   if (this.options.canTab) {
-        //     e.shiftKey
-        //       ? se.executeCommand('outdent')
-        //       : se.executeCommand('indent');
-        //     e.preventDefault();
-        //   }
-        //   break;
+        case 'Tab':
+          if (this.options.canTab) {
+            e.shiftKey
+              ? se.executeCommand('outdent')
+              : se.executeCommand('indent');
+            e.preventDefault();
+          }
+          break;
         case 'Shift':
           break;
         case 'Backspace':
@@ -1230,29 +1247,6 @@ export default class StrivenEditor {
             textRowInput.value = '';
           }
 
-          insertedLink.onmouseover = ({ctrlKey}) => {
-            const redirectClick = (e) => {
-              e.preventDefault(); 
-
-              const redirectLink = document.createElement('a');
-              redirectLink.setAttribute('target', '_blank');
-              redirectLink.setAttribute('href', insertedLink.getAttribute('href'));
-              redirectLink.setAttribute('style', 'display: none;');
-              document.body.append(redirectLink);
-              redirectLink.click();
-              redirectLink.remove();
-            }
-
-            if(ctrlKey){
-              insertedLink.style.cursor = 'pointer';
-
-              insertedLink.addEventListener('click', redirectClick);
-            } else {
-              insertedLink.style.cursor = null;
-              insertedLink.removeEventListener('click', redirectClick);
-            }
-          };
-
           insertedLink.parsed = true;
         }
 
@@ -1280,10 +1274,10 @@ export default class StrivenEditor {
         }
 
         // Remove contenteditable for firefox
-        // if (!this.browser.isFirefox()) {
-        //   const bodyLinks = this.body.querySelectorAll('a');
-        //   [...bodyLinks].forEach(link => (link.contentEditable = 'false'));
-        // }
+        if (!this.browser.isFirefox()) {
+          const bodyLinks = this.body.querySelectorAll('a');
+          [...bodyLinks].forEach(link => (link.contentEditable = 'false'));
+        }
 
         // trigger input event
         if (this.body.oninput) {
@@ -1333,14 +1327,12 @@ export default class StrivenEditor {
     if (windowRow) {
       windowRow.setAttribute(
         'style',
-        'justify-content: flex-end; align-items: center; flex-direction: row-reverse;',
+        'justify-content: flex-end; align-items: center;',
       );
     }
 
     if (windowRowLabel) {
       windowRowLabel.innerText = 'Open in new window?';
-
-      windowRowLabel.setAttribute('style', 'margin: 3px 5px 0px 5px;');
     }
 
     if (windowRowInput) {
@@ -1533,7 +1525,7 @@ export default class StrivenEditor {
       'se-button-secondary',
     );
 
-    tableMenuButton.textContent = 'Insert';
+    tableMenuButton.textContent = 'Create Table';
     tableMenuCloseButton.textContent = 'Close';
 
     tableMenuForm.appendChild(tableMenuFormLabel);
@@ -1792,38 +1784,6 @@ export default class StrivenEditor {
 
     if (!this.options.minimal) {
       function responsiveGroups(isResponsive) {
-        const isSmall = that.editor.offsetWidth < 600;
-        [...that.toolbar.querySelectorAll('.se-toolbar-selection')].forEach(
-          sel => (sel.style.display = isSmall ? 'none' : null),
-        );
-
-        [...that.toolbar.querySelectorAll('.se-divider-section')].forEach(
-          divider => (divider.style.display = isResponsive ? 'none' : null),
-        );
-
-        const fullscreenOption = that.toolbar.querySelector(
-          '#toolbar-fullscreen',
-        );
-        if (fullscreenOption && !that.toolbar.classList.contains('se-html')) {
-          if (isResponsive) {
-            fullscreenOption.style.display = 'flex';
-            fullscreenOption.style.alignItems = 'center';
-
-            const menuOptions = that.toolbar.querySelector('#menu-options');
-            if (menuOptions) {
-              menuOptions.before(fullscreenOption);
-            }
-          } else {
-            fullscreenOption.style.display = null;
-            fullscreenOption.style.alignItems = null;
-
-            const groupOptions = that.toolbar.querySelector('#group-options');
-            if (groupOptions) {
-              groupOptions.append(fullscreenOption);
-            }
-          }
-        }
-
         that.toolbarGroups.forEach(group => {
           if (group) {
             group.dataset.open = 'false';
@@ -2025,7 +1985,8 @@ export default class StrivenEditor {
     const text = this.body.textContent;
 
     if (text || se.body.getElementsByTagName('img').length) {
-      return se.body.innerHTML;
+      const htmlView = !!se.editor.querySelector('.se-html'); 
+      return htmlView ? text : se.body.innerHTML;
     } else {
       return null;
     }
@@ -2824,48 +2785,14 @@ export default class StrivenEditor {
           saveoption.remove();
           se.body.style.fontFamily = null;
 
-          const fullscreenoption = se.toolbar.querySelector(
-            '#toolbar-fullscreen',
-          );
-          if (fullscreenoption) {
-            const groupOptions = se.toolbar.querySelector('#group-options');
-            groupOptions && groupOptions.append(fullscreenoption);
-          }
-
-          se.toolbar.style.display = null;
           se.toolbar.classList.remove('se-html');
-
-          const htmleditor = se.editor.querySelector('.se-html-editor');
-          
-          if(htmleditor){
-            se.setContent(htmleditor.value);
-            htmleditor.remove();
-          }
-
-          se.body.style.display = null;
+          se.setContent(se.body.textContent);
         };
 
         se.toolbar.prepend(saveoption);
 
-        const fullscreenoption = se.toolbar.querySelector(
-          '#toolbar-fullscreen',
-        );
-        fullscreenoption && saveoption.after(fullscreenoption);
-
-        se.toolbar.style.display = 'block';
         se.body.style.fontFamily = 'Courier';
-
-        const area = document.createElement('textarea');
-        area.setAttribute('class', 'se-html-editor se-body');
-        area.style = se.body.style; 
-        area.style.minWidth = '100%'; 
-        area.style.height = '100%';
-        area.style.border = 'none';
-        area.value = sourceFormatter.html(se.body.innerHTML);
-        
-        se.body.style.display = 'none';
-        se.body.after(area);
-
+        se.body.textContent = se.body.innerHTML;
         break;
       case 'fullscreen':
         const opt = se.toolbar.querySelector('#toolbar-fullscreen');
@@ -2876,25 +2803,19 @@ export default class StrivenEditor {
 
             se.editor.collapse();
           }
-
+  
+          se.overflow();
           se.editor.style.maxHeight = null;
-          se.editor.style.height = null;
-
-          se.body.style.maxHeight = null;
-          se.body.style.height = null;
-
+          se.body.style.height = se.editor.style.height;
           opt.removeAttribute('data-fullscreen');
         } else {
           blowUpElement(se.editor, '#fff', e => {
             opt.innerHTML = '';
             opt.append(createSVG(COLLAPSEICON));
 
+            se.body.style.overflow = null;
+            se.body.style.height = null;
             se.editor.style.maxHeight = 'inherit';
-            se.editor.style.height = '100%';
-
-            se.body.style.maxHeight = 'inherit';
-            se.body.style.height = '100%';
-
             opt.setAttribute('data-fullscreen', 'active');
           });
         }
@@ -2985,13 +2906,28 @@ export default class StrivenEditor {
             se.body.focus();
           });
 
-          // pickr.on('show', p => {
-          //   const { app } = p['_root'];
-          //   se.setMenuOffset(colorOption, app);
-          // });
+          pickr.on('show', p => {
+            const { app } = p['_root'];
+            if(window.matchMedia('(max-width: 510px)').matches) {
+              app.style.left = null;
+            }
+          });
         }
         break;
       case 'insertOrderedList':
+        if(!this.range && !this.getContent()) {
+          const list = document.createElement('ol');
+          list.append(document.createElement('li'));
+          
+          this.body.append(list); 
+          
+          const r = new Range();
+          window.getSelection().addRange(r);
+          r.selectNode(list);
+
+          return false;
+        }
+
         if (this.browser.isFirefox() || this.browser.isEdge()) {
           document.execCommand(command);
         } else {
@@ -2999,6 +2935,19 @@ export default class StrivenEditor {
         }
         break;
       case 'insertUnorderedList':
+        if(!this.range && !this.getContent()) {
+          const list = document.createElement('ul');
+          list.append(document.createElement('li'));
+          
+          this.body.append(list); 
+          
+          const r = new Range();
+          window.getSelection().addRange(r);
+          r.selectNode(list);
+
+          return false;
+        }
+
         if (this.browser.isFirefox() || this.browser.isEdge()) {
           document.execCommand(command);
         } else {

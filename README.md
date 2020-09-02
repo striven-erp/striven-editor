@@ -1,7 +1,7 @@
 <h1 align="center">Striven Editor</h1>
 
 <p align="center">
-    <img src="./striven-editor.gif" alt="stirven-editor" />
+    <img style="border: 1px solid #ddd" src="./img/striven-editor.gif" alt="stirven-editor" />
 </p>
 
 <p align="center">
@@ -259,11 +259,11 @@ const editor = new StrivenEditor(editorEl, { toolbarOptions: ["bold", "italic", 
 
 You can find Raw Fontawesome SVG data [here](https://github.com/encharm/Font-Awesome-SVG-PNG/tree/master/black/svg). After finding the icon you want, view the SVG file as raw.
 
-![SVG Raw](./svg-raw.png "SVG Raw")
+![SVG Raw](./img/svg-raw.png "SVG Raw")
 
 Then take the SVG element's ```viewBox``` attribute data and the path element's ```d``` attribute data.
 
-![SVG Data](./svg-data.png "SVG Data")
+![SVG Data](./img/svg-data.png "SVG Data")
 
 ## Editor Options
 

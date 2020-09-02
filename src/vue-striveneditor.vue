@@ -23,7 +23,9 @@ export default {
     activeOptionColor: String,
     onEnter: Function,
     value: String,
-    toolbarTemplate: Function
+    toolbarTemplate: Function,
+    onPaste: Function,
+    afterPaste: Function
   },
   mounted() {
     let vm = this;
