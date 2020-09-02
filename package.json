@@ -9,7 +9,7 @@
     "prepare": "npm run build",
     "build": "npx webpack --mode=\"production\"",
     "gh-pages": "cd demo && npm run build && node gh-pages",
-    "publish": "git checkout master && git merge dev && git push origin master && npm run build && npm publish --access=public && git checkout dev"
+    "publish": "git checkout master && git pull origin master && git merge dev && git push origin master && npm run build && npm publish --access=public && git checkout dev"
   },
   "repository": {
     "type": "git",
