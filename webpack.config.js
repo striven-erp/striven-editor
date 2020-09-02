@@ -1,3 +1,6 @@
+const { version } = require('./package.json');
+const webpack = require('webpack');
+
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
@@ -40,6 +43,7 @@ module.exports = {
         ]
     },
     plugins: [
+        new webpack.DefinePlugin({'__VERSION__': JSON.stringify(version)}), 
         new VueLoaderPlugin()
     ],
     optimization: {
