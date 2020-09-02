@@ -1193,7 +1193,7 @@ export default class StrivenEditor {
     const linkMenuCheck = document.createElement('input');
 
     function resetInput() {
-      linkMenuFormInput.value = 'http://';
+      linkMenuFormInput.value = '';
     }
 
     linkMenu.id = 'link-menu';
