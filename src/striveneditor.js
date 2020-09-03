@@ -873,7 +873,11 @@ export default class StrivenEditor {
     body.style.height = this.editor.style.height;
     body.style.minHeight = this.editor.style.minHeight;
     body.style.maxHeight = this.editor.style.maxHeight;
-
+    
+    this.editor.setAttribute('height', this.editor.style.height);
+    this.editor.setAttribute('min-height', this.editor.style.minHeight);
+    this.editor.setAttribute('max-height', this.editor.style.maxHeight);
+    
     this.editor.style.height = 'auto';
     this.editor.style.minHeight = 'auto';
     this.editor.style.maxHeight = 'auto';
@@ -2807,7 +2811,11 @@ export default class StrivenEditor {
   
           se.overflow();
           se.editor.style.maxHeight = null;
-          se.body.style.height = se.editor.style.height;
+          
+          se.body.style.height = se.editor.getAttribute('height');
+          se.body.style.minHeight = se.editor.getAttribute('min-height');
+          se.body.style.maxHeight = se.editor.getAttribute('max-height');
+          
           opt.removeAttribute('data-fullscreen');
         } else {
           blowUpElement(se.editor, '#fff', e => {
@@ -2916,33 +2924,37 @@ export default class StrivenEditor {
         }
         break;
       case 'insertOrderedList':
-        if(!this.range && !this.getContent()) {
+        if(!se.body.textContent) {
           const list = document.createElement('ol');
-          list.append(document.createElement('li'));
+          const item = document.createElement('li'); 
+          list.append(item);
           
           this.body.append(list); 
           
-          const r = new Range();
+          const r = se.range || new Range();
+          window.getSelection().removeAllRanges(); 
           window.getSelection().addRange(r);
-          r.selectNode(list);
+          r.selectNode(item);
 
           return false;
         }
 
         if (this.browser.isFirefox() || this.browser.isEdge()) {
-          document.execCommand(command);
+          document.execCommand(command, false);
         } else {
           document.execCommand(command);
         }
         break;
       case 'insertUnorderedList':
-        if(!this.range && !this.getContent()) {
+        if(!se.body.textContent) {
           const list = document.createElement('ul');
-          list.append(document.createElement('li'));
+          const item = document.createElement('li'); 
+          list.append(item);
           
           this.body.append(list); 
           
-          const r = new Range();
+          const r = se.range || new Range();
+          window.getSelection().removeAllRanges(); 
           window.getSelection().addRange(r);
           r.selectNode(list);
 
@@ -2950,7 +2962,7 @@ export default class StrivenEditor {
         }
 
         if (this.browser.isFirefox() || this.browser.isEdge()) {
-          document.execCommand(command);
+          document.execCommand(command, false);
         } else {
           document.execCommand(command);
         }

@@ -34,6 +34,10 @@
   color: #777;
 }
 
+.striven-editor .se-body table {
+  width: max-content;
+}
+
 .striven-editor .se-body .se-file-drop-dropzone {
   height: 90%;
   width: 95%;
