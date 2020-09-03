@@ -873,7 +873,11 @@ export default class StrivenEditor {
     body.style.height = this.editor.style.height;
     body.style.minHeight = this.editor.style.minHeight;
     body.style.maxHeight = this.editor.style.maxHeight;
-
+    
+    this.editor.setAttribute('height', this.editor.style.height);
+    this.editor.setAttribute('min-height', this.editor.style.minHeight);
+    this.editor.setAttribute('max-height', this.editor.style.maxHeight);
+    
     this.editor.style.height = 'auto';
     this.editor.style.minHeight = 'auto';
     this.editor.style.maxHeight = 'auto';
@@ -2807,7 +2811,11 @@ export default class StrivenEditor {
   
           se.overflow();
           se.editor.style.maxHeight = null;
-          se.body.style.height = se.editor.style.height;
+          
+          se.body.style.height = se.editor.getAttribute('height');
+          se.body.style.minHeight = se.editor.getAttribute('min-height');
+          se.body.style.maxHeight = se.editor.getAttribute('max-height');
+          
           opt.removeAttribute('data-fullscreen');
         } else {
           blowUpElement(se.editor, '#fff', e => {
