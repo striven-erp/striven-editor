@@ -1197,7 +1197,7 @@ export default class StrivenEditor {
     const linkMenuCheck = document.createElement('input');
 
     function resetInput() {
-      linkMenuFormInput.value = '';
+      linkMenuFormInput.value = 'http://';
     }
 
     linkMenu.id = 'link-menu';
@@ -2993,7 +2993,7 @@ export default class StrivenEditor {
             );
             selection && (selection.value = document.getSelection().toString());
 
-            this.linkMenu.querySelector('input').focus();
+            this.linkMenu.querySelector('input').select();
           }, 100);
         }
         break;
