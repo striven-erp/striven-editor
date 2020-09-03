@@ -2916,33 +2916,37 @@ export default class StrivenEditor {
         }
         break;
       case 'insertOrderedList':
-        if(!this.range && !this.getContent()) {
+        if(!se.body.textContent) {
           const list = document.createElement('ol');
-          list.append(document.createElement('li'));
+          const item = document.createElement('li'); 
+          list.append(item);
           
           this.body.append(list); 
           
-          const r = new Range();
+          const r = se.range || new Range();
+          window.getSelection().removeAllRanges(); 
           window.getSelection().addRange(r);
-          r.selectNode(list);
+          r.selectNode(item);
 
           return false;
         }
 
         if (this.browser.isFirefox() || this.browser.isEdge()) {
-          document.execCommand(command);
+          document.execCommand(command, false);
         } else {
           document.execCommand(command);
         }
         break;
       case 'insertUnorderedList':
-        if(!this.range && !this.getContent()) {
+        if(!se.body.textContent) {
           const list = document.createElement('ul');
-          list.append(document.createElement('li'));
+          const item = document.createElement('li'); 
+          list.append(item);
           
           this.body.append(list); 
           
-          const r = new Range();
+          const r = se.range || new Range();
+          window.getSelection().removeAllRanges(); 
           window.getSelection().addRange(r);
           r.selectNode(list);
 
@@ -2950,7 +2954,7 @@ export default class StrivenEditor {
         }
 
         if (this.browser.isFirefox() || this.browser.isEdge()) {
-          document.execCommand(command);
+          document.execCommand(command, false);
         } else {
           document.execCommand(command);
         }
