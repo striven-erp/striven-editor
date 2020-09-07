@@ -6,7 +6,7 @@
  * @param {Width} Width of the SVG
  * @returns {HTMLElement} Returns SVG Element
  */
-export const createSVG = () => {
+export const createSVG = (svgData, fillColor = '#000', height = 16, width = 16) => {
   const {viewBox, d} = svgData;
   const xmlns = 'http://www.w3.org/2000/svg';
 
