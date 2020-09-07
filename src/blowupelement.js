@@ -27,23 +27,26 @@ export default function blowUpElement(el, bg = '#fff', onExpand) {
     onExpand && onExpand(el);
     el.collapse = () => reset();
 
-    window.addEventListener('keydown', (e) => {
-        if (e.key) {
-            switch (e.key) {
-                case 'Escape':
-                    el.dataset.expanded === 'true' && reset();
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            switch (e.keyCode) {
-                case 13:
-                    el.dataset.expanded === 'true' && reset();
-                    break;
-                default:
-                    break;
-            }
-        }
-    })
+    const escapeEvt = (e) => {
+      if (e.key) {
+          switch (e.key) {
+              case 'Escape':
+                  el.dataset.expanded === 'true' && reset();
+                  break;
+              default:
+                  break;
+          }
+      } else {
+          switch (e.keyCode) {
+              case 13:
+                  el.dataset.expanded === 'true' && reset();
+                  break;
+              default:
+                  break;
+          }
+      }
+    }
+
+    window.addEventListener('keydown', escapeEvt);
+    el.addEventListener('keydown', escapeEvt);
 }

@@ -2801,23 +2801,26 @@ export default class StrivenEditor {
         break;
       case 'fullscreen':
         const opt = se.toolbar.querySelector('#toolbar-fullscreen');
-        if (opt.getAttribute('data-fullscreen')) {
-          if (se.editor.collapse) {
+        
+        if(!se.editor.oncollapse) {
+          se.editor.oncollapse = () => {
             opt.innerHTML = '';
             opt.append(createSVG(EXPANDICON));
+          
+            se.overflow();
+            se.editor.style.maxHeight = null;
+            se.body.style.height = se.editor.style.height;
+            opt.removeAttribute('data-fullscreen');
+          };
+        }
 
-            se.editor.collapse();
-          }
-  
-          se.overflow();
-          se.editor.style.maxHeight = null;
-          se.body.style.height = se.editor.style.height;
-          opt.removeAttribute('data-fullscreen');
+        if (opt.getAttribute('data-fullscreen')) {
+            se.editor.collapse && se.editor.collapse();
         } else {
           blowUpElement(se.editor, '#fff', e => {
             opt.innerHTML = '';
             opt.append(createSVG(COLLAPSEICON));
-
+           
             se.body.style.overflow = null;
             se.body.style.height = null;
             se.editor.style.maxHeight = 'inherit';
