@@ -52,6 +52,7 @@ export default class StrivenEditor {
         const actives = [...menus, ...inputs, se.body, se.toolbar, se.editor];
 
         if (
+          se.editor.getAttribute('data-expanded') !== 'true' && 
           el.innerHTML != el.data_orig &&
           !se.toolbarClick &&
           !actives.includes(document.activeElement) &&
