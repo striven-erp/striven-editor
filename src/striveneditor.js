@@ -286,6 +286,8 @@ export default class StrivenEditor {
             }
             break;
           case 'removeFormat':
+            this.executeCommand('formatBlock', 'p'); 
+
             // Remove the format of content
             this.executeCommand(command);
 
@@ -1850,6 +1852,7 @@ export default class StrivenEditor {
             };
           }
         });
+
       }
 
       function setResponsive() {
@@ -1904,6 +1907,7 @@ export default class StrivenEditor {
           textDecorationMenu.style.display = 'none';
           textDecorationGroup.classList.remove('se-popup');
         }
+       
       }
 
       function hideOption(option) {
