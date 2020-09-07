@@ -15,9 +15,11 @@ import {
 } from './defaults.js';
 
 // Helpers
-import createSVG from './createSVG';
-import denormalizeCamel from './denormalizeCamel';
-import blowUpElement from './blowupelement';
+import { 
+  createSVG,
+  denormalizeCamel,
+  blowUpElement 
+} from './utils';
 
 // Polyfills
 import ResizeObserver from 'resize-observer-polyfill';
