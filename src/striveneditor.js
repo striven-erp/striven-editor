@@ -290,7 +290,7 @@ export default class StrivenEditor {
             }
             break;
           case 'removeFormat':
-            this.executeCommand('formatBlock', 'p'); 
+            se.executeCommand('formatBlock', 'p'); 
 
             // Remove the format of content
             se.executeCommand(command);
