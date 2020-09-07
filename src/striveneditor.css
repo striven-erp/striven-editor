@@ -100,6 +100,10 @@
   display: none !important;
 }
 
+.striven-editor .se-html .se-toolbar-menu {
+  display: none !important;
+}
+
 .striven-editor .se-toolbar-close {
   height: 0px;
 }

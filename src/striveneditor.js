@@ -52,6 +52,7 @@ export default class StrivenEditor {
         const actives = [...menus, ...inputs, se.body, se.toolbar, se.editor];
 
         if (
+          se.editor.getAttribute('data-expanded') !== 'true' && 
           el.innerHTML != el.data_orig &&
           !se.toolbarClick &&
           !actives.includes(document.activeElement) &&
@@ -289,6 +290,8 @@ export default class StrivenEditor {
             }
             break;
           case 'removeFormat':
+            this.executeCommand('formatBlock', 'p'); 
+
             // Remove the format of content
             se.executeCommand(command);
 
@@ -1204,7 +1207,7 @@ export default class StrivenEditor {
     const linkMenuCheck = document.createElement('input');
 
     function resetInput() {
-      linkMenuFormInput.value = 'http://';
+      linkMenuFormInput.value = '';
     }
 
     linkMenu.id = 'link-menu';
@@ -1865,6 +1868,7 @@ export default class StrivenEditor {
             };
           }
         });
+
       }
 
       function setResponsive() {
@@ -1919,6 +1923,7 @@ export default class StrivenEditor {
           textDecorationMenu.style.display = 'none';
           textDecorationGroup.classList.remove('se-popup');
         }
+       
       }
 
       function hideOption(option) {
@@ -2000,11 +2005,12 @@ export default class StrivenEditor {
    */
   getContent() {
     const se = this;
-    const text = se.body.textContent;
+    const body = se.pruneScripts(se.body);  
+    const text = body.textContent;
 
     if (text || se.body.getElementsByTagName('img').length) {
       const htmlView = !!se.editor.querySelector('.se-html'); 
-      return htmlView ? text : se.body.innerHTML;
+      return htmlView ? text : body.innerHTML;
     } else {
       return null;
     }
@@ -2862,23 +2868,26 @@ export default class StrivenEditor {
         break;
       case 'fullscreen':
         const opt = se.toolbar.querySelector('#toolbar-fullscreen');
-        if (opt.getAttribute('data-fullscreen')) {
-          if (se.editor.collapse) {
+        
+        if(!se.editor.oncollapse) {
+          se.editor.oncollapse = () => {
             opt.innerHTML = '';
             opt.append(createSVG(EXPANDICON));
+          
+            se.overflow();
+            se.editor.style.maxHeight = null;
+            se.body.style.height = se.editor.style.height;
+            opt.removeAttribute('data-fullscreen');
+          };
+        }
 
-            se.editor.collapse();
-          }
-  
-          se.overflow();
-          se.editor.style.maxHeight = null;
-          se.body.style.height = se.editor.style.height;
-          opt.removeAttribute('data-fullscreen');
+        if (opt.getAttribute('data-fullscreen')) {
+            se.editor.collapse && se.editor.collapse();
         } else {
           blowUpElement(se.editor, '#fff', e => {
             opt.innerHTML = '';
             opt.append(createSVG(COLLAPSEICON));
-
+           
             se.body.style.overflow = null;
             se.body.style.height = null;
             se.editor.style.maxHeight = 'inherit';
