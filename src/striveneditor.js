@@ -2388,6 +2388,7 @@ export default class StrivenEditor {
    * Removes the escape handler on the editor for popup menus
    */
   removePopupEscapeHandler() {
+    const se = this; 
     se.editor.removeEventListener('keyup', se.bound_popupEscapeHandler);
   }
 
