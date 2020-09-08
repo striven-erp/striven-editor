@@ -287,10 +287,19 @@ export default class StrivenEditor {
             }
             break;
           case 'removeFormat':
-            this.executeCommand('formatBlock', 'p'); 
+            
+            const range = this.getRange(); 
+            const { tagName } = range.commonAncestorContainer;
+            
+            if(tagName && (tagName === 'OL' || tagName === 'UL')) {
+              range.commonAncestorContainer.innerHTML = range.commonAncestorContainer.textContent;
+              return;
+            }
 
-            // Remove the format of content
-            this.executeCommand(command);
+            const textNode = document.createTextNode( range.toString() );
+            range.deleteContents();
+            range.insertNode(textNode);
+            range.selectNodeContents(textNode);
 
             // Deactivate all toolbar options
             this.toolbarOptions.forEach(o =>
