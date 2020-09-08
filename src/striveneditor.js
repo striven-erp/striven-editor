@@ -289,13 +289,26 @@ export default class StrivenEditor {
           case 'removeFormat':
             
             const range = this.getRange(); 
-            const { tagName } = range.commonAncestorContainer;
             
-            if(tagName && (tagName === 'OL' || tagName === 'UL')) {
-              range.commonAncestorContainer.innerHTML = range.commonAncestorContainer.textContent;
-              return;
-            }
+            const { commonAncestorContainer } = range; 
+            const { tagName } = commonAncestorContainer;
+            
+            if(commonAncestorContainer) {
+              
+              if(tagName && (tagName === 'OL' || tagName === 'UL')) {
+                commonAncestorContainer.innerHTML = commonAncestorContainer.textContent;
+                return;
+              }
 
+              const { parentElement } = commonAncestorContainer;
+              const formatTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
+              if(formatTags.includes(parentElement.tagName)) {
+                parentElement.outerHTML = parentElement.textContent;
+                return;
+              }
+
+            }
+            
             const textNode = document.createTextNode( range.toString() );
             range.deleteContents();
             range.insertNode(textNode);
