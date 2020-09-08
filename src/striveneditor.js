@@ -52,6 +52,7 @@ export default class StrivenEditor {
         const actives = [...menus, ...inputs, se.body, se.toolbar, se.editor];
 
         if (
+          se.editor.getAttribute('data-expanded') !== 'true' && 
           el.innerHTML != el.data_orig &&
           !se.toolbarClick &&
           !actives.includes(document.activeElement) &&
@@ -80,7 +81,7 @@ export default class StrivenEditor {
    */
   constructor(el, options) {
     // Webpack inserts the package.json version
-    // this['_version'] = __VERSION__;
+    this['_version'] = __VERSION__;
 
     // Establish the browser context
     this.establishBrowser();
@@ -286,6 +287,8 @@ export default class StrivenEditor {
             }
             break;
           case 'removeFormat':
+            this.executeCommand('formatBlock', 'p'); 
+
             // Remove the format of content
             this.executeCommand(command);
 
@@ -1854,6 +1857,7 @@ export default class StrivenEditor {
             };
           }
         });
+
       }
 
       function setResponsive() {
@@ -1908,6 +1912,7 @@ export default class StrivenEditor {
           textDecorationMenu.style.display = 'none';
           textDecorationGroup.classList.remove('se-popup');
         }
+       
       }
 
       function hideOption(option) {
@@ -2801,27 +2806,26 @@ export default class StrivenEditor {
         break;
       case 'fullscreen':
         const opt = se.toolbar.querySelector('#toolbar-fullscreen');
-        if (opt.getAttribute('data-fullscreen')) {
-          if (se.editor.collapse) {
+        
+        if(!se.editor.oncollapse) {
+          se.editor.oncollapse = () => {
             opt.innerHTML = '';
             opt.append(createSVG(EXPANDICON));
+          
+            se.overflow();
+            se.editor.style.maxHeight = null;
+            se.body.style.height = se.editor.style.height;
+            opt.removeAttribute('data-fullscreen');
+          };
+        }
 
-            se.editor.collapse();
-          }
-  
-          se.overflow();
-          se.editor.style.maxHeight = null;
-          
-          se.body.style.height = se.editor.getAttribute('height');
-          se.body.style.minHeight = se.editor.getAttribute('min-height');
-          se.body.style.maxHeight = se.editor.getAttribute('max-height');
-          
-          opt.removeAttribute('data-fullscreen');
+        if (opt.getAttribute('data-fullscreen')) {
+            se.editor.collapse && se.editor.collapse();
         } else {
           blowUpElement(se.editor, '#fff', e => {
             opt.innerHTML = '';
             opt.append(createSVG(COLLAPSEICON));
-
+           
             se.body.style.overflow = null;
             se.body.style.height = null;
             se.editor.style.maxHeight = 'inherit';
