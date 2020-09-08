@@ -224,12 +224,6 @@
   background-color: transparent;
 }
 
-@media (max-width: 500px) {
-  .striven-editor .se-toolbar .se-toolbar-selection {
-    display: none;
-  }
-}
-
 /*
 .striven-editor .se-toolbar .se-toolbar-selection .se-toolbar-option {
   border: 1px solid #ddd; 

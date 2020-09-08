@@ -1854,6 +1854,15 @@ export default class StrivenEditor {
           }
         });
 
+        [...that.toolbar.getElementsByClassName('se-toolbar-selection')]
+          .forEach(sl => {
+            sl.style.display = isResponsive ? 'none' : null;
+            const { nextElementSibling } = sl;
+            if(nextElementSibling.classList.contains('se-divider-section')) {
+              nextElementSibling.style.display = isResponsive ? 'none' : null;  
+            }
+          })
+
       }
 
       function setResponsive() {
