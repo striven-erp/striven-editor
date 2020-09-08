@@ -1858,6 +1858,15 @@ export default class StrivenEditor {
           }
         });
 
+        [...that.toolbar.getElementsByClassName('se-toolbar-selection')]
+          .forEach(sl => {
+            sl.style.display = isResponsive ? 'none' : null;
+            const { nextElementSibling } = sl;
+            if(nextElementSibling.classList.contains('se-divider-section')) {
+              nextElementSibling.style.display = isResponsive ? 'none' : null;  
+            }
+          })
+
       }
 
       function setResponsive() {
@@ -2809,6 +2818,10 @@ export default class StrivenEditor {
         
         if(!se.editor.oncollapse) {
           se.editor.oncollapse = () => {
+            if(opt.original !== se.body.innerHTML && se.options.change) {
+              se.options.change();
+            }
+
             opt.innerHTML = '';
             opt.append(createSVG(EXPANDICON));
           
@@ -2823,6 +2836,7 @@ export default class StrivenEditor {
             se.editor.collapse && se.editor.collapse();
         } else {
           blowUpElement(se.editor, '#fff', e => {
+            opt.original = se.body.innerHTML; 
             opt.innerHTML = '';
             opt.append(createSVG(COLLAPSEICON));
            

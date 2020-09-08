@@ -25,7 +25,8 @@ export default {
     value: String,
     toolbarTemplate: Function,
     onPaste: Function,
-    afterPaste: Function
+    afterPaste: Function,
+    change: Function
   },
   mounted() {
     let vm = this;
