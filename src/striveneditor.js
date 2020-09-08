@@ -1860,10 +1860,11 @@ export default class StrivenEditor {
 
         [...that.toolbar.getElementsByClassName('se-toolbar-selection')]
           .forEach(sl => {
-            sl.style.display = isResponsive ? 'none' : null;
+            const respond = that.editor.offsetWidth < 500; 
+            sl.style.display = respond ? 'none' : null;
             const { nextElementSibling } = sl;
             if(nextElementSibling.classList.contains('se-divider-section')) {
-              nextElementSibling.style.display = isResponsive ? 'none' : null;  
+              nextElementSibling.style.display = respond ? 'none' : null;  
             }
           })
 
