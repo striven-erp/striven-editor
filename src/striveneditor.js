@@ -2847,7 +2847,7 @@ export default class StrivenEditor {
         if(!se.editor.oncollapse) {
           se.editor.oncollapse = () => {
             if(opt.original !== se.body.innerHTML && se.options.change) {
-              se.options.change();
+              se.options.change(se.getContent());
             }
 
             opt.innerHTML = '';
