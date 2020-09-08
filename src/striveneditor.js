@@ -2855,7 +2855,11 @@ export default class StrivenEditor {
           
             se.overflow();
             se.editor.style.maxHeight = null;
-            se.body.style.height = se.editor.style.height;
+            
+            se.body.style.height = se.editor.getAttribute('height');
+            se.body.style.minHeight = se.editor.getAttribute('min-height');
+            se.body.style.maxHeight = se.editor.getAttribute('max-height');
+
             opt.removeAttribute('data-fullscreen');
           };
         }
@@ -2869,7 +2873,11 @@ export default class StrivenEditor {
             opt.append(createSVG(COLLAPSEICON));
            
             se.body.style.overflow = null;
+            
             se.body.style.height = null;
+            se.body.style.minHeight = null;
+            se.body.style.maxHeight = null;
+
             se.editor.style.maxHeight = 'inherit';
             opt.setAttribute('data-fullscreen', 'active');
           });
