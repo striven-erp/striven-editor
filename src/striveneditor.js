@@ -308,11 +308,16 @@ export default class StrivenEditor {
               }
 
             }
-            
+           
             const textNode = document.createTextNode( range.toString() );
             range.deleteContents();
             range.insertNode(textNode);
             range.selectNodeContents(textNode);
+
+            const { previousElementSibling } = textNode;
+            if(previousElementSibling.tagName === 'OL' || previousElementSibling.tagName === 'UL') {
+              !previousElementSibling.textContent && previousElementSibling.remove();
+            }
 
             // Deactivate all toolbar options
             this.toolbarOptions.forEach(o =>
