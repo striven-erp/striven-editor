@@ -14,6 +14,7 @@
       :on-enter="submitOnEnter"
       :on-paste="onPaste"
       :after-paste="afterPaste"
+      :change="onChange"
     ></striven-editor>
 
     <!-- TESTING -->
@@ -80,6 +81,10 @@ export default {
     this.editor = this.$refs.editor.editor;
   },
   methods: {
+    onChange() {
+      this.editor.body.style.backgroundColor = 'green';
+      setTimeout(() => this.editor.body.style.backgroundColor = null, 200);
+    },
     afterPaste() {
       setTimeout(() => { 
         [...this.editor.body.querySelectorAll('.striven-mention')]

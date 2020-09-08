@@ -2805,6 +2805,10 @@ export default class StrivenEditor {
         
         if(!se.editor.oncollapse) {
           se.editor.oncollapse = () => {
+            if(opt.original !== se.body.innerHTML && se.options.change) {
+              se.options.change();
+            }
+
             opt.innerHTML = '';
             opt.append(createSVG(EXPANDICON));
           
@@ -2819,6 +2823,7 @@ export default class StrivenEditor {
             se.editor.collapse && se.editor.collapse();
         } else {
           blowUpElement(se.editor, '#fff', e => {
+            opt.original = se.body.innerHTML; 
             opt.innerHTML = '';
             opt.append(createSVG(COLLAPSEICON));
            
