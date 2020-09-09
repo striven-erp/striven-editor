@@ -13,6 +13,7 @@ function node(content) {
   return node;
 }
 
+/* Editor Tests */
 describe('Editor Initilization', () => {
   it('should of been created', () => {
     assert.exists(getEditor().editor, 'Editor is created'); 
@@ -27,6 +28,7 @@ describe('Editor Initilization', () => {
   });
 });
 
+/* Quality Assurance Tests */
 describe('Quality Assurance', () => {
   it('should insert a link that will open in a new window', () => {
     const se  = getEditor();
