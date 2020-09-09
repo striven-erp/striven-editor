@@ -22,7 +22,7 @@
     <!-- <button @click="chromeOut">isChrome</button> -->
     <!-- <button @click="insertList">insertUnorderedList</button> -->
 
-    <div v-html="content"></div>
+    <!-- <div v-html="content"></div> -->
     <!-- <div ref="customButton" style="display: flex; align-items: flex-end;"> -->
     <!--   <div class="custom-button" @click="sendContent">Send</div>           -->
     <!-- </div>                                                                 -->
@@ -31,6 +31,7 @@
 
 <script>
 /* eslint-disable */
+import './test';
 import { VueStrivenEditor as StrivenEditor } from "@striven-erp/striven-editor";
 
 export default {
