@@ -293,54 +293,13 @@ export default class StrivenEditor {
             break;
           case 'removeFormat':
            
-            const clear = () => {
-              const range = se.getRange();
+            se.executeCommand(command);
 
-              const textNode = document.createTextNode( range.toString() );
-              range.deleteContents();
-              range.insertNode(textNode);
-              range.selectNodeContents(textNode);
-
-              // Deactivate all toolbar options
-              se.toolbarOptions.forEach(o =>
-                o.classList.remove('se-toolbar-option-active'),
-              );
-            }
+            // Deactivate all toolbar options
+            se.toolbarOptions.forEach(o =>
+              o.classList.remove('se-toolbar-option-active'),
+            );          
             
-            try {
-              
-              const range = se.getRange(); 
-              
-              const { commonAncestorContainer } = range; 
-              const { tagName } = commonAncestorContainer;
-              
-              if(commonAncestorContainer) {
-                
-                if(tagName && (tagName === 'OL' || tagName === 'UL')) {
-                  commonAncestorContainer.innerHTML = commonAncestorContainer.textContent;
-                  return;
-                }
-
-                const { parentElement } = commonAncestorContainer;
-                const formatTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
-                if(formatTags.includes(parentElement.tagName)) {
-                  parentElement.outerHTML = parentElement.textContent;
-                  return;
-                }
-
-              }
-
-              const { previousElementSibling } = textNode;
-              if(previousElementSibling.tagName === 'OL' || previousElementSibling.tagName === 'UL') {
-                !previousElementSibling.textContent && previousElementSibling.remove();
-              }
-
-              clear();
-
-            } catch (e) {
-              clear();
-            }
-
             break;
           case 'indent':
             setTimeout(() => se.setRange(se.range), 0);
