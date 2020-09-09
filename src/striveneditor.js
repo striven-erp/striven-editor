@@ -287,42 +287,55 @@ export default class StrivenEditor {
             }
             break;
           case 'removeFormat':
-            
-            const range = this.getRange(); 
-            
-            const { commonAncestorContainer } = range; 
-            const { tagName } = commonAncestorContainer;
-            
-            if(commonAncestorContainer) {
-              
-              if(tagName && (tagName === 'OL' || tagName === 'UL')) {
-                commonAncestorContainer.innerHTML = commonAncestorContainer.textContent;
-                return;
-              }
-
-              const { parentElement } = commonAncestorContainer;
-              const formatTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
-              if(formatTags.includes(parentElement.tagName)) {
-                parentElement.outerHTML = parentElement.textContent;
-                return;
-              }
-
-            }
            
-            const textNode = document.createTextNode( range.toString() );
-            range.deleteContents();
-            range.insertNode(textNode);
-            range.selectNodeContents(textNode);
+            const clear = () => {
+              const range = this.getRange();
 
-            const { previousElementSibling } = textNode;
-            if(previousElementSibling.tagName === 'OL' || previousElementSibling.tagName === 'UL') {
-              !previousElementSibling.textContent && previousElementSibling.remove();
+              const textNode = document.createTextNode( range.toString() );
+              range.deleteContents();
+              range.insertNode(textNode);
+              range.selectNodeContents(textNode);
+
+              // Deactivate all toolbar options
+              this.toolbarOptions.forEach(o =>
+                o.classList.remove('se-toolbar-option-active'),
+              );
+            }
+            
+            try {
+              
+              const range = this.getRange(); 
+              
+              const { commonAncestorContainer } = range; 
+              const { tagName } = commonAncestorContainer;
+              
+              if(commonAncestorContainer) {
+                
+                if(tagName && (tagName === 'OL' || tagName === 'UL')) {
+                  commonAncestorContainer.innerHTML = commonAncestorContainer.textContent;
+                  return;
+                }
+
+                const { parentElement } = commonAncestorContainer;
+                const formatTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
+                if(formatTags.includes(parentElement.tagName)) {
+                  parentElement.outerHTML = parentElement.textContent;
+                  return;
+                }
+
+              }
+
+              const { previousElementSibling } = textNode;
+              if(previousElementSibling.tagName === 'OL' || previousElementSibling.tagName === 'UL') {
+                !previousElementSibling.textContent && previousElementSibling.remove();
+              }
+
+              clear();
+
+            } catch (e) {
+              clear();
             }
 
-            // Deactivate all toolbar options
-            this.toolbarOptions.forEach(o =>
-              o.classList.remove('se-toolbar-option-active'),
-            );
             break;
           case 'indent':
             setTimeout(() => this.setRange(this.range), 0);
@@ -2847,7 +2860,7 @@ export default class StrivenEditor {
         if(!se.editor.oncollapse) {
           se.editor.oncollapse = () => {
             if(opt.original !== se.body.innerHTML && se.options.change) {
-              se.options.change();
+              se.options.change(se.getContent());
             }
 
             opt.innerHTML = '';
