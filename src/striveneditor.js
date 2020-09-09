@@ -54,7 +54,6 @@ export default class StrivenEditor {
         const actives = [...menus, ...inputs, se.body, se.toolbar, se.editor];
 
         if (
-          se.editor.getAttribute('data-expanded') !== 'true' && 
           el.innerHTML != el.data_orig &&
           !se.toolbarClick &&
           !actives.includes(document.activeElement) &&
@@ -2913,9 +2912,9 @@ export default class StrivenEditor {
             opt.innerHTML = '';
             opt.append(createSVG(COLLAPSEICON));
            
-            se.body.style.overflow = null;
+            document.body.style.overflow = null;
             
-            se.body.style.height = null;
+            se.body.style.height = '100%';
             se.body.style.minHeight = null;
             se.body.style.maxHeight = null;
 
