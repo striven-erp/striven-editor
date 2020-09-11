@@ -50,7 +50,7 @@ describe('Regression Tests', () => {
 
  });
 
- it('apply font style to content', (done) => {
+ it('should apply font style to content', (done) => {
   const se = getEditor();
   se.setContent('<p>Change me to Verdana</p>');
   
@@ -68,7 +68,7 @@ describe('Regression Tests', () => {
 
  });
 
- it('apply font size to content', (done) => {
+ it('should apply font size to content', (done) => {
   const se = getEditor();
   se.setContent('<p>Change me to 36pt size</p>');
 
