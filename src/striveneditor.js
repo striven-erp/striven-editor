@@ -2890,15 +2890,15 @@ export default class StrivenEditor {
 
             opt.innerHTML = '';
             opt.append(createSVG(EXPANDICON));
-          
-            se.overflow();
-            
+         
             se.editor.style.maxHeight = null;
             document.body.style.overflow = null;
 
             se.body.style.height = se.editor.getAttribute('height');
             se.body.style.minHeight = se.editor.getAttribute('min-height');
             se.body.style.maxHeight = se.editor.getAttribute('max-height');
+
+            se.overflow();
 
             opt.removeAttribute('data-fullscreen');
           };
