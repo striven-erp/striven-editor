@@ -13,23 +13,8 @@ function node(content) {
   return node;
 }
 
-/* Editor Tests */
-describe('Editor Initilization', () => {
-  it('should of been created', () => {
-    assert.exists(getEditor().editor, 'Editor is created'); 
-  });
-
-  it('should have a body', () => {
-    assert.exists(getEditor().body, 'Editor contains a body');
-  });
-
-  it('should have a toolbar', () => {
-    assert.exists(getEditor().toolbar, 'Editor contains a body');
-  });
-});
-
-/* Quality Assurance Tests */
-describe('Quality Assurance', () => {
+/* Regression Tests */
+describe('Regression Tests', () => {
   it('should insert a link that will open in a new window', () => {
     const se  = getEditor();
     const { editor, body } = se;
@@ -64,6 +49,39 @@ describe('Quality Assurance', () => {
 
  });
 
-})
+ it('should create an ordered list with no content', () => {
+  const se = getEditor();
+  se.toolbar.querySelector('#toolbar-insertOrderedList').click();
+
+  assert.exists(se.body.querySelector('ol'), 'an ordered list was created');
+  se.clearContent();
+
+ });
+
+ it('should create an unordered list with no content', () => {
+  const se = getEditor();
+  se.toolbar.querySelector('#toolbar-insertUnorderedList').click();
+
+  assert.exists(se.body.querySelector('ul'), 'an unordered list was created');
+  se.clearContent();
+
+ });
+
+});
+
+/* Internal Tests */
+describe('Editor Initilization', () => {
+  it('should of been created', () => {
+    assert.exists(getEditor().editor, 'Editor is created'); 
+  });
+
+  it('should have a body', () => {
+    assert.exists(getEditor().body, 'Editor contains a body');
+  });
+
+  it('should have a toolbar', () => {
+    assert.exists(getEditor().toolbar, 'Editor contains a body');
+  });
+});
 
 mocha.run();
