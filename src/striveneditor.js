@@ -2892,8 +2892,10 @@ export default class StrivenEditor {
             opt.append(createSVG(EXPANDICON));
           
             se.overflow();
-            se.editor.style.maxHeight = null;
             
+            se.editor.style.maxHeight = null;
+            document.body.style.overflow = null;
+
             se.body.style.height = se.editor.getAttribute('height');
             se.body.style.minHeight = se.editor.getAttribute('min-height');
             se.body.style.maxHeight = se.editor.getAttribute('max-height');
@@ -2910,7 +2912,7 @@ export default class StrivenEditor {
             opt.innerHTML = '';
             opt.append(createSVG(COLLAPSEICON));
            
-            document.body.style.overflow = null;
+            document.body.style.overflow = 'hidden';
             
             se.body.style.height = '100%';
             se.body.style.minHeight = null;
