@@ -87,7 +87,7 @@ describe('Regression Tests', () => {
 
  });
 
- it('apply font format to content', (done) => {
+ it('should apply font format to content', (done) => {
   const se = getEditor();
   se.setContent('<p>Change me to an H1 format</p>');
 
@@ -106,10 +106,50 @@ describe('Regression Tests', () => {
 
  });
 
+ it('should apply a scroll bar for large content', () => {
+  const se = getEditor();
+  se.editor.setAttribute('max-height', '300px');
+  se.body.style.maxHeight = '300px'; 
+
+  let largeContent = '';
+  for(let i = 0; i < 1000; i++) {
+    largeContent += `<p>line ${i}</p>`;
+  }
+
+  se.setContent(largeContent);
+  se.body.blur();
+ 
+  assert.notEqual(se.body.scrollHeight, se.body.offsetHeight, 'scroll bar was set');
+  se.clearContent();
+  se.overflow(); 
+
+ });
+
+ it('should apply a scroll bar for large content after collapsing fullscreen', () => {
+  const se = getEditor();
+  se.editor.setAttribute('max-height', '300px');
+  se.body.style.maxHeight = '300px'; 
+
+  se.toolbar.querySelector('#toolbar-fullscreen').click();
+
+  let largeContent = '';
+  for(let i = 0; i < 1000; i++) {
+    largeContent += `<p>line ${i}</p>`;
+  }
+
+  se.setContent(largeContent);
+  se.toolbar.querySelector('#toolbar-fullscreen').click();
+  
+  assert.notEqual(se.body.scrollHeight, se.body.offsetHeight, 'scroll bar was set');
+  se.clearContent();
+  se.overflow(); 
+
+ });
+
 });
 
 /* Internal Tests */
-describe('Editor Initilization', () => {
+describe('Internal Tests', () => {
   it('should of been created', () => {
     assert.exists(getEditor().editor, 'Editor is created'); 
   });
