@@ -44,7 +44,7 @@ export default {
       minimal: false,
       uploadOnPaste: false,
       toolbarBottom: false,
-      toolbarHide: true,
+      toolbarHide: false, // Tests will break toolbar if this is on
       sanitizePaste: true,
       onInvalidFile() {
         alert("invalid file");

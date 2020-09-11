@@ -15,24 +15,7 @@ function node(content) {
 
 /* Regression Tests */
 describe('Regression Tests', () => {
-  it('should insert a link that will open in a new window', () => {
-    const se  = getEditor();
-    const { editor, body } = se;
-    body.focus(); 
-
-    const menu = editor.querySelector('#link-menu');
-    
-    const url = menu.querySelector('input');
-    url.value = 'https://striven.com/';
-
-    menu.querySelector('button').click();
-    const link = body.querySelector('a[target="_blank"]');
-
-    assert.exists(link, 'will open in new window');
-    se.clearContent();
-
-  });
-
+  
  it('should not return script elements', () => {
   const se = getEditor();
   
@@ -64,6 +47,62 @@ describe('Regression Tests', () => {
 
   assert.exists(se.body.querySelector('ul'), 'an unordered list was created');
   se.clearContent();
+
+ });
+
+ it('apply font style to content', (done) => {
+  const se = getEditor();
+  se.setContent('<p>Change me to Verdana</p>');
+  
+  setTimeout(() => {
+    se.getRange().selectNode(se.body.querySelector('p')); 
+    se.toolbar.querySelector('#toolbar-fontName').click();
+    se.editor.querySelector('.se-toolbar-popup-option[style="font-family: Verdana;"]').click();
+    se.body.onfocus();
+    setTimeout(() => {
+      assert.exists(se.body.querySelector('p font[face="Verdana"]'), 'selected font style was applied');
+      se.clearContent();
+      done();
+    }, 0);
+  }, 200);
+
+ });
+
+ it('apply font size to content', (done) => {
+  const se = getEditor();
+  se.setContent('<p>Change me to 36pt size</p>');
+
+  setTimeout(() => {
+    se.getRange().selectNode(se.body.querySelector('p')); 
+    se.toolbar.querySelector('#toolbar-fontSize').click();
+    const option = [...se.editor.querySelectorAll('.se-toolbar-popup-option')].filter(opt => (opt.textContent === '36pt')).pop();
+    option.click();
+    se.body.onfocus();
+    setTimeout(() => {
+      assert.exists(se.body.querySelector('font[size="7"]'), 'selected font size was applied');
+      se.clearContent();
+      done();
+    }, 0);
+  }, 200);
+
+ });
+
+ it('apply font format to content', (done) => {
+  const se = getEditor();
+  se.setContent('<p>Change me to an H1 format</p>');
+
+  setTimeout(() => {
+    se.getRange().selectNode(se.body.querySelector('p')); 
+    se.toolbar.querySelector('#toolbar-fontFormat').click();
+    const option = [...se.editor.querySelectorAll('.se-toolbar-popup-option')].filter(opt => (opt.textContent === 'Heading 1')).pop();
+    option.click();
+    se.body.onfocus();
+    setTimeout(() => {
+      assert.exists(se.body.querySelector('h1'), 'selected font format was applied');
+      se.clearContent();
+      done();
+    }, 0);
+  }, 200);
 
  });
 
