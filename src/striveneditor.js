@@ -718,8 +718,6 @@ export default class StrivenEditor {
     }
 
     function initFontFormatMenu() {
-      const se = this; 
-
       const menu = initMenu('fontFormat');
 
       const formats = [
