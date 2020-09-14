@@ -1693,6 +1693,8 @@ export default class StrivenEditor {
    * @param {Number} size Size of the file in bytes
    */
   createFileElement(name, size) {
+    const se = this; 
+
     const fileEl = document.createElement('div');
     const fileNameEl = document.createElement('p');
     const fileSizeEl = document.createElement('p');
