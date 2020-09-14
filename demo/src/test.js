@@ -146,6 +146,25 @@ describe('Regression Tests', () => {
 
  });
 
+ it('should attach a file', (done) => {
+
+  const se = getEditor();
+
+  fetch('https://raw.githubusercontent.com/striven-erp/striven-editor/master/LICENSE.txt')
+    .then(res => res.body.getReader().read().then(d => {
+      se.attachFile(new File([new Blob(d.value)], 'LICENSE.txt'));
+      
+      const isAttached = se.getFiles().pop() instanceof File;
+      const elCreated = se.filesSection.querySelector('.se-file .se-file-name').textContent === 'LICENSE.txt';
+
+      assert.isTrue(isAttached && elCreated, 'file was attached');
+      se.clearFiles();
+      done();
+    
+    }));
+
+ });
+
 });
 
 /* Internal Tests */
