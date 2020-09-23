@@ -1,7 +1,7 @@
 {
   "name": "@striven-erp/striven-editor",
   "private": false,
-  "version": "3.7.6",
+  "version": "3.7.7",
   "description": "The editor used for the Striven ERP system.",
   "main": "./dist",
   "scripts": {
