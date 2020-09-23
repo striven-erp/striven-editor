@@ -1122,7 +1122,7 @@ export default class StrivenEditor {
       window.addEventListener('mouseup', execRange);
       
       se.editor.classList.add('se-focus');
-     
+    
       if(se.body.textContent.trim() === '') {
         const r = se.getRange();
         
@@ -1135,15 +1135,15 @@ export default class StrivenEditor {
             selNode.remove();  
           }, 0);
         
-        } else {
+        } 
+      
+      } else {
           const r = se.getRange();
 
-          if(se.body.textContent && r) {
+          if(r) {
             r.selectNodeContents(se.body); 
             r.collapse();
           }
-        }
-      
       }
 
       if (se.scrollPosition && !se.browser.isEdge()) {
