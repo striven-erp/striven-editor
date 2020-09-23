@@ -1115,6 +1115,33 @@ export default class StrivenEditor {
       se.toolbarState();
     };
 
+    addEventListener('keyup', (e) => {
+      const tab = (e.key === 'Tab' || e.keyCode === 9);
+      
+      if(tab && document.activeElement === se.body) {
+        if(se.body.textContent.trim() === '') {
+          const r = se.getRange(); 
+
+          if(r) {
+            const selNode = document.createElement('span');
+            selNode.innerHTML = '&nbsp;';
+            se.body.append(selNode);
+
+            r.selectNode(selNode);
+            r.collapse();
+          }
+          
+        } else {
+          const r = se.getRange();
+
+          if(r) {
+            r.selectNodeContents(se.body);
+            r.collapse();
+          }
+        }
+      }
+    });
+
     const bodyFocus = body.onfocus;
     body.onfocus = e => {
       !se.browser.isEdge() && se.setRange();
@@ -1122,20 +1149,6 @@ export default class StrivenEditor {
       window.addEventListener('mouseup', execRange);
 
       se.editor.classList.add('se-focus');
-
-      if(se.body.textContent.trim() === '') {
-        const r = se.getRange(); 
-
-        if(r) {
-          const selNode = document.createElement('span');
-          selNode.innerHTML = '&nbsp;';
-          se.body.append(selNode);
-
-          r.selectNode(selNode);
-          r.deleteContent();
-        }
-        
-      }
 
       if (se.scrollPosition && !se.browser.isEdge()) {
         body.scrollTo(se.scrollPosition);
@@ -1175,6 +1188,10 @@ export default class StrivenEditor {
     const bodyBlur = body.onblur;
     body.onblur = e => {
       se.editor.classList.remove('se-focus');
+
+      if(se.body.textContent.trim() === '') {
+        se.clearContent();
+      }
 
       window.removeEventListener('mouseup', execRange);
 
