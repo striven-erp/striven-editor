@@ -1135,6 +1135,13 @@ export default class StrivenEditor {
             selNode.remove();  
           }, 0);
         
+        } else {
+          const r = se.getRange();
+
+          if(se.body.textContent && r) {
+            r.selectNodeContents(se.body); 
+            r.collapse();
+          }
         }
       
       }
