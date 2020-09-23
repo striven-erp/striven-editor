@@ -1120,8 +1120,24 @@ export default class StrivenEditor {
       !se.browser.isEdge() && se.setRange();
 
       window.addEventListener('mouseup', execRange);
-
+      
       se.editor.classList.add('se-focus');
+     
+      if(se.body.textContent.trim() === '') {
+        const r = se.getRange();
+        
+        if(r) {
+          const selNode = document.createTextNode('');
+          se.body.append(selNode);
+          
+          setTimeout(() => {
+            se.getRange().selectNode(selNode);
+            selNode.remove();  
+          }, 0);
+        
+        }
+      
+      }
 
       if (se.scrollPosition && !se.browser.isEdge()) {
         body.scrollTo(se.scrollPosition);
