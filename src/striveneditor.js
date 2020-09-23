@@ -1115,6 +1115,19 @@ export default class StrivenEditor {
       se.toolbarState();
     };
 
+    addEventListener('keyup', (e) => {
+      const tab = (e.key === 'Tab' || e.keyCode === 9);
+
+      if(tab && document.activeElement === 9) {
+        const r = se.getRange();
+
+        if(r) {
+          r.selectNodeContents(se.body); 
+          r.collapse();
+        }
+      }
+    })
+
     const bodyFocus = body.onfocus;
     body.onfocus = e => {
       !se.browser.isEdge() && se.setRange();
@@ -1137,13 +1150,6 @@ export default class StrivenEditor {
         
         } 
       
-      } else {
-          const r = se.getRange();
-
-          if(r) {
-            r.selectNodeContents(se.body); 
-            r.collapse();
-          }
       }
 
       if (se.scrollPosition && !se.browser.isEdge()) {
