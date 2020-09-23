@@ -1117,16 +1117,30 @@ export default class StrivenEditor {
 
     addEventListener('keyup', (e) => {
       const tab = (e.key === 'Tab' || e.keyCode === 9);
+      
+      if(tab && document.activeElement === se.body) {
+        if(se.body.textContent.trim() === '') {
+          const r = se.getRange(); 
 
-      if(tab && document.activeElement === 9) {
-        const r = se.getRange();
+          if(r) {
+            const selNode = document.createElement('span');
+            selNode.innerHTML = '&nbsp;';
+            se.body.append(selNode);
 
-        if(r) {
-          r.selectNodeContents(se.body); 
-          r.collapse();
+            r.selectNode(selNode);
+            r.collapse();
+          }
+          
+        } else {
+          const r = se.getRange();
+
+          if(r) {
+            r.selectNodeContents(se.body);
+            r.collapse();
+          }
         }
       }
-    })
+    });
 
     const bodyFocus = body.onfocus;
     body.onfocus = e => {
@@ -1190,6 +1204,10 @@ export default class StrivenEditor {
     const bodyBlur = body.onblur;
     body.onblur = e => {
       se.editor.classList.remove('se-focus');
+
+      if(se.body.textContent.trim() === '') {
+        se.clearContent();
+      }
 
       window.removeEventListener('mouseup', execRange);
 
@@ -2888,6 +2906,24 @@ export default class StrivenEditor {
   executeCommand(command, input) {
     const se = this;
 
+    function textDecorationInsert(el) {
+      const r = se.getRange(); 
+      
+      if(r) {
+        const b = document.createElement(el);
+        const selNode = document.createElement('span');
+        selNode.innerHTML = '&nbsp;';
+       
+        b.append(selNode);
+        
+        const fc = se.body.firstChild
+        fc ? fc.append(b) : se.body.append(b);
+
+        r.selectNode(selNode);
+        r.collapse();
+      }
+    }
+
     switch (command) {
       case 'html':
         const saveoption = document.createElement('div');
@@ -3142,6 +3178,26 @@ export default class StrivenEditor {
           setTimeout(() => se.tableMenu.querySelector('input').focus(), 100);
         }
         break;
+      case 'bold':
+        if(se.body.textContent === '') {
+          textDecorationInsert('b');
+          break;
+        }
+      case 'italic':
+        if(se.body.textContent === '') {
+          textDecorationInsert('i');
+          break;
+        } 
+      case 'underline':
+        if(se.body.textContent === '') {
+          textDecorationInsert('u');
+          break;
+        }
+      case 'strikethrough':
+        if(se.body.textContent === '') {
+          textDecorationInsert('strike');
+          break;
+        }
       default:
         if (se.browser.isFirefox() || se.browser.isEdge()) {
           input
