@@ -1123,6 +1123,20 @@ export default class StrivenEditor {
 
       se.editor.classList.add('se-focus');
 
+      if(se.body.textContent.trim() === '') {
+        const r = se.getRange(); 
+
+        if(r) {
+          const selNode = document.createElement('span');
+          selNode.innerHTML = '&nbsp;';
+          se.body.append(selNode);
+
+          r.selectNode(selNode);
+          r.deleteContent();
+        }
+        
+      }
+
       if (se.scrollPosition && !se.browser.isEdge()) {
         body.scrollTo(se.scrollPosition);
       }
