@@ -2899,9 +2899,9 @@ export default class StrivenEditor {
       selNode.innerHTML = '&nbsp;';
       
       b.append(selNode);
-      
+     
       const fc = se.body.firstChild;
-      fc ? fc.append(b) : se.body.append(b);
+      (fc && fc.append) ? fc.append(b) : se.body.append(b);
 
       r.selectNode(selNode);
       r.collapse();
