@@ -3178,22 +3178,22 @@ export default class StrivenEditor {
         }
         break;
       case 'bold':
-        if(se.body.textContent === '') {
+        if(se.body.textContent.trim() === '') {
           textDecorationInsert('b');
           break;
         }
       case 'italic':
-        if(se.body.textContent === '') {
+        if(se.body.textContent.trim() === '') {
           textDecorationInsert('i');
           break;
         } 
       case 'underline':
-        if(se.body.textContent === '') {
+        if(se.body.textContent.trim() === '') {
           textDecorationInsert('u');
           break;
         }
       case 'strikethrough':
-        if(se.body.textContent === '') {
+        if(se.body.textContent.trim() === '') {
           textDecorationInsert('strike');
           break;
         }
