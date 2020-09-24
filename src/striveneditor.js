@@ -1140,6 +1140,10 @@ export default class StrivenEditor {
           }
         }
       }
+
+      if(tab && document.activeElement !== se.body && se.body.textContent.trim() === '') {
+        se.clearContent();
+      }
     });
 
     const bodyFocus = body.onfocus;
@@ -1188,10 +1192,6 @@ export default class StrivenEditor {
     const bodyBlur = body.onblur;
     body.onblur = e => {
       se.editor.classList.remove('se-focus');
-
-      if(se.body.textContent.trim() === '') {
-        se.clearContent();
-      }
 
       window.removeEventListener('mouseup', execRange);
 
@@ -2891,21 +2891,20 @@ export default class StrivenEditor {
     const se = this;
 
     function textDecorationInsert(el) {
-      const r = se.getRange(); 
-      
-      if(r) {
-        const b = document.createElement(el);
-        const selNode = document.createElement('span');
-        selNode.innerHTML = '&nbsp;';
-       
-        b.append(selNode);
-        
-        const fc = se.body.firstChild
-        fc ? fc.append(b) : se.body.append(b);
+      const r = se.range || new Range(); 
+      se.setRange(r); 
 
-        r.selectNode(selNode);
-        r.collapse();
-      }
+      const b = document.createElement(el);
+      const selNode = document.createElement('span');
+      selNode.innerHTML = '&nbsp;';
+      
+      b.append(selNode);
+      
+      const fc = se.body.firstChild;
+      fc ? fc.append(b) : se.body.append(b);
+
+      r.selectNode(selNode);
+      r.collapse();
     }
 
     switch (command) {
