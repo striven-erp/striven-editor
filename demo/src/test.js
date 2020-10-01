@@ -183,9 +183,8 @@ describe('Internal Tests', () => {
   });
 });
 
-/* denormalizeCamel() Unit Tests */
-describe('Function denormalizeCamel', () => {
-  it('assertions', () => {
+describe('Unit Tests', () => {
+  it('should denormalize camel case strings', () => {
     assert.equal(denormalizeCamel('helloWorld'), 'Hello World');
     assert.equal(denormalizeCamel('aVariable'), 'A Variable');
     assert.equal(denormalizeCamel('aVeryVeryVeryVeryVeryLongVariable'), 'A Very Very Very Very Very Long Variable');
