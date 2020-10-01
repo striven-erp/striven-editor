@@ -2181,7 +2181,7 @@ export default class StrivenEditor {
   /**
    * Prunes inline position styles from elements
    * @param {HTMLElement} el Element to prune inline styles from
-   * @returns {HTMLElement} Reutrns the sanitized element
+   * @returns {HTMLElement} Returns the sanitized element
    */
   pruneInlineStyles(el) {
     let inlineStyleNodes = [...el.querySelectorAll('[style]')];
