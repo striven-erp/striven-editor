@@ -125,6 +125,19 @@ describe('Regression Tests', () => {
 
  });
 
+ it("should remove inline styles from element", () => {
+  const se = getEditor();
+  const content = node(
+    '<div style="position: static"></div><div style="position: static"></div>'
+  );
+
+  const pruned = se.pruneInlineStyles(content);
+  const testResult = pruned.querySelector('[style="position: static"]');
+  assert.notExists(testResult, "inline styles are pruned");
+  se.clearContent();
+});
+
+
  it('should apply a scroll bar for large content after collapsing fullscreen', () => {
   const se = getEditor();
   se.editor.setAttribute('max-height', '300px');
