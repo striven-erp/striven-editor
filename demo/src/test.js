@@ -167,15 +167,18 @@ describe('Regression Tests', () => {
 
  it('should open/close link menu', (done) => {
      const se = getEditor();
+     var wasVisible = false;
      se.openLinkMenu();
      assert.exists(document.querySelector('#link-menu'), 'menu is there');
 
      se.openLinkMenu()
      setTimeout(function() {
          if (window.getComputedStyle(document.getElementById("link-menu")).visibility == "visible") {
+             wasVisible = true;
              se.closeLinkMenu();
              setTimeout(function() {
                  if (window.getComputedStyle(document.getElementById("link-menu")).visibility == "hidden") {
+                     assert.isTrue(wasVisible)
                      done();
                  }
              }, 500);
