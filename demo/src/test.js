@@ -125,15 +125,20 @@ describe('Regression Tests', () => {
 
  });
 
- it("should remove inline styles from element", () => {
+ it("should change position to static", () => {
   const se = getEditor();
   const content = node(
-    '<div style="position: static"></div><div style="position: static"></div>'
+    `<div style="position: relative"></div>
+    <div style="position: fixed"></div>
+    <div style="position: sticky"></div>
+    <div style="position: absolute"></div>`
   );
 
   const pruned = se.pruneInlineStyles(content);
-  const testResult = pruned.querySelector('[style="position: static"]');
-  assert.notExists(testResult, "inline styles are pruned");
+  
+  const prunedElementsWithStyle = pruned.querySelectorAll('*[style]');
+  const testArray = Array.from(prunedElementsWithStyle).filter(el=> el.style.position !== 'static')
+  assert.isEmpty(testArray, "inline styles are pruned");
   se.clearContent();
 });
 
