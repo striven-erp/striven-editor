@@ -18,7 +18,7 @@ import {
 import { 
   createSVG,
   denormalizeCamel,
-  blowUpElement 
+  blowUpElement
 } from './utils';
 
 // Polyfills
@@ -1038,8 +1038,40 @@ export default class StrivenEditor {
           }
         }
       }
-
+     
+      // Wrap pasted link content for resetting the range
+      let resolveLinkPaste;
+      const content = e.clipboardData.getData('text/html') || pastedText; 
       
+      if(content) {
+        const pasteNode = document.createElement('div');
+        pasteNode.innerHTML = content; 
+    
+        if(pasteNode.querySelector('a') || se.validURL(content) || se.validURL(pasteNode.textContent)) {
+          e.preventDefault();
+
+          pasteNode.setAttribute('class', 'se-pasted-content');
+          se.executeCommand('insertHTML', pasteNode.outerHTML);
+
+          resolveLinkPaste = () => {
+            // Collapse on pasted content
+            const pasteContent = se.body.querySelector('.se-pasted-content');
+            const range = se.getRange();
+
+            if(range && pasteContent) {
+              range.selectNode(pasteContent);
+              range.collapse();
+
+              const resContent = () => { 
+                pasteContent.outerHTML = pasteContent.innerHTML;
+                se.body.removeEventListener('blur', resContent);
+              };
+
+              se.body.addEventListener('blur', resContent);
+            }
+          }
+        }
+      }
 
       // After the paste
       setTimeout(() => {
@@ -1047,7 +1079,10 @@ export default class StrivenEditor {
         se.pruneInlineStyles(se.body);
 
         // Convert all the links
-        se.convertAndSelectLinks();
+        se.convertLinks();
+       
+        // Collapse on pasted content containing links
+        resolveLinkPaste && resolveLinkPaste(); 
 
         // Editor After Paste Handler
         se.options.afterPaste && se.options.afterPaste(e);
@@ -1081,7 +1116,7 @@ export default class StrivenEditor {
           break;
         case 'Enter':
         case ' ':
-          se.validURL(se.textBuffer) && se.convertAndSelectLinks();
+          se.validURL(se.textBuffer) && se.convertLinks(true);
           se.textBuffer = null;
           break;
         case 'Semicolon':
@@ -1217,7 +1252,7 @@ export default class StrivenEditor {
       };
 
       se.textBuffer = null;
-      se.convertAndSelectLinks(false);
+      se.convertLinks();
 
       bodyBlur && bodyBlur();
     };
@@ -2797,14 +2832,20 @@ export default class StrivenEditor {
   }
 
   /**
-   * Convert and select links
-   * @param {Boolean} Select the last link
+   * Convert links
+   * @param {Boolean} Select the last converted link
    */
-  convertAndSelectLinks(sel = true) {
+  convertLinks(selectLast) {
     const se = this;
+   
     linkify(se.body, {}, document);
-
     const linkElements = se.body.getElementsByTagName('a');
+
+    let lastConverted;
+
+    if(selectLast) {
+      lastConverted = se.body.querySelector('.linkified');
+    }
 
     if (linkElements.length > 0) {
       const links = [...linkElements];
@@ -2846,12 +2887,11 @@ export default class StrivenEditor {
         link.classList.remove('linkified');
         link.setAttribute('target', '_blank');
       });
+    }
 
-      if (sel) {
-        const range = se.getRange();
-        range.selectNode(convertedLinks.pop());
-        range.collapse();
-      }
+    if(lastConverted && se.range) {
+      se.range.selectNode(lastConverted);
+      se.range.collapse();
     }
 
     setTimeout(() => {
