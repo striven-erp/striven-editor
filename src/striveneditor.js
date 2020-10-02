@@ -2833,6 +2833,7 @@ export default class StrivenEditor {
   /**
    * Convert links
    * @param {Boolean} Select the last converted link
+   * @parma {HTMLElement} Element to convert links in
    */
   convertLinks(selectLast, el) {
     const se = this;
