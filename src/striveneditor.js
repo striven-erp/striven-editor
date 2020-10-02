@@ -1044,7 +1044,7 @@ export default class StrivenEditor {
       const content = e.clipboardData.getData('text/html') || pastedText; 
       
       if(content) {
-        const pasteNode = document.createElement('div');
+        const pasteNode = document.createElement('span');
         pasteNode.innerHTML = content; 
     
         if(pasteNode.querySelector('a') || se.validURL(content) || se.validURL(pasteNode.textContent)) {
@@ -1061,6 +1061,8 @@ export default class StrivenEditor {
             if(range && pasteContent) {
               range.selectNode(pasteContent);
               range.collapse();
+              
+              se.convertLinks(false, pasteContent);
 
               const resContent = () => { 
                 pasteContent.outerHTML = pasteContent.innerHTML;
@@ -1078,9 +1080,6 @@ export default class StrivenEditor {
         // Prune inline styles
         se.pruneInlineStyles(se.body);
 
-        // Convert all the links
-        se.convertLinks();
-       
         // Collapse on pasted content containing links
         resolveLinkPaste && resolveLinkPaste(); 
 
@@ -2835,10 +2834,10 @@ export default class StrivenEditor {
    * Convert links
    * @param {Boolean} Select the last converted link
    */
-  convertLinks(selectLast) {
+  convertLinks(selectLast, el) {
     const se = this;
    
-    linkify(se.body, {}, document);
+    linkify(el || se.body, {}, document);
     const linkElements = se.body.getElementsByTagName('a');
 
     let lastConverted;
