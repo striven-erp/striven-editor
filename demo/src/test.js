@@ -165,6 +165,13 @@ describe('Regression Tests', () => {
 
  });
 
+ it('should check if the input string is a valid URL', (done) => {
+  const se = getEditor();
+  assert.isTrue(se.validURL('https://www/google.com'),'The string is a valid link');
+  assert.isFalse(se.validURL('invalid.string'),'The string is an invalid link');
+  done();
+ });
+
 });
 
 /* Internal Tests */
