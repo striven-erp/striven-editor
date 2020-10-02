@@ -198,17 +198,15 @@ describe("Regression Tests", () => {
     it("should apply strikethrough decoration to content", (done) => {
         const se = getEditor();
         se.setContent("<p>Strike Me Through</p>");
-        setTimeout(() => {
-            se.getRange().selectNode(se.body.querySelector("p"));
-            se.toolbar.querySelector("#toolbar-strikethrough").click();
-            assert.exists(
-                se.body.querySelector("p[text-decoration=line-through]"),
-                "strikethrough was applied"
-            );
-
-            se.clearContent();
-            done();
-        }, 200);
+        se.getRange().selectNode(se.body.querySelector("p"));
+        se.toolbar.querySelector("#toolbar-strikethrough").click();
+        se.body.onfocus();
+        assert.exists(
+            se.body.querySelector("strike"),
+            "strikethrough was applied"
+        );
+        se.clearContent();
+        done();
     });
 });
 
