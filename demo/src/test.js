@@ -213,6 +213,8 @@ describe('Regression Tests', () => {
       }
     }, 250);
   });
+
+
 });
 
 /* Internal Tests */
@@ -257,6 +259,12 @@ describe('Unit Tests', () => {
     const testArray = Array.from(prunedElementsWithStyle).filter(el=> el.style.position !== 'static')
     assert.isEmpty(testArray, "inline styles are pruned");
     se.clearContent();
+  });
+
+  it('should check if the input string is a valid URL', () => {
+    const se = getEditor();
+    assert.isTrue(se.validURL('https://www.google.com'),'The string is a valid link');
+    assert.isFalse(se.validURL('invalid.string'),'The string is an invalid link');
   });
 });
 
