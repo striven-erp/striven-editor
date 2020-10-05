@@ -93,7 +93,7 @@ describe('Regression Tests', () => {
       }, 0);
     }, 200);
   });
-
+ 
   it('should apply font format to content', done => {
     const se = getEditor();
     se.setContent('<p>Change me to an H1 format</p>');
@@ -240,6 +240,23 @@ describe('Unit Tests', () => {
     );
     assert.equal(denormalizeCamel('nocase'), 'Nocase');
     assert.equal(denormalizeCamel('has_Underscore'), 'Has_ Underscore');
+  });
+
+  it("should change position to static", () => {
+    const se = getEditor();
+    const content = node(
+      `<div style="position: relative"></div>
+      <div style="position: fixed"></div>
+      <div style="position: sticky"></div>
+      <div style="position: absolute"></div>`
+    );
+
+    const pruned = se.pruneInlineStyles(content);
+  
+    const prunedElementsWithStyle = pruned.querySelectorAll('*[style]');
+    const testArray = Array.from(prunedElementsWithStyle).filter(el=> el.style.position !== 'static')
+    assert.isEmpty(testArray, "inline styles are pruned");
+    se.clearContent();
   });
 });
 
