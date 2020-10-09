@@ -289,7 +289,6 @@ export default class StrivenEditor {
               // Focus back into the body
               se.body.focus();
             }
-            break;
           case 'removeFormat':
            
             se.executeCommand(command);
