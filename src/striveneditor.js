@@ -289,6 +289,7 @@ export default class StrivenEditor {
               // Focus back into the body
               se.body.focus();
             }
+          break;
           case 'removeFormat':
            
             se.executeCommand(command);
@@ -2950,7 +2951,8 @@ export default class StrivenEditor {
       se.setRange(r); 
 
       const b = document.createElement(el);
-      const selNode = document.createElement('span');
+      const selNode = se.body.querySelector('.se-init-sel') || document.createElement('span');
+      selNode.setAttribute('class', 'se-init-sel'); 
       selNode.innerHTML = '&nbsp;';
       
       b.append(selNode);
