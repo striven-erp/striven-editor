@@ -219,8 +219,9 @@ describe('Regression Tests', () => {
       se.setContent("<p>Strike Me Through</p>");
       setTimeout(() => {
           se.getRange().selectNode(se.body.querySelector("p"));
+          se.body.blur(); 
           se.toolbar.querySelector("#toolbar-strikethrough").click();
-          se.body.onfocus(); 
+          se.body.focus(); 
           setTimeout(() => {
               assert.exists(
                   se.body.querySelector("strike"),
