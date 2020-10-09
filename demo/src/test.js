@@ -1,7 +1,7 @@
 import { denormalizeCamel } from '../../src/utils';
 const { assert } = chai;
 
-mocha.setup('bdd');
+mocha.setup("bdd");
 
 function getEditor() {
   const editor = [...document.getElementsByClassName('striven-editor')].pop();
@@ -9,9 +9,9 @@ function getEditor() {
 }
 
 function node(content) {
-  const node = document.createElement('div');
-  node.innerHTML = content;
-  return node;
+    const node = document.createElement("div");
+    node.innerHTML = content;
+    return node;
 }
 
 /* Regression Tests */

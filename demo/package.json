@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@striven-erp/striven-editor": "^3.8.3",
     "core-js": "^2.6.5",
     "terser-webpack-plugin": "^2.2.2",
     "tributejs": "^3.7.3",
