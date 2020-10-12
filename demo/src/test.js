@@ -262,6 +262,29 @@ describe('Unit Tests', () => {
     assert.equal(denormalizeCamel('has_Underscore'), 'Has_ Underscore');
   });
 
+  it('should passes bytes and returns a nicely formatted string of the size', () => {
+    const se = getEditor();
+    const kb = 1024;
+    const mb = kb * kb;
+    const gb = Math.pow(kb, 3);
+    const tb = Math.pow(kb, 4);
+    const pb = Math.pow(kb, 5);
+    const eb = Math.pow(kb, 6);
+    const zb = Math.pow(kb, 7);
+    const yb = Math.pow(kb, 8);
+
+    assert.equal(se.formatBytes(0), '0 Bytes');
+    assert.equal(se.formatBytes(256), '256 Bytes');
+    assert.equal(se.formatBytes(kb), '1 KB');
+    assert.equal(se.formatBytes(mb), '1 MB');
+    assert.equal(se.formatBytes(gb), '1 GB');
+    assert.equal(se.formatBytes(tb), '1 TB');
+    assert.equal(se.formatBytes(pb), '1 PB');
+    assert.equal(se.formatBytes(eb), '1 EB');
+    assert.equal(se.formatBytes(zb), '1 ZB');
+    assert.equal(se.formatBytes(yb), '1 YB');
+  })
+
   it("should change position to static", () => {
     const se = getEditor();
     const content = node(
