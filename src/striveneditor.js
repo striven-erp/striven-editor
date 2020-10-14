@@ -342,7 +342,7 @@ export default class StrivenEditor {
     se.tableMenu && se.editor.appendChild(se.tableMenu);
     se.metaDataSection && se.editor.appendChild(se.metaDataSection);
     se.filesSection && se.editor.appendChild(se.filesSection);
-
+    
     // Reposition Toolbar
     if (se.options.toolbarBottom) {
       se.toolbar.classList.add('se-toolbar-bottom');
@@ -360,6 +360,8 @@ export default class StrivenEditor {
       se.editor.removeChild(se.toolbar);
       se.editor.append(se.toolbar);
     }
+  
+    se.options.init && se.options.init(se);
   }
 
   /**
