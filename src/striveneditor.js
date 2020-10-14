@@ -2497,9 +2497,7 @@ export default class StrivenEditor {
     se.clearContent();
     if (html) {
       se.body.innerHTML = html;
-      [...se.body.querySelectorAll('a')].forEach(
-        link => (link.parsed = true),
-      );
+      se.convertLinks();
     }
   }
 
