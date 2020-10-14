@@ -18,7 +18,7 @@ import {
 import { 
   createSVG,
   denormalizeCamel,
-  blowUpElement 
+  blowUpElement
 } from './utils';
 
 // Polyfills
@@ -289,7 +289,7 @@ export default class StrivenEditor {
               // Focus back into the body
               se.body.focus();
             }
-            break;
+          break;
           case 'removeFormat':
            
             se.executeCommand(command);
@@ -1038,16 +1038,50 @@ export default class StrivenEditor {
           }
         }
       }
-
+     
+      // Wrap pasted link content for resetting the range
+      let resolveLinkPaste;
+      const content = e.clipboardData.getData('text/html') || pastedText; 
       
+      if(content) {
+        const pasteNode = document.createElement('span');
+        pasteNode.innerHTML = content; 
+    
+        if(pasteNode.querySelector('a') || se.validURL(content) || se.validURL(pasteNode.textContent)) {
+          e.preventDefault();
+
+          pasteNode.setAttribute('class', 'se-pasted-content');
+          se.executeCommand('insertHTML', pasteNode.outerHTML);
+
+          resolveLinkPaste = () => {
+            // Collapse on pasted content
+            const pasteContent = se.body.querySelector('.se-pasted-content');
+            const range = se.getRange();
+
+            if(range && pasteContent) {
+              range.selectNode(pasteContent);
+              range.collapse();
+              
+              se.convertLinks(false, pasteContent);
+
+              const resContent = () => { 
+                pasteContent.outerHTML = pasteContent.innerHTML;
+                se.body.removeEventListener('blur', resContent);
+              };
+
+              se.body.addEventListener('blur', resContent);
+            }
+          }
+        }
+      }
 
       // After the paste
       setTimeout(() => {
         // Prune inline styles
         se.pruneInlineStyles(se.body);
 
-        // Convert all the links
-        se.convertAndSelectLinks();
+        // Collapse on pasted content containing links
+        resolveLinkPaste && resolveLinkPaste(); 
 
         // Editor After Paste Handler
         se.options.afterPaste && se.options.afterPaste(e);
@@ -1081,7 +1115,7 @@ export default class StrivenEditor {
           break;
         case 'Enter':
         case ' ':
-          se.validURL(se.textBuffer) && se.convertAndSelectLinks();
+          se.validURL(se.textBuffer) && se.convertLinks(true);
           se.textBuffer = null;
           break;
         case 'Semicolon':
@@ -1151,8 +1185,24 @@ export default class StrivenEditor {
       !se.browser.isEdge() && se.setRange();
 
       window.addEventListener('mouseup', execRange);
-
+      
       se.editor.classList.add('se-focus');
+    
+      if(se.body.textContent.trim() === '') {
+        const r = se.getRange();
+        
+        if(r) {
+          const selNode = document.createTextNode('');
+          se.body.append(selNode);
+          
+          setTimeout(() => {
+            se.getRange().selectNode(selNode);
+            selNode.remove();  
+          }, 0);
+        
+        } 
+      
+      }
 
       if (se.scrollPosition && !se.browser.isEdge()) {
         body.scrollTo(se.scrollPosition);
@@ -1201,7 +1251,7 @@ export default class StrivenEditor {
       };
 
       se.textBuffer = null;
-      se.convertAndSelectLinks(false);
+      se.convertLinks();
 
       bodyBlur && bodyBlur();
     };
@@ -2165,7 +2215,7 @@ export default class StrivenEditor {
   /**
    * Prunes inline position styles from elements
    * @param {HTMLElement} el Element to prune inline styles from
-   * @returns {HTMLElement} Reutrns the sanitized element
+   * @returns {HTMLElement} Returns the sanitized element
    */
   pruneInlineStyles(el) {
     let inlineStyleNodes = [...el.querySelectorAll('[style]')];
@@ -2781,14 +2831,21 @@ export default class StrivenEditor {
   }
 
   /**
-   * Convert and select links
-   * @param {Boolean} Select the last link
+   * Convert links
+   * @param {Boolean} Select the last converted link
+   * @parma {HTMLElement} Element to convert links in
    */
-  convertAndSelectLinks(sel = true) {
+  convertLinks(selectLast, el) {
     const se = this;
-    linkify(se.body, {}, document);
-
+   
+    linkify(el || se.body, {}, document);
     const linkElements = se.body.getElementsByTagName('a');
+
+    let lastConverted;
+
+    if(selectLast) {
+      lastConverted = se.body.querySelector('.linkified');
+    }
 
     if (linkElements.length > 0) {
       const links = [...linkElements];
@@ -2830,12 +2887,11 @@ export default class StrivenEditor {
         link.classList.remove('linkified');
         link.setAttribute('target', '_blank');
       });
+    }
 
-      if (sel) {
-        const range = se.getRange();
-        range.selectNode(convertedLinks.pop());
-        range.collapse();
-      }
+    if(lastConverted && se.range) {
+      se.range.selectNode(lastConverted);
+      se.range.collapse();
     }
 
     setTimeout(() => {
@@ -2895,7 +2951,8 @@ export default class StrivenEditor {
       se.setRange(r); 
 
       const b = document.createElement(el);
-      const selNode = document.createElement('span');
+      const selNode = se.body.querySelector('.se-init-sel') || document.createElement('span');
+      selNode.setAttribute('class', 'se-init-sel'); 
       selNode.innerHTML = '&nbsp;';
       
       b.append(selNode);
@@ -3162,22 +3219,22 @@ export default class StrivenEditor {
         }
         break;
       case 'bold':
-        if(se.body.textContent === '') {
+        if(se.body.textContent.trim() === '') {
           textDecorationInsert('b');
           break;
         }
       case 'italic':
-        if(se.body.textContent === '') {
+        if(se.body.textContent.trim() === '') {
           textDecorationInsert('i');
           break;
         } 
       case 'underline':
-        if(se.body.textContent === '') {
+        if(se.body.textContent.trim() === '') {
           textDecorationInsert('u');
           break;
         }
       case 'strikethrough':
-        if(se.body.textContent === '') {
+        if(se.body.textContent.trim() === '') {
           textDecorationInsert('strike');
           break;
         }
