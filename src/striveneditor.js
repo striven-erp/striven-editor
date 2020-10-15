@@ -203,6 +203,14 @@ export default class StrivenEditor {
       }
     });
 
+    // Remove all link option popups on escape
+    window.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape') {
+        [...se.body.querySelectorAll('.se-link-options')]
+          .forEach(o => o.remove());
+      }
+    });
+
     // Toolbar Hide
     if (se.options.toolbarHide) {
       // Hide the toolbar template if there is one
@@ -1067,8 +1075,12 @@ export default class StrivenEditor {
               se.convertLinks(false, pasteContent);
 
               const resContent = () => { 
-                pasteContent.outerHTML = pasteContent.innerHTML;
-                se.body.removeEventListener('blur', resContent);
+                try {
+                  pasteContent.outerHTML = pasteContent.innerHTML;
+                  se.body.removeEventListener('blur', resContent);
+                } catch(e) {
+                  se.body.removeEventListener('blur', resContent);
+                }
               };
 
               se.body.addEventListener('blur', resContent);
@@ -1328,25 +1340,33 @@ export default class StrivenEditor {
       se.setRange();
 
       if (linkValue) {
-        if (se.browser.isFirefox() || se.browser.isEdge()) {
-          document.execCommand('createLink', false, linkValue);
+        const linkToEdit = se.body.querySelector('.se-link-to-edit'); 
+        if(linkToEdit) {
+          linkToEdit.setAttribute('href', linkValue);
+          linkToEdit.innerText = textRowInput.value;
+          linkToEdit.classList.remove('se-link-to-edit');
+          linkToEdit.setAttribute('contenteditable', true);
         } else {
-          document.execCommand('createLink', true, linkValue);
-        }
-
-        const insertedLink = se.getRange().commonAncestorContainer
-          .parentElement;
-        if (insertedLink) {
-          windowRowInput.checked &&
-            insertedLink.setAttribute('target', '_blank');
-          windowRowInput.checked = true;
-
-          if (textRowInput.value) {
-            insertedLink.textContent = textRowInput.value;
-            textRowInput.value = '';
+          if (se.browser.isFirefox() || se.browser.isEdge()) {
+            document.execCommand('createLink', false, linkValue);
+          } else {
+            document.execCommand('createLink', true, linkValue);
           }
+          
+          const insertedLink = se.getRange().commonAncestorContainer
+            .parentElement;
+          if (insertedLink) {
+            windowRowInput.checked &&
+              insertedLink.setAttribute('target', '_blank');
+            windowRowInput.checked = true;
 
-          insertedLink.parsed = true;
+            if (textRowInput.value) {
+              insertedLink.textContent = textRowInput.value;
+              textRowInput.value = '';
+            }
+           
+            setTimeout(() => se.convertLinks(false, insertedLink), 10);
+          }
         }
 
         if (se.options.metaUrl && se.validURL(linkValue)) {
@@ -1393,6 +1413,7 @@ export default class StrivenEditor {
     };
 
     linkMenuCloseButton.onclick = e => {
+      linkMenu.targetLink = null;
       se.body.focus();
       se.closeLinkMenu();
       resetInput();
@@ -2104,7 +2125,7 @@ export default class StrivenEditor {
     const se = this;
     const body = se.pruneScripts(se.body);  
     const text = body.textContent;
-
+    
     if (text || se.body.getElementsByTagName('img').length) {
       const htmlView = !!se.editor.querySelector('.se-html'); 
       return htmlView ? text : body.innerHTML;
@@ -2851,9 +2872,6 @@ export default class StrivenEditor {
       const links = [...linkElements];
       const convertedLinks = [];
       links.forEach(link => {
-        if (link.parsed) {
-          return false;
-        }
 
         const href = link.getAttribute('href');
         const isEmail = href ? href.includes('mailto') : false;
@@ -2864,6 +2882,7 @@ export default class StrivenEditor {
         if (href && (isEmail || isLinkified)) {
           link.outerHTML = link.textContent;
         } else {
+          
           link.onmousemove = e => {
             e.ctrlKey && (link.style.cursor = 'pointer');
           };
@@ -2876,6 +2895,64 @@ export default class StrivenEditor {
               document.body.append(anchor);
               anchor.click();
               anchor.remove();
+            } else {
+              if(!link.querySelector('.se-link-options')) {
+                const linkOptions = document.createElement('span');
+                linkOptions.setAttribute('class', 'se-link-options'); 
+                linkOptions.setAttribute('contenteditable', false); 
+                linkOptions.onclick = e => e.stopPropagation(); 
+                link.append(linkOptions);
+
+                const removeOption = document.createElement('span');
+                removeOption.textContent = 'Remove';
+                removeOption.onclick = (e) => {
+                  e.preventDefault(); 
+                  e.stopPropagation();
+                  linkOptions.remove();
+                 
+                  const replNode = document.createElement('span');
+                  replNode.setAttribute('class', 'se-link-ignore'); 
+                  replNode.textContent = link.textContent;
+                  link.replaceWith(replNode); 
+
+                }
+                
+                linkOptions.append(removeOption);
+                
+                const changeOption = document.createElement('span');
+                changeOption.textContent = 'Change';
+                changeOption.onclick = (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  linkOptions.remove();
+
+                  link.classList.add('se-link-to-edit'); 
+                  se.openLinkMenu();
+                  
+                  const linkInputs = se.linkMenu.querySelectorAll('input');
+                  linkInputs[0]['value'] = link.getAttribute('href');
+                  linkInputs[1]['value'] = link.textContent;
+                }
+
+                linkOptions.append(changeOption);
+
+                const optionHandler = () => {
+                  try {
+                    const r = se.getRange();
+                    const rNode = r['commonAncestorContainer']['parentElement'];
+                    if(rNode !== link) {
+                      linkOptions.remove();
+                      se.body.removeEventListener('click', optionHandler);
+                    }
+                  } catch(e) {
+                    linkOptions.remove();
+                    window.removeEventListener('click', optionHandler);
+                  }
+                }
+
+                window.addEventListener('click', optionHandler);
+                
+              }
             }
           };
 
@@ -2883,8 +2960,9 @@ export default class StrivenEditor {
 
           convertedLinks.push(link);
         }
-
+        
         link.classList.remove('linkified');
+        link.setAttribute('contenteditable', true); 
         link.setAttribute('target', '_blank');
       });
     }
@@ -2893,6 +2971,9 @@ export default class StrivenEditor {
       se.range.selectNode(lastConverted);
       se.range.collapse();
     }
+
+    [...se.body.querySelectorAll('.se-link-ignore a')]
+      .forEach(ign => ign.outerHTML = ign.textContent);
 
     setTimeout(() => {
       // Trigger oninput event
@@ -3186,6 +3267,21 @@ export default class StrivenEditor {
         if (se.linkMenu.dataset.active === 'true') {
           se.closeLinkMenu();
         } else {
+          const r = se.getRange(); 
+          const rnode = document.createElement('div'); 
+          rnode.append(r.cloneContents().cloneNode(true));
+        
+          const rLink = rnode.querySelector('a');
+          if(rLink) {
+            const linkRepl = document.createElement('a');
+            linkRepl.textContent = rnode.textContent;
+            linkRepl.setAttribute('href', rLink.getAttribute('href'));
+            r.deleteContents();
+            r.insertNode(linkRepl);
+            se.convertLinks(false, linkRepl);
+            return;
+          }
+
           se.openLinkMenu();
 
           setTimeout(() => {

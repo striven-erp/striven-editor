@@ -38,6 +38,34 @@
   width: max-content;
 }
 
+.striven-editor .se-body a {
+  position: relative;
+}
+
+.striven-editor .se-body .se-link-options {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  padding: 2px 5px; 
+  background-color: #fff;
+  min-width: max-content;
+  border: 1px solid #ddd;
+  box-shadow: 5px 5px 5px #ddd;
+  font-size: 14px;
+}
+
+.striven-editor .se-body .se-link-options span {
+  cursor: pointer;
+  color: #428bca;
+  text-decoration: underline;
+}
+
+.striven-editor .se-body .se-link-options span:first-child:after {
+  content: '|';
+  margin: 0 5px;
+  color: #000;
+}
+
 .striven-editor .se-body .se-file-drop-dropzone {
   height: 90%;
   width: 95%;
