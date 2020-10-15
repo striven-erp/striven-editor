@@ -3270,7 +3270,11 @@ export default class StrivenEditor {
           const r = se.getRange(); 
           const rnode = document.createElement('div'); 
           rnode.append(r.cloneContents().cloneNode(true));
-        
+          
+          if(rnode.querySelector('br')){
+            return;
+          }
+
           const rLink = rnode.querySelector('a');
           if(rLink) {
             const linkRepl = document.createElement('a');
