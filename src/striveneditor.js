@@ -611,7 +611,7 @@ export default class StrivenEditor {
         fontOption.textContent = f;
         fontOption.style.fontFamily = f;
 
-        fontOption.onmousedown = e => {
+        const trigger = e => {
           let fontselect = e.target.textContent;
           select.textContent = fontselect;
           menu.close();
@@ -656,10 +656,15 @@ export default class StrivenEditor {
 
           se.body.focus();
         };
-
+        
+        fontOption.onmousedown = trigger;
+        fontOption.onclick = trigger;
+        
         menu.append(fontOption);
       });
 
+      
+      
       return menu;
     }
 
@@ -690,7 +695,7 @@ export default class StrivenEditor {
             }
         }
 
-        fontOption.onmousedown = e => {
+        const trigger = e => {
           const fontsize = e.target.textContent;
 
           select.textContent = fontsize;
@@ -725,6 +730,9 @@ export default class StrivenEditor {
 
           se.body.focus();
         };
+
+        fontOption.onmousedown = trigger;
+        fontOption.onclick = trigger;
 
         menu.append(fontOption);
       });
