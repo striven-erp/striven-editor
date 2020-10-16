@@ -611,24 +611,27 @@ export default class StrivenEditor {
         fontOption.textContent = f;
         fontOption.style.fontFamily = f;
 
-        fontOption.onclick = e => {
+        fontOption.onmousedown = e => {
           let fontselect = e.target.textContent;
           select.textContent = fontselect;
           menu.close();
-
-          const refocus = se.body.onfocus;
-          se.body.onfocus = () => {
-            function execute() {
+          
+          function execute() {
               if (fontselect === '(inherited font)') {
                 fontselect = getComputedStyle(se.body).fontFamily;
               }
-
+              
               if (se.browser.isEdge() || se.browser.isFirefox()) {
                 document.execCommand('fontName', false, fontselect);
               } else {
                 document.execCommand('fontName', true, fontselect);
               }
-            }
+          }
+
+          execute();
+
+          const refocus = se.body.onfocus;
+          se.body.onfocus = () => {
 
             se.setRange(se.range);
 
@@ -672,9 +675,8 @@ export default class StrivenEditor {
 
         fontOption.classList.add('se-toolbar-popup-option');
         fontOption.textContent = s;
-
-        fontOption.onclick = e => {
-          function execute() {
+        
+        function execute() {
             let execSize = size;
 
             if (size === '(inherited size)') {
@@ -686,15 +688,18 @@ export default class StrivenEditor {
             } else {
               document.execCommand('fontSize', true, execSize);
             }
-          }
+        }
 
+        fontOption.onmousedown = e => {
           const fontsize = e.target.textContent;
 
           select.textContent = fontsize;
           select.dataset.command = size;
-
+          
           menu.close();
 
+          execute();
+          
           const refocus = se.body.focus;
           se.body.onfocus = () => {
             se.setRange(se.range);
