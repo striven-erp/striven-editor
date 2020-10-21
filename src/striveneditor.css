@@ -52,6 +52,8 @@
   border: 1px solid #ddd;
   box-shadow: 5px 5px 5px #ddd;
   font-size: 12px;
+  font-style: normal;
+  font-weight: normal;
 }
 
 .striven-editor .se-body .se-link-options span {
