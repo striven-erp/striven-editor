@@ -1351,7 +1351,7 @@ export default class StrivenEditor {
       const linkValue = linkMenuFormInput.value;
       se.body.focus();
       se.setRange();
-
+      
       if (linkValue) {
         const linkToEdit = se.body.querySelector('.se-link-to-edit'); 
         if(linkToEdit) {
@@ -1365,9 +1365,28 @@ export default class StrivenEditor {
           } else {
             document.execCommand('createLink', true, linkValue);
           }
+         
+          function traverseLink(trav, val) {
+            if(trav && trav !== se.body) {
+              if(trav.querySelector) {
+                const travQuery = trav.querySelector('a'); 
+                if(travQuery && travQuery.getAttribute('href') === val) {
+                  return travQuery;
+                }
+              }
+              
+              if(trav.tagName === 'A' && trav.getAttribute('href') === val) {
+                return trav;
+              } else {
+                return traverseLink(trav.parentElement, val);
+              }
+            } else {
+              return false;
+            }
+          }
           
-          const insertedLink = se.getRange().commonAncestorContainer
-            .parentElement;
+          const insertedLink = traverseLink(se.getRange()['startContainer'], linkValue); 
+
           if (insertedLink) {
             windowRowInput.checked &&
               insertedLink.setAttribute('target', '_blank');
@@ -2924,7 +2943,6 @@ export default class StrivenEditor {
                   linkOptions.remove();
                  
                   const replNode = document.createElement('span');
-                  replNode.setAttribute('class', 'se-link-ignore'); 
                   replNode.textContent = link.textContent;
                   link.replaceWith(replNode); 
 
@@ -2984,9 +3002,6 @@ export default class StrivenEditor {
       se.range.selectNode(lastConverted);
       se.range.collapse();
     }
-
-    [...se.body.querySelectorAll('.se-link-ignore a')]
-      .forEach(ign => ign.outerHTML = ign.textContent);
 
     setTimeout(() => {
       // Trigger oninput event
@@ -3280,25 +3295,7 @@ export default class StrivenEditor {
         if (se.linkMenu.dataset.active === 'true') {
           se.closeLinkMenu();
         } else {
-          const r = se.getRange(); 
-          const rnode = document.createElement('div'); 
-          rnode.append(r.cloneContents().cloneNode(true));
           
-          if(rnode.querySelector('br')){
-            return;
-          }
-
-          const rLink = rnode.querySelector('a');
-          if(rLink) {
-            const linkRepl = document.createElement('a');
-            linkRepl.textContent = rnode.textContent;
-            linkRepl.setAttribute('href', rLink.getAttribute('href'));
-            r.deleteContents();
-            r.insertNode(linkRepl);
-            se.convertLinks(false, linkRepl);
-            return;
-          }
-
           se.openLinkMenu();
 
           setTimeout(() => {
