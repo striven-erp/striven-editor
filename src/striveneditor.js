@@ -1351,54 +1351,16 @@ export default class StrivenEditor {
       const linkValue = linkMenuFormInput.value;
       se.body.focus();
       se.setRange();
-      
+     
       if (linkValue) {
+        
         const linkToEdit = se.body.querySelector('.se-link-to-edit'); 
+        
         if(linkToEdit) {
           linkToEdit.setAttribute('href', linkValue);
           linkToEdit.innerText = textRowInput.value;
           linkToEdit.classList.remove('se-link-to-edit');
           linkToEdit.setAttribute('contenteditable', true);
-        } else {
-          if (se.browser.isFirefox() || se.browser.isEdge()) {
-            document.execCommand('createLink', false, linkValue);
-          } else {
-            document.execCommand('createLink', true, linkValue);
-          }
-         
-          function traverseLink(trav, val) {
-            if(trav && trav !== se.body) {
-              if(trav.querySelector) {
-                const travQuery = trav.querySelector('a'); 
-                if(travQuery && travQuery.getAttribute('href') === val) {
-                  return travQuery;
-                }
-              }
-              
-              if(trav.tagName === 'A' && trav.getAttribute('href') === val) {
-                return trav;
-              } else {
-                return traverseLink(trav.parentElement, val);
-              }
-            } else {
-              return false;
-            }
-          }
-          
-          const insertedLink = traverseLink(se.getRange()['startContainer'], linkValue); 
-
-          if (insertedLink) {
-            windowRowInput.checked &&
-              insertedLink.setAttribute('target', '_blank');
-            windowRowInput.checked = true;
-
-            if (textRowInput.value) {
-              insertedLink.textContent = textRowInput.value;
-              textRowInput.value = '';
-            }
-           
-            setTimeout(() => se.convertLinks(false, insertedLink), 10);
-          }
         }
 
         if (se.options.metaUrl && se.validURL(linkValue)) {
@@ -2465,6 +2427,9 @@ export default class StrivenEditor {
    */
   closeLinkMenu() {
     const se = this; 
+  
+    [...se.body.querySelectorAll('a.se-link-to-edit[href="#"]')]
+      .forEach(lnk => (lnk.outerHTML = lnk.textContent));
 
     se.closeAllMenus();
     se.linkMenu.classList.remove('se-popup-open');
@@ -2477,7 +2442,7 @@ export default class StrivenEditor {
    */
   closeImageMenu() {
     const se = this; 
-
+    
     se.closeAllMenus();
     se.imageMenu.classList.remove('se-popup-open');
     se.imageMenu.dataset.active = 'false';
@@ -2517,6 +2482,9 @@ export default class StrivenEditor {
     const se = this; 
 
     if (evt.which === 27) {
+      [...se.body.querySelectorAll('a.se-link-to-edit[href="#"]')]
+        .forEach(lnk => (lnk.outerHTML = lnk.textContent));
+      
       //close all open popups
       se.closeAllMenus();
     }
@@ -3295,7 +3263,35 @@ export default class StrivenEditor {
         if (se.linkMenu.dataset.active === 'true') {
           se.closeLinkMenu();
         } else {
-          
+
+          function traverseLink(trav, val) {
+            if(trav && trav !== se.body) {
+              if(trav.querySelector) {
+                const travQuery = trav.querySelector('a'); 
+                if(travQuery && travQuery.getAttribute('href') === val) {
+                  return travQuery;
+                }
+              }
+              
+              if(trav.tagName === 'A' && trav.getAttribute('href') === val) {
+                return trav;
+              } else {
+                return traverseLink(trav.parentElement, val);
+              }
+            } else {
+              return false;
+            }
+          }
+         
+          if (se.browser.isFirefox() || se.browser.isEdge()) {
+            document.execCommand('createLink', false, '#');
+          } else {
+            document.execCommand('createLink', true, '#');
+          }
+
+          const travLink = traverseLink(se.range['startContainer'], '#');
+          travLink && travLink.classList.add('se-link-to-edit');
+
           se.openLinkMenu();
 
           setTimeout(() => {
