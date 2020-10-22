@@ -658,7 +658,6 @@ export default class StrivenEditor {
         };
         
         fontOption.onmousedown = trigger;
-        fontOption.onclick = trigger;
         
         menu.append(fontOption);
       });
@@ -732,7 +731,6 @@ export default class StrivenEditor {
         };
 
         fontOption.onmousedown = trigger;
-        fontOption.onclick = trigger;
 
         menu.append(fontOption);
       });
