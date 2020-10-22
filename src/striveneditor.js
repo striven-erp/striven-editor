@@ -1276,6 +1276,8 @@ export default class StrivenEditor {
       };
 
       se.textBuffer = null;
+      
+      se.clearLinksToEdit(); 
       se.convertLinks();
 
       bodyBlur && bodyBlur();
@@ -1405,7 +1407,6 @@ export default class StrivenEditor {
     };
 
     linkMenuCloseButton.onclick = e => {
-      linkMenu.targetLink = null;
       se.body.focus();
       se.closeLinkMenu();
       resetInput();
@@ -1468,7 +1469,12 @@ export default class StrivenEditor {
           e.preventDefault();
         }
       };
+
+      inp.onblur = () => {
+        setTimeout(() => se.clearLinksToEdit(), 100);
+      };
     });
+    
     return linkMenu;
   }
 
@@ -2115,6 +2121,7 @@ export default class StrivenEditor {
    */
   getContent() {
     const se = this;
+
     const body = se.pruneScripts(se.body);  
     const text = body.textContent;
     
@@ -2420,15 +2427,25 @@ export default class StrivenEditor {
     window.addEventListener('keyup', se.tableMenu.submitEvt);
   }
 
+  clearLinksToEdit(force) {
+    const se = this; 
+  
+    if(force || (se.linkMenu && !se.linkMenu.classList.contains('se-popup-open'))) {
+      [...se.body.querySelectorAll('.se-link-options')]
+        .forEach(opt => opt.remove());
+      
+      [...se.body.querySelectorAll('a.se-link-to-edit[href="#"]')]
+        .forEach(lnk => (lnk.outerHTML = lnk.textContent));
+    }
+    
+  }
+
   /**
    * Closes the editor's link menu popup
    */
   closeLinkMenu() {
     const se = this; 
-  
-    [...se.body.querySelectorAll('a.se-link-to-edit[href="#"]')]
-      .forEach(lnk => (lnk.outerHTML = lnk.textContent));
-
+    
     se.closeAllMenus();
     se.linkMenu.classList.remove('se-popup-open');
     se.linkMenu.dataset.active = 'false';
@@ -2440,7 +2457,7 @@ export default class StrivenEditor {
    */
   closeImageMenu() {
     const se = this; 
-    
+   
     se.closeAllMenus();
     se.imageMenu.classList.remove('se-popup-open');
     se.imageMenu.dataset.active = 'false';
@@ -2480,9 +2497,9 @@ export default class StrivenEditor {
     const se = this; 
 
     if (evt.which === 27) {
-      [...se.body.querySelectorAll('a.se-link-to-edit[href="#"]')]
-        .forEach(lnk => (lnk.outerHTML = lnk.textContent));
-      
+      //clear unused links 
+      se.clearLinksToEdit(true);
+
       //close all open popups
       se.closeAllMenus();
     }
@@ -3264,21 +3281,24 @@ export default class StrivenEditor {
 
           function traverseLink(trav, val) {
             if(trav && trav !== se.body) {
+              
               if(trav.querySelector) {
-                const travQuery = trav.querySelector('a'); 
-                if(travQuery && travQuery.getAttribute('href') === val) {
+                const travQuery = trav.querySelector(`a[href="${val}"]`) 
+                if(travQuery) {
                   return travQuery;
                 }
               }
-              
+
               if(trav.tagName === 'A' && trav.getAttribute('href') === val) {
                 return trav;
               } else {
                 return traverseLink(trav.parentElement, val);
               }
+            
             } else {
-              return false;
+              return se.body.querySelector(`a[href="${val}"]`);
             }
+          
           }
          
           if (se.browser.isFirefox() || se.browser.isEdge()) {
@@ -3286,7 +3306,7 @@ export default class StrivenEditor {
           } else {
             document.execCommand('createLink', true, '#');
           }
-
+         
           const travLink = traverseLink(se.range['startContainer'], '#');
           travLink && travLink.classList.add('se-link-to-edit');
 
