@@ -2916,7 +2916,6 @@ export default class StrivenEditor {
 
                 }
                 
-                linkOptions.append(removeOption);
                 
                 const changeOption = document.createElement('span');
                 changeOption.textContent = 'Change';
@@ -2934,7 +2933,8 @@ export default class StrivenEditor {
                 }
 
                 linkOptions.append(changeOption);
-
+                linkOptions.append(removeOption);
+                
                 const optionHandler = () => {
                   try {
                     const r = se.getRange();
