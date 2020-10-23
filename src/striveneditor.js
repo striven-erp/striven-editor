@@ -1358,7 +1358,7 @@ export default class StrivenEditor {
         
         if(linkToEdit) {
           linkToEdit.setAttribute('href', linkValue);
-          linkToEdit.innerText = textRowInput.value;
+          linkToEdit.innerText = textRowInput.value || linkValue;
           linkToEdit.classList.remove('se-link-to-edit');
           linkToEdit.setAttribute('contenteditable', true);
         }
@@ -3300,17 +3300,31 @@ export default class StrivenEditor {
             }
           
           }
-         
-          if (se.browser.isFirefox() || se.browser.isEdge()) {
-            document.execCommand('createLink', false, '#');
-          } else {
-            document.execCommand('createLink', true, '#');
-          }
-         
-          const travLink = traverseLink(se.range['startContainer'], '#');
-          travLink && travLink.classList.add('se-link-to-edit');
+   
+          if(se.range) {
+            if(se.range.collapsed) {
+            
+              const linkToEdit = document.createElement('a');
+              linkToEdit.setAttribute('class', 'se-link-to-edit');
+            
+              se.range.insertNode(linkToEdit);
+            
+            } else {
+             
+              if (se.browser.isFirefox() || se.browser.isEdge()) {
+                document.execCommand('createLink', false, '#');
+              } else {
+                document.execCommand('createLink', true, '#');
+              }
+            
+              const travLink = traverseLink(se.range['startContainer'], '#');
+              travLink && travLink.classList.add('se-link-to-edit');
 
-          se.openLinkMenu();
+            }
+          
+            se.openLinkMenu();
+          
+          }
 
           setTimeout(() => {
             const selection = se.linkMenu.querySelector(
@@ -3320,6 +3334,7 @@ export default class StrivenEditor {
 
             se.linkMenu.querySelector('input').select();
           }, 100);
+        
         }
         break;
       case 'image':
