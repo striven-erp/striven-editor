@@ -3300,14 +3300,15 @@ export default class StrivenEditor {
             }
           
           }
-   
-          if(se.range) {
-            if(se.range.collapsed) {
+         
+          const r = se.getRange();
+          if(r) {
+            if(r.collapsed) {
             
               const linkToEdit = document.createElement('a');
               linkToEdit.setAttribute('class', 'se-link-to-edit');
             
-              se.range.insertNode(linkToEdit);
+              r.insertNode(linkToEdit);
             
             } else {
              
@@ -3317,7 +3318,7 @@ export default class StrivenEditor {
                 document.execCommand('createLink', true, '#');
               }
             
-              const travLink = traverseLink(se.range['startContainer'], '#');
+              const travLink = traverseLink(r['startContainer'], '#');
               travLink && travLink.classList.add('se-link-to-edit');
 
             }
