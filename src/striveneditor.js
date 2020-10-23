@@ -1353,14 +1353,22 @@ export default class StrivenEditor {
       se.setRange();
      
       if (linkValue) {
-        
+   
         const linkToEdit = se.body.querySelector('.se-link-to-edit'); 
         
         if(linkToEdit) {
           linkToEdit.setAttribute('href', linkValue);
           linkToEdit.innerText = textRowInput.value || linkValue;
           linkToEdit.classList.remove('se-link-to-edit');
+          linkToEdit.setAttribute('target', windowRowInput.checked ? '_blank' : '');   
           linkToEdit.setAttribute('contenteditable', true);
+        } else if(!se.body.textContent.trim()) {
+          const linkToCreate = document.createElement('a');
+          linkToCreate.setAttribute('href', linkValue);
+          linkToCreate.innerText = textRowInput.value || linkValue;
+          linkToCreate.setAttribute('contenteditable', true);
+          linkToCreate.setAttribute('target', windowRowInput.checked ? '_blank' : '');   
+          se.body.append(linkToCreate);
         }
 
         if (se.options.metaUrl && se.validURL(linkValue)) {
@@ -2874,7 +2882,7 @@ export default class StrivenEditor {
   convertLinks(selectLast, el) {
     const se = this;
    
-    linkify(el || se.body, {}, document);
+    linkify(el || se.body, { target: { url: '_parent' }}, document);
     const linkElements = se.body.getElementsByTagName('a');
 
     let lastConverted;
@@ -2906,7 +2914,6 @@ export default class StrivenEditor {
             if (e.ctrlKey) {
               const anchor = document.createElement('a');
               anchor.setAttribute('href', link.getAttribute('href'));
-              anchor.setAttribute('target', '_blank');
               document.body.append(anchor);
               anchor.click();
               anchor.remove();
@@ -2945,6 +2952,7 @@ export default class StrivenEditor {
                   const linkInputs = se.linkMenu.querySelectorAll('input');
                   linkInputs[0]['value'] = link.getAttribute('href');
                   linkInputs[1]['value'] = link.textContent;
+                  linkInputs[2]['checked'] = (link.getAttribute('target') === '_blank');
                 }
 
                 linkOptions.append(changeOption);
@@ -2977,7 +2985,7 @@ export default class StrivenEditor {
         
         link.classList.remove('linkified');
         link.setAttribute('contenteditable', true); 
-        link.setAttribute('target', '_blank');
+      
       });
     }
 
@@ -3279,6 +3287,10 @@ export default class StrivenEditor {
           se.closeLinkMenu();
         } else {
 
+          if(window.getSelection().toString().split('\n').length > 1) {
+            return;
+          }
+
           function traverseLink(trav, val) {
             if(trav && trav !== se.body) {
               
@@ -3302,7 +3314,9 @@ export default class StrivenEditor {
           }
          
           const r = se.getRange();
+          
           if(r) {
+            
             if(r.collapsed) {
             
               const linkToEdit = document.createElement('a');
@@ -3322,7 +3336,7 @@ export default class StrivenEditor {
               travLink && travLink.classList.add('se-link-to-edit');
 
             }
-          
+
             se.openLinkMenu();
           
           }
