@@ -1444,16 +1444,17 @@ export default class StrivenEditor {
     const windowRow = linkMenuForm.cloneNode(true);
     const windowRowLabel = windowRow.querySelector('.se-form-label');
     const windowRowInput = windowRow.querySelector('.se-form-input');
-
+    
     if (windowRow) {
       windowRow.setAttribute(
         'style',
-        'justify-content: flex-end; align-items: center;',
+        'justify-content: flex-end; align-items: center; flex-direction: row-reverse',
       );
     }
 
     if (windowRowLabel) {
-      windowRowLabel.innerText = 'Open in new window?';
+      windowRowLabel.innerText = 'Open in new window';
+      windowRowLabel.style.marginLeft = '5px';
     }
 
     if (windowRowInput) {
@@ -2131,6 +2132,11 @@ export default class StrivenEditor {
     const se = this;
 
     const body = se.pruneScripts(se.body);  
+    
+    // Remove contenteditable tags for body
+    [...body.querySelectorAll('[contenteditable="true"]')]
+      .forEach(ce => ce.removeAttribute('contenteditable'));
+    
     const text = body.textContent;
     
     if (text || se.body.getElementsByTagName('img').length) {
@@ -2376,6 +2382,9 @@ export default class StrivenEditor {
 
     se.linkMenu.submitEvt = submitEvt;
     window.addEventListener('keyup', se.linkMenu.submitEvt);
+
+
+
   }
 
   /**
@@ -2948,11 +2957,13 @@ export default class StrivenEditor {
 
                   link.classList.add('se-link-to-edit'); 
                   se.openLinkMenu();
-                  
+                 
                   const linkInputs = se.linkMenu.querySelectorAll('input');
                   linkInputs[0]['value'] = link.getAttribute('href');
                   linkInputs[1]['value'] = link.textContent;
                   linkInputs[2]['checked'] = (link.getAttribute('target') === '_blank');
+
+                  setTimeout(() => linkInputs[0].select(), 100);
                 }
 
                 linkOptions.append(changeOption);
@@ -3113,6 +3124,7 @@ export default class StrivenEditor {
 
         if (opt.getAttribute('data-fullscreen')) {
             se.editor.collapse && se.editor.collapse();
+            se.options.onFullscreenCollapse() && se.options.onFullscreenCollapse();
         } else {
           blowUpElement(se.editor, '#fff', e => {
             opt.original = se.body.innerHTML; 
@@ -3345,8 +3357,8 @@ export default class StrivenEditor {
             const selection = se.linkMenu.querySelector(
               'input[placeholder="Text content"]',
             );
+      
             selection && (selection.value = document.getSelection().toString());
-
             se.linkMenu.querySelector('input').select();
           }, 100);
         
