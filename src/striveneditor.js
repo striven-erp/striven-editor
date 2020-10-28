@@ -1480,7 +1480,7 @@ export default class StrivenEditor {
       };
 
       inp.onblur = () => {
-        setTimeout(() => se.clearLinksToEdit(), 100);
+        setTimeout(() => se.clearLinksToEdit(), 200);
       };
     });
     
@@ -2499,6 +2499,7 @@ export default class StrivenEditor {
     const popups = se.editor.getElementsByClassName('se-popup');
     [...popups].forEach(popup => {
       popup.classList.remove('se-popup-open');
+      popup.dataset.active = 'false';
 
       if (popup.submitEvt) {
         window.removeEventListener('keyup', popup.submitEvt);
@@ -3324,7 +3325,7 @@ export default class StrivenEditor {
             }
           
           }
-         
+          debugger 
           const r = se.getRange();
           
           if(r) {
