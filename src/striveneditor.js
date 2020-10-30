@@ -1351,7 +1351,7 @@ export default class StrivenEditor {
       const linkValue = linkMenuFormInput.value;
       se.body.focus();
       se.setRange();
-     
+    
       if (linkValue) {
    
         const linkToEdit = se.body.querySelector('.se-link-to-edit'); 
@@ -1379,25 +1379,6 @@ export default class StrivenEditor {
               title &&
               se.createMetaDataElement(url, image, title, description);
           });
-        }
-
-        // insert link on no selection
-        if (se.browser.isFirefox() || se.browser.isEdge()) {
-          if (se.range.startOffset === se.range.endOffset) {
-            const link = document.createElement('a');
-            link.href = linkValue;
-            link.textContent = linkValue;
-
-            se.range.insertNode(link);
-            se.range.selectNode(link);
-            se.range.collapse();
-          }
-        }
-
-        // Remove contenteditable for firefox
-        if (!se.browser.isFirefox()) {
-          const bodyLinks = se.body.querySelectorAll('a');
-          [...bodyLinks].forEach(link => (link.contentEditable = 'false'));
         }
 
         // trigger input event
@@ -3325,7 +3306,6 @@ export default class StrivenEditor {
             }
           
           }
-          debugger 
           const r = se.getRange();
           
           if(r) {
