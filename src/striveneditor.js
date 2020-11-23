@@ -47,7 +47,7 @@ export default class StrivenEditor {
     });
 
     el.addEventListener('blur', function() {
-      setTimeout(() => {
+      
         const menus = se.editor.getElementsByClassName('se-popup-open');
         const inputs = se.editor.getElementsByTagName('input');
 
@@ -62,7 +62,7 @@ export default class StrivenEditor {
           se.options.change(se.getContent());
           delete el.data_orig;
         }
-      }, 500);
+      
     });
 
     se.toolbarClick = false;
