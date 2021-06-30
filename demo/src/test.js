@@ -57,8 +57,8 @@ describe('Regression Tests', () => {
       se.editor
         .querySelector(
           '.se-toolbar-popup-option[style="font-family: Verdana;"]'
-        )
-        .click();
+        ).dispatchEvent(new Event("mousedown"));
+        
       se.body.onfocus();
       setTimeout(() => {
         assert.exists(
@@ -81,7 +81,7 @@ describe('Regression Tests', () => {
       const option = [...se.editor.querySelectorAll('.se-toolbar-popup-option')]
         .filter(opt => opt.textContent === '36pt')
         .pop();
-      option.click();
+      option.dispatchEvent(new Event("mousedown"));
       se.body.onfocus();
       setTimeout(() => {
         assert.exists(
@@ -121,7 +121,6 @@ describe('Regression Tests', () => {
     const se = getEditor();
     se.editor.setAttribute('max-height', '300px');
     se.body.style.maxHeight = '300px';
-
     let largeContent = '';
     for (let i = 0; i < 1000; i++) {
       largeContent += `<p>line ${i}</p>`;

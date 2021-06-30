@@ -3106,7 +3106,7 @@ export default class StrivenEditor {
 
         if (opt.getAttribute('data-fullscreen')) {
             se.editor.collapse && se.editor.collapse();
-            se.options.onFullscreenCollapse() && se.options.onFullscreenCollapse();
+            se.options.onFullscreenCollapse && se.options.onFullscreenCollapse();
         } else {
           blowUpElement(se.editor, '#fff', e => {
             opt.original = se.body.innerHTML; 
