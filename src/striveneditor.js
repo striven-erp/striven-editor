@@ -404,7 +404,6 @@ export default class StrivenEditor {
 
     toolbar.onclick = () => {
       se.body.focus();
-      console.log('focusing body back')
     };
 
     // Append Font Options
@@ -1995,7 +1994,7 @@ export default class StrivenEditor {
       function setResponsive() {
         let responsive = window.matchMedia('(max-width: 700px)').matches;
 
-        responsiveGroups(responsive || se.editor.offsetWidth < 1000);
+        responsiveGroups(responsive || se.editor.offsetWidth < 1100);
       }
 
       setResponsive();
