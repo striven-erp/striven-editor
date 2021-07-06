@@ -2,9 +2,9 @@ import StrivenEditor from './striveneditor';
 
 export default class KoStrivenEditor {
   constructor(ko, bindingName = 'striveneditor') {
-    if(!ko.bindingHandlers.striveneditor) {
+    if (!ko.bindingHandlers.striveneditor) {
       ko.bindingHandlers.striveneditor = {
-        init: function(
+        init: function (
           element,
           valueAccessor,
           allBindings,
@@ -51,7 +51,9 @@ export default class KoStrivenEditor {
             editor.body.oninput = e => {
               pauseUpdate = true;
               value(editor.getContent());
-              pauseUpdate = false;
+              setTimeout(function () {
+                pauseUpdate = false;
+              }, 0);
             };
 
             // Subscribe to the value observable to detect when it is changed and update the editor
