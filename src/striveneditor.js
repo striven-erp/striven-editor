@@ -15,7 +15,7 @@ import {
 } from './defaults.js';
 
 // Helpers
-import { 
+import {
   createSVG,
   denormalizeCamel,
   blowUpElement
@@ -40,38 +40,27 @@ export default class StrivenEditor {
   _bindContenteditableOnChange(el) {
     const se = this;
 
-    el.addEventListener('focus', function() {
+    el.addEventListener('focus', function () {
       if (el.data_orig === undefined) {
         el.data_orig = el.innerHTML;
       }
     });
 
-    el.addEventListener('blur', function() {
-      
-        const menus = se.editor.getElementsByClassName('se-popup-open');
-        const inputs = se.editor.getElementsByTagName('input');
+    el.addEventListener('blur', function () {
+      const menus = se.editor.getElementsByClassName('se-popup-open');
+      const inputs = se.editor.getElementsByTagName('input');
 
-        const actives = [...menus, ...inputs, se.body, se.toolbar, se.editor];
-
-        if (
-          el.innerHTML != el.data_orig &&
-          !se.toolbarClick &&
-          !actives.includes(document.activeElement) &&
-          !menus.length
-        ) {
-          se.options.change(se.getContent());
-          delete el.data_orig;
-        }
-      
-    });
-
-    se.toolbarClick = false;
-    se.toolbar.addEventListener('mousedown', () => {
-      se.toolbarClick = true;
-    });
-
-    se.toolbar.addEventListener('mouseup', () => {
-      se.toolbarClick = false;
+      const actives = [...menus, ...inputs, se.body, se.toolbar, se.editor];
+      if (
+        el.innerHTML != el.data_orig &&
+        !se.toolbarClick &&
+        !actives.includes(document.activeElement) &&
+        !menus.length
+      ) {
+        se.createLinks();
+        se.options.change(se.getContent());
+        delete el.data_orig;
+      }
     });
   }
 
@@ -81,7 +70,7 @@ export default class StrivenEditor {
    * @param {Object} options StrivenEditor options to initialize the editor with
    */
   constructor(el, options) {
-    const se = this; 
+    const se = this;
 
     // Webpack inserts the package.json version
     se['_version'] = __VERSION__;
@@ -140,6 +129,7 @@ export default class StrivenEditor {
           ...customs,
         ];
 
+        //disallow tabbing
         se.options.canTab = false;
       }
     } else {
@@ -173,7 +163,7 @@ export default class StrivenEditor {
    * @param {HTMLElement} el
    */
   initEditor(el) {
-    const se = this; 
+    const se = this;
 
     se.editor = el;
     se.toolbar = se.initToolbar();
@@ -205,7 +195,7 @@ export default class StrivenEditor {
 
     // Remove all link option popups on escape
     window.addEventListener('keydown', (e) => {
-      if(e.key === 'Escape') {
+      if (e.key === 'Escape') {
         [...se.body.querySelectorAll('.se-link-options')]
           .forEach(o => o.remove());
       }
@@ -297,16 +287,16 @@ export default class StrivenEditor {
               // Focus back into the body
               se.body.focus();
             }
-          break;
+            break;
           case 'removeFormat':
-           
+
             se.executeCommand(command);
 
             // Deactivate all toolbar options
             se.toolbarOptions.forEach(o =>
               o.classList.remove('se-toolbar-option-active'),
-            );          
-            
+            );
+
             break;
           case 'indent':
             setTimeout(() => se.setRange(se.range), 0);
@@ -350,7 +340,7 @@ export default class StrivenEditor {
     se.tableMenu && se.editor.appendChild(se.tableMenu);
     se.metaDataSection && se.editor.appendChild(se.metaDataSection);
     se.filesSection && se.editor.appendChild(se.filesSection);
-    
+
     // Reposition Toolbar
     if (se.options.toolbarBottom) {
       se.toolbar.classList.add('se-toolbar-bottom');
@@ -368,7 +358,7 @@ export default class StrivenEditor {
       se.editor.removeChild(se.toolbar);
       se.editor.append(se.toolbar);
     }
-  
+
     se.options.init && se.options.init(se);
   }
 
@@ -376,7 +366,7 @@ export default class StrivenEditor {
    * Open the toolbar for when the toolbarHide option is set to true
    */
   openToolbar() {
-    const se = this; 
+    const se = this;
 
     se.toolbar.classList.remove('se-toolbar-close');
     setTimeout(() => {
@@ -388,7 +378,7 @@ export default class StrivenEditor {
    * Close the toolbar for when the toolbarHide option is set to true
    */
   closeToolbar() {
-    const se = this; 
+    const se = this;
 
     se.closeAllMenus();
     se.toolbarOptionsGroup.style.display = 'none';
@@ -401,7 +391,7 @@ export default class StrivenEditor {
    * @returns {HTMLElement} The StrivenEditor toolbar
    */
   initToolbar() {
-    const se = this; 
+    const se = this;
 
     const toolbar = document.createElement('div');
     se.toolbarOptionsGroup = document.createElement('div');
@@ -523,10 +513,10 @@ export default class StrivenEditor {
     );
     if (customOptions.length > 0) {
       customOptions.forEach(opt => {
-        const {icon, handler, title} = opt;
+        const { icon, handler, title } = opt;
 
         if (typeof icon === 'object') {
-          const option = se.constructSVG({viewBox: icon.viewBox, d: icon.d});
+          const option = se.constructSVG({ viewBox: icon.viewBox, d: icon.d });
           option.classList.add('se-toolbar-option');
 
           option.onclick = () => handler(option);
@@ -559,6 +549,14 @@ export default class StrivenEditor {
       miscOptions.append(removeFormatOption);
     }
 
+    se.toolbarClick = false;
+    toolbar.addEventListener('mousedown', () => {
+      se.toolbarClick = true;
+    });
+
+    toolbar.addEventListener('mouseup', () => {
+      se.toolbarClick = false;
+    });
     return toolbar;
   }
 
@@ -615,17 +613,17 @@ export default class StrivenEditor {
           let fontselect = e.target.textContent;
           select.textContent = fontselect;
           menu.close();
-          
+
           function execute() {
-              if (fontselect === '(inherited font)') {
-                fontselect = getComputedStyle(se.body).fontFamily;
-              }
-              
-              if (se.browser.isEdge() || se.browser.isFirefox()) {
-                document.execCommand('fontName', false, fontselect);
-              } else {
-                document.execCommand('fontName', true, fontselect);
-              }
+            if (fontselect === '(inherited font)') {
+              fontselect = getComputedStyle(se.body).fontFamily;
+            }
+
+            if (se.browser.isEdge() || se.browser.isFirefox()) {
+              document.execCommand('fontName', false, fontselect);
+            } else {
+              document.execCommand('fontName', true, fontselect);
+            }
           }
 
           execute();
@@ -656,14 +654,14 @@ export default class StrivenEditor {
 
           se.body.focus();
         };
-        
+
         fontOption.onmousedown = trigger;
-        
+
         menu.append(fontOption);
       });
 
-      
-      
+
+
       return menu;
     }
 
@@ -679,19 +677,19 @@ export default class StrivenEditor {
 
         fontOption.classList.add('se-toolbar-popup-option');
         fontOption.textContent = s;
-        
+
         function execute() {
-            let execSize = size;
+          let execSize = size;
 
-            if (size === '(inherited size)') {
-              execSize = 3;
-            }
+          if (size === '(inherited size)') {
+            execSize = 3;
+          }
 
-            if (se.browser.isEdge() || se.browser.isFirefox()) {
-              document.execCommand('fontSize', false, execSize);
-            } else {
-              document.execCommand('fontSize', true, execSize);
-            }
+          if (se.browser.isEdge() || se.browser.isFirefox()) {
+            document.execCommand('fontSize', false, execSize);
+          } else {
+            document.execCommand('fontSize', true, execSize);
+          }
         }
 
         const trigger = e => {
@@ -699,11 +697,11 @@ export default class StrivenEditor {
 
           select.textContent = fontsize;
           select.dataset.command = size;
-          
+
           menu.close();
 
           execute();
-          
+
           const refocus = se.body.focus;
           se.body.onfocus = () => {
             se.setRange(se.range);
@@ -906,11 +904,11 @@ export default class StrivenEditor {
     body.style.height = se.editor.style.height;
     body.style.minHeight = se.editor.style.minHeight;
     body.style.maxHeight = se.editor.style.maxHeight;
-    
+
     se.editor.setAttribute('height', se.editor.style.height);
     se.editor.setAttribute('min-height', se.editor.style.minHeight);
     se.editor.setAttribute('max-height', se.editor.style.maxHeight);
-    
+
     se.editor.style.height = 'auto';
     se.editor.style.minHeight = 'auto';
     se.editor.style.maxHeight = 'auto';
@@ -932,12 +930,12 @@ export default class StrivenEditor {
 
     // Paste Handler
     body.onpaste = e => {
-       
+
       // Editor Paste Handler
-      if(se.options.onPaste) {
+      if (se.options.onPaste) {
         const content = se.options.onPaste(e);
-        if(content) {
-          e.preventDefault(); 
+        if (content) {
+          e.preventDefault();
           se.executeCommand('insertHTML', content);
           return true;
         }
@@ -954,7 +952,7 @@ export default class StrivenEditor {
           u8arr[n] = bstr.charCodeAt(n);
         }
 
-        const file = new File([u8arr], filename, {type: mime});
+        const file = new File([u8arr], filename, { type: mime });
         return new File([u8arr], `${file.name}.${file.type.split('/').pop()}`, {
           type: file.type,
         });
@@ -1011,46 +1009,44 @@ export default class StrivenEditor {
         });
       }
 
-      // sanitize of html
-      if (
-        se.options.sanitizePaste &&
-        e.clipboardData.types.includes('text/html')
-      ) {
-        e.preventDefault();
+      // // sanitize of html
+      // if (
+      //   se.options.sanitizePaste &&
+      //   e.clipboardData.types.includes('text/html')
+      // ) {
+      //   e.preventDefault();
 
-        let pastedHtmlItem;
+      //   let pastedHtmlItem;
 
-        for (let i = 0; i < e.clipboardData.items.length; i++) {
-          const item = e.clipboardData.items[i];
-          item.type === 'text/html' && (pastedHtmlItem = item);
-        }
+      //   for (let i = 0; i < e.clipboardData.items.length; i++) {
+      //     const item = e.clipboardData.items[i];
+      //     item.type === 'text/html' && (pastedHtmlItem = item);
+      //   }
+      //   if (pastedHtmlItem) {
+      //     pastedHtmlItem.getAsString(htmlString => {
+      //       const range = se.getRange();
+      //       range.insertNode(se.scrubHTML(htmlString));
+      //       range.collapse();
+      //     });
+      //   }
+      // }
 
-        if (pastedHtmlItem) {
-          pastedHtmlItem.getAsString(htmlString => {
-            const range = se.getRange();
-            range.insertNode(se.scrubHTML(htmlString));
-            range.collapse();
-          });
-        }
-      }
-
-      let pastedText = false;
+      let pastedTextWithURL = false;
       // pasting text content
       if (
         e.clipboardData.items &&
         e.clipboardData.items.length > 0 &&
         e.clipboardData.items[0].type === 'text/plain'
       ) {
-        let string = e.clipboardData.getData('text/plain');
-        string && (pastedText = string);
+        let plainText = e.clipboardData.getData('text/plain');
 
-        if (se.validURL(string.trim())) {
-          string = string.trim();
+        if (se.validURL(plainText.trim())) {
+          pastedTextWithURL = plainText.trim();
 
           // get meta data
           if (se.options.metaUrl) {
-            se.getMeta(string).then(res => {
-              const {url, title, image, description} = res;
+            se.getMeta(plainText).then(res => {
+              const { url, title, image, description } = res;
               url &&
                 title &&
                 image &&
@@ -1059,54 +1055,77 @@ export default class StrivenEditor {
           }
         }
       }
-     
+
+      let pastedHTML = false;
+      if (e.clipboardData.types.includes('text/html')) {
+        //get the html
+        pastedHTML = e.clipboardData.getData('text/html')
+      }
+
       // Wrap pasted link content for resetting the range
-      let resolveLinkPaste;
-      const content = e.clipboardData.getData('text/html') || pastedText; 
-      
-      if(content) {
-        const pasteNode = document.createElement('span');
-        pasteNode.innerHTML = content; 
-    
-        if(pasteNode.querySelector('a') || se.validURL(content) || se.validURL(pasteNode.textContent)) {
-          e.preventDefault();
+      let resolvePaste;
+      if (pastedHTML || pastedTextWithURL) {
+        let pasteContent = pastedHTML || pastedTextWithURL
 
-          pasteNode.setAttribute('class', 'se-pasted-content');
-          se.executeCommand('insertHTML', pasteNode.outerHTML);
+        let pasteNode = document.createElement('span');
+        pasteNode.innerHTML = pasteContent;
 
-          resolveLinkPaste = () => {
-            // Collapse on pasted content
-            const pasteContent = se.body.querySelector('.se-pasted-content');
-            const range = se.getRange();
+        //cleanup styles
+        this.pruneInlineStyles(pasteNode);
 
-            if(range && pasteContent) {
-              range.selectNode(pasteContent);
-              range.collapse();
-              
-              se.convertLinks(false, pasteContent);
+        //cleanup css classes
+        this.cleanCss(pasteNode);
 
-              const resContent = () => { 
-                try {
-                  pasteContent.outerHTML = pasteContent.innerHTML;
-                  se.body.removeEventListener('blur', resContent);
-                } catch(e) {
-                  se.body.removeEventListener('blur', resContent);
-                }
-              };
+        //sanitize
+        if (se.options.sanitizePaste) {
+          pasteNode = this.scrubHTML(pasteNode);
+        }
 
-              se.body.addEventListener('blur', resContent);
-            }
+        if(pastedTextWithURL)
+        {
+          this.createLinks(pasteNode);
+        }
+
+        e.preventDefault();
+
+        pasteNode.setAttribute('class', 'se-pasted-content');
+        se.executeCommand('insertHTML', pasteNode.outerHTML);
+
+        resolvePaste = () => {
+          // Collapse on pasted content
+          const pasteContent = se.body.querySelector('.se-pasted-content');
+          const range = se.getRange();
+
+          if (range && pasteContent) {
+            range.selectNode(pasteContent);
+            range.collapse();
+
+            const resContent = () => {
+              try {
+                pasteContent.outerHTML = pasteContent.innerHTML;
+                se.body.removeEventListener('blur', resContent);
+              } catch (e) {
+                se.body.removeEventListener('blur', resContent);
+              }
+            };
+
+            se.body.addEventListener('blur', resContent);
           }
         }
       }
+
+
+
 
       // After the paste
       setTimeout(() => {
         // Prune inline styles
         se.pruneInlineStyles(se.body);
 
+        //clean css classes
+        se.cleanCss(se.body);
         // Collapse on pasted content containing links
-        resolveLinkPaste && resolveLinkPaste(); 
+        resolvePaste && resolvePaste();
 
         // Editor After Paste Handler
         se.options.afterPaste && se.options.afterPaste(e);
@@ -1136,13 +1155,7 @@ export default class StrivenEditor {
           break;
         case 'Control':
           break;
-        case 'Alt':
-          break;
-        case 'Enter':
-        case ' ':
-          se.validURL(se.textBuffer) && se.convertLinks(true);
-          se.textBuffer = null;
-          break;
+
         case 'Semicolon':
           if (e.shiftKey) {
             se.textBuffer ? (se.textBuffer += ':') : (se.textBuffer = ':');
@@ -1153,6 +1166,7 @@ export default class StrivenEditor {
           break;
       }
     };
+
 
     // State of the editor
     const bodyKeyup = body.onkeyup;
@@ -1176,12 +1190,11 @@ export default class StrivenEditor {
 
     addEventListener('keyup', (e) => {
       const tab = (e.key === 'Tab' || e.keyCode === 9);
-      
-      if(tab && document.activeElement === se.body) {
-        if(se.body.textContent.trim() === '') {
-          const r = se.getRange(); 
+      if (tab && document.activeElement === se.body) {
+        if (se.body.textContent.trim() === '') {
+          const r = se.getRange();
 
-          if(r) {
+          if (r) {
             const selNode = document.createElement('span');
             selNode.innerHTML = '&nbsp;';
             se.body.append(selNode);
@@ -1189,44 +1202,45 @@ export default class StrivenEditor {
             r.selectNode(selNode);
             r.collapse();
           }
-          
+
         } else {
           const r = se.getRange();
 
-          if(r) {
+          if (r) {
             r.selectNodeContents(se.body);
             r.collapse();
           }
         }
       }
 
-      if(tab && document.activeElement !== se.body && se.body.textContent.trim() === '') {
+      if (tab && document.activeElement !== se.body && se.body.textContent.trim() === '') {
         se.clearContent();
       }
     });
 
     const bodyFocus = body.onfocus;
     body.onfocus = e => {
+      console.log('on focus handler');
       !se.browser.isEdge() && se.setRange();
 
       window.addEventListener('mouseup', execRange);
-      
+
       se.editor.classList.add('se-focus');
-    
-      if(se.body.textContent.trim() === '') {
+
+      if (se.body.textContent.trim() === '') {
         const r = se.getRange();
-        
-        if(r) {
+
+        if (r) {
           const selNode = document.createTextNode('');
           se.body.append(selNode);
-          
+
           setTimeout(() => {
             se.getRange().selectNode(selNode);
-            selNode.remove();  
+            selNode.remove();
           }, 0);
-        
-        } 
-      
+
+        }
+
       }
 
       if (se.scrollPosition && !se.browser.isEdge()) {
@@ -1276,9 +1290,8 @@ export default class StrivenEditor {
       };
 
       se.textBuffer = null;
-      
-      se.clearLinksToEdit(); 
-      se.convertLinks();
+
+      se.clearLinksToEdit();
 
       bodyBlur && bodyBlur();
     };
@@ -1351,29 +1364,30 @@ export default class StrivenEditor {
       const linkValue = linkMenuFormInput.value;
       se.body.focus();
       se.setRange();
-    
       if (linkValue) {
-   
-        const linkToEdit = se.body.querySelector('.se-link-to-edit'); 
-        
-        if(linkToEdit) {
+
+        const linkToEdit = se.body.querySelector('.se-link-to-edit');
+
+        if (linkToEdit) {
           linkToEdit.setAttribute('href', linkValue);
           linkToEdit.innerText = textRowInput.value || linkValue;
           linkToEdit.classList.remove('se-link-to-edit');
-          linkToEdit.setAttribute('target', windowRowInput.checked ? '_blank' : '');   
+          linkToEdit.setAttribute('target', windowRowInput.checked ? '_blank' : '');
           linkToEdit.setAttribute('contenteditable', true);
-        } else if(!se.body.textContent.trim()) {
+          se.makeLinksClickable([linkToEdit]);
+        } else if (!se.body.textContent.trim()) {
           const linkToCreate = document.createElement('a');
           linkToCreate.setAttribute('href', linkValue);
           linkToCreate.innerText = textRowInput.value || linkValue;
           linkToCreate.setAttribute('contenteditable', true);
-          linkToCreate.setAttribute('target', windowRowInput.checked ? '_blank' : '');   
+          linkToCreate.setAttribute('target', windowRowInput.checked ? '_blank' : '');
           se.body.append(linkToCreate);
+          se.makeLinksClickable([linkToCreate]);
         }
 
         if (se.options.metaUrl && se.validURL(linkValue)) {
           se.getMeta(linkValue).then(res => {
-            const {url, image, title, description} = res;
+            const { url, image, title, description } = res;
             url &&
               image &&
               title &&
@@ -1425,7 +1439,7 @@ export default class StrivenEditor {
     const windowRow = linkMenuForm.cloneNode(true);
     const windowRowLabel = windowRow.querySelector('.se-form-label');
     const windowRowInput = windowRow.querySelector('.se-form-input');
-    
+
     if (windowRow) {
       windowRow.setAttribute(
         'style',
@@ -1464,7 +1478,7 @@ export default class StrivenEditor {
         setTimeout(() => se.clearLinksToEdit(), 200);
       };
     });
-    
+
     return linkMenu;
   }
 
@@ -1713,14 +1727,14 @@ export default class StrivenEditor {
    * @returns {HTMLElement} The StrivenEditor attached file section
    */
   initFilesSection() {
-    const se = this; 
+    const se = this;
 
     const filesSection = document.createElement('div');
     filesSection.classList.add('se-files-section');
 
     window.addEventListener(
       'dragover',
-      function(e) {
+      function (e) {
         e = e || event;
         e.preventDefault();
       },
@@ -1729,7 +1743,7 @@ export default class StrivenEditor {
 
     window.addEventListener(
       'drop',
-      function(e) {
+      function (e) {
         e = e || event;
         e.preventDefault();
       },
@@ -1785,7 +1799,7 @@ export default class StrivenEditor {
    * @param {Number} size Size of the file in bytes
    */
   createFileElement(name, size) {
-    const se = this; 
+    const se = this;
 
     const fileEl = document.createElement('div');
     const fileNameEl = document.createElement('p');
@@ -1871,9 +1885,9 @@ export default class StrivenEditor {
    * @returns {HTMLElement} Returns the constructed svg
    */
   constructSVG(svgData) {
-    const se = this; 
+    const se = this;
 
-    const {viewBox, d} = svgData;
+    const { viewBox, d } = svgData;
     const fillColor = se.options.toolbarOptionFillColor
       ? se.options.toolbarOptionFillColor
       : '#333';
@@ -1967,11 +1981,11 @@ export default class StrivenEditor {
 
         [...se.toolbar.getElementsByClassName('se-toolbar-selection')]
           .forEach(sl => {
-            const respond = se.editor.offsetWidth < 500; 
+            const respond = se.editor.offsetWidth < 500;
             sl.style.display = respond ? 'none' : null;
             const { nextElementSibling } = sl;
-            if(nextElementSibling.classList.contains('se-divider-section')) {
-              nextElementSibling.style.display = respond ? 'none' : null;  
+            if (nextElementSibling.classList.contains('se-divider-section')) {
+              nextElementSibling.style.display = respond ? 'none' : null;
             }
           })
 
@@ -1980,7 +1994,7 @@ export default class StrivenEditor {
       function setResponsive() {
         let responsive = window.matchMedia('(max-width: 700px)').matches;
 
-        responsiveGroups(responsive || se.editor.offsetWidth < 1000);
+        responsiveGroups(responsive || se.editor.offsetWidth < 1100);
       }
 
       setResponsive();
@@ -2029,7 +2043,7 @@ export default class StrivenEditor {
           textDecorationMenu.style.display = 'none';
           textDecorationGroup.classList.remove('se-popup');
         }
-       
+
       }
 
       function hideOption(option) {
@@ -2048,8 +2062,8 @@ export default class StrivenEditor {
       if (
         se.toolbarTemplate
           ? se.toolbarTemplate.offsetWidth +
-              se.toolbarOptionsGroup.offsetWidth >
-            se.editor.offsetWidth
+          se.toolbarOptionsGroup.offsetWidth >
+          se.editor.offsetWidth
           : se.toolbarOptionsGroup.offsetWidth > se.editor.offsetWidth
       ) {
         responsiveMinimal(true);
@@ -2075,7 +2089,7 @@ export default class StrivenEditor {
    * Initilizes the overflow properties of the editor
    */
   initOverflow() {
-    const se = this; 
+    const se = this;
 
     const onFocus = se.body.onfocus;
     se.body.onfocus = () => {
@@ -2101,7 +2115,7 @@ export default class StrivenEditor {
    * @returns {Array} Returns an array of attached files to the editor
    */
   getFiles() {
-    const se = this; 
+    const se = this;
     return se.files;
   }
 
@@ -2112,16 +2126,16 @@ export default class StrivenEditor {
   getContent() {
     const se = this;
 
-    const body = se.pruneScripts(se.body);  
-    
+    const body = se.pruneScripts(se.body);
+
     // Remove contenteditable tags for body
     [...body.querySelectorAll('[contenteditable="true"]')]
       .forEach(ce => ce.removeAttribute('contenteditable'));
-    
+
     const text = body.textContent;
-    
+
     if (text || se.body.getElementsByTagName('img').length) {
-      const htmlView = !!se.editor.querySelector('.se-html'); 
+      const htmlView = !!se.editor.querySelector('.se-html');
       return htmlView ? text : body.innerHTML;
     } else {
       return null;
@@ -2138,7 +2152,7 @@ export default class StrivenEditor {
       if (selection) {
         return window.getSelection().getRangeAt(0);
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
   /**
@@ -2147,11 +2161,11 @@ export default class StrivenEditor {
    * @returns {Promise} Returns a promise that has the resolves with the meta data object
    */
   getMeta(url) {
-    const se = this; 
+    const se = this;
     return fetch(se.options.metaUrl, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({targetUrl: url}),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ targetUrl: url }),
     }).then(res => res.json());
   }
 
@@ -2161,11 +2175,11 @@ export default class StrivenEditor {
    * @returns {Promise} Returns a promise that resolves with the image path
    */
   getImage(imageEncoding) {
-    const se = this; 
+    const se = this;
     return fetch(se.options.imageUrl, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({imageEncoding}),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageEncoding }),
     }).then(res => res.json());
   }
 
@@ -2174,7 +2188,7 @@ export default class StrivenEditor {
    * @returns {Array} Returns an array with the toolbar commands currently active
    */
   getActiveOptions() {
-    const se = this; 
+    const se = this;
     return [...se.toolbarOptions]
       .filter(opt => opt.classList.contains('se-toolbar-option-active'))
       .map(opt => opt.id.split('-').pop());
@@ -2194,7 +2208,7 @@ export default class StrivenEditor {
    * Checks if the content overflows and removes or provides scrollbar
    */
   overflow() {
-    const se = this; 
+    const se = this;
 
     const body = se.body;
     body.scrollHeight > body.clientHeight
@@ -2241,6 +2255,18 @@ export default class StrivenEditor {
     return el;
   }
 
+  /* Cleans css  */
+  cleanCss(node) {
+    if (node.childNodes && node.childNodes.length) {
+      node.childNodes.forEach(cn => {
+        if (cn.nodeType == 1) {
+          if (cn.className !== 'se-pasted-content') { cn.className = ""; }
+          this.cleanCss(cn);
+        }
+      })
+    }
+  }
+
   /**
    * Denormalizes provided bytes into human readable string
    * @param {Number} bytes
@@ -2266,7 +2292,7 @@ export default class StrivenEditor {
    * @returns {Boolean} Returns true if file is valid
    */
   validateFile(file) {
-    const se = this; 
+    const se = this;
 
     const extension =
       file &&
@@ -2286,7 +2312,7 @@ export default class StrivenEditor {
    * @param {File} file File to attach to editor
    */
   attachFile(file) {
-    const se = this; 
+    const se = this;
 
     if (se.validateFile(file)) {
       se.files.push(file);
@@ -2301,7 +2327,7 @@ export default class StrivenEditor {
    * Fires the file invalid animation on the editor
    */
   fileInvalid() {
-    const se = this; 
+    const se = this;
 
     se.options.onInvalidFile && se.options.onInvalidFile();
     se.body.style.transition = 'background-color .5s';
@@ -2318,7 +2344,7 @@ export default class StrivenEditor {
    * @param {HTMLElement} menu Popup menu to set offset on
    */
   setMenuOffset(button, menu) {
-    const se = this; 
+    const se = this;
 
     const editorRect = se.editor.getClientRects()[0];
     const buttonRect = button.getClientRects()[0];
@@ -2339,12 +2365,12 @@ export default class StrivenEditor {
    * Opens the editor's link menu popup
    */
   openLinkMenu() {
-    const se = this; 
+    const se = this;
 
     se.closeAllMenus();
 
     se.setMenuOffset(
-      se.toolbar.querySelector('#toolbar-link'),
+      se.toolbar.querySelector('.se-toolbar-option#toolbar-link'),
       se.linkMenu,
     );
     se.linkMenu.classList.add('se-popup-open');
@@ -2372,7 +2398,7 @@ export default class StrivenEditor {
    * Opens the editor's image menu popup
    */
   openImageMenu() {
-    const se = this;  
+    const se = this;
 
     se.closeAllMenus();
 
@@ -2399,7 +2425,7 @@ export default class StrivenEditor {
   }
 
   openTableMenu() {
-    const se = this; 
+    const se = this;
 
     se.closeAllMenus();
 
@@ -2426,24 +2452,24 @@ export default class StrivenEditor {
   }
 
   clearLinksToEdit(force) {
-    const se = this; 
-  
-    if(force || (se.linkMenu && !se.linkMenu.classList.contains('se-popup-open'))) {
+    const se = this;
+
+    if (force || (se.linkMenu && !se.linkMenu.classList.contains('se-popup-open'))) {
       [...se.body.querySelectorAll('.se-link-options')]
         .forEach(opt => opt.remove());
-      
+
       [...se.body.querySelectorAll('a.se-link-to-edit[href="#"]')]
         .forEach(lnk => (lnk.outerHTML = lnk.textContent));
     }
-    
+
   }
 
   /**
    * Closes the editor's link menu popup
    */
   closeLinkMenu() {
-    const se = this; 
-    
+    const se = this;
+
     se.closeAllMenus();
     se.linkMenu.classList.remove('se-popup-open');
     se.linkMenu.dataset.active = 'false';
@@ -2454,8 +2480,8 @@ export default class StrivenEditor {
    * Closes the editor's image menu popup
    */
   closeImageMenu() {
-    const se = this; 
-   
+    const se = this;
+
     se.closeAllMenus();
     se.imageMenu.classList.remove('se-popup-open');
     se.imageMenu.dataset.active = 'false';
@@ -2463,7 +2489,7 @@ export default class StrivenEditor {
   }
 
   closeTableMenu() {
-    const se = this; 
+    const se = this;
 
     se.closeAllMenus();
     se.tableMenu.classList.remove('se-popup-open');
@@ -2475,7 +2501,7 @@ export default class StrivenEditor {
    * Closes all menus opended on the editor instance
    */
   closeAllMenus() {
-    const se = this; 
+    const se = this;
 
     const popups = se.editor.getElementsByClassName('se-popup');
     [...popups].forEach(popup => {
@@ -2493,7 +2519,7 @@ export default class StrivenEditor {
    * @param {Event} evt Event to bind to
    */
   popupEscapeHandler(evt) {
-    const se = this; 
+    const se = this;
 
     if (evt.which === 27) {
       //clear unused links 
@@ -2508,7 +2534,7 @@ export default class StrivenEditor {
    * Binds the escape handler to the editor for popup menus
    */
   addPopupEscapeHandler() {
-    const se = this; 
+    const se = this;
 
     se.removePopupEscapeHandler();
     se.editor.addEventListener('keyup', se.bound_popupEscapeHandler);
@@ -2518,7 +2544,7 @@ export default class StrivenEditor {
    * Removes the escape handler on the editor for popup menus
    */
   removePopupEscapeHandler() {
-    const se = this; 
+    const se = this;
     se.editor.removeEventListener('keyup', se.bound_popupEscapeHandler);
   }
 
@@ -2527,12 +2553,12 @@ export default class StrivenEditor {
    * @param {String} html Html string to set the content with
    */
   setContent(html) {
-    const se = this; 
+    const se = this;
 
     se.clearContent();
     if (html) {
       se.body.innerHTML = html;
-      se.convertLinks();
+      se.makeLinksClickable();
     }
   }
 
@@ -2541,7 +2567,7 @@ export default class StrivenEditor {
    * @param {Range} range Range to set the window with
    */
   setRange(range) {
-    const se = this; 
+    const se = this;
 
     try {
       if (range) {
@@ -2551,14 +2577,14 @@ export default class StrivenEditor {
         window.getSelection().removeAllRanges();
         window.getSelection().addRange(se.range);
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
   /**
    * Clears the editors content
    */
   clearContent() {
-    const se = this; 
+    const se = this;
     se.body.innerHTML = '';
   }
 
@@ -2566,7 +2592,7 @@ export default class StrivenEditor {
    * Clears all attached files to the editor
    */
   clearFiles() {
-    const se = this; 
+    const se = this;
     se.files = [];
     se.filesSection.innerHTML = '';
   }
@@ -2576,30 +2602,29 @@ export default class StrivenEditor {
    * @returns {String} Returns text content of the editor
    */
   getTextContent() {
-    const se = this; 
+    const se = this;
     return se.body.textContent;
   }
 
   /**
    * Sanitizes the provided element
-   * @param {HTMLElement} html Element to sanitize
+   * @param {HTMLElement} dirtyNode HTML Node to sanitize
    * @returns {HTMLElement} Cleaned HTML node
    */
-  scrubHTML(html) {
-    const dirtyNode = document.createElement('div');
+  scrubHTML(dirtyNode) {
     const cleanNode = document.createElement('div');
 
-    dirtyNode.innerHTML = html;
     cleanNode.append(document.createTextNode(dirtyNode.textContent));
 
     return cleanNode;
   }
 
+
   /**
    * Sets the toolbars stated based on which options are enabled on the document
    */
   toolbarState() {
-    const se = this; 
+    const se = this;
     se.options.toolbarOptions.forEach(option => {
       if (typeof option === 'string') {
         const toolbarOption = se.toolbar.querySelector(`#toolbar-${option}`);
@@ -2625,7 +2650,7 @@ export default class StrivenEditor {
    * Update the font states on the toolbar
    */
   setFontStates() {
-    const se = this;  
+    const se = this;
     if (se.fontSize && !se.browser.isFirefox()) {
       se.fontSize.textContent =
         FONTSIZES[document.queryCommandValue('fontSize')] || '(inherited size)';
@@ -2706,7 +2731,7 @@ export default class StrivenEditor {
   }
 
   generateTable(cols = 3, rows = 3) {
-    const se = this; 
+    const se = this;
 
     let table = document.createElement('table');
 
@@ -2752,22 +2777,22 @@ export default class StrivenEditor {
    * This method is used to detect the user browser and environment
    */
   establishBrowser() {
-    const se = this; 
+    const se = this;
 
     const userAgent = ((navigator && navigator.userAgent) || '').toLowerCase();
     const vendor = ((navigator && navigator.vendor) || '').toLowerCase();
 
     const comparator = {
-      '<': function(a, b) {
+      '<': function (a, b) {
         return a < b;
       },
-      '<=': function(a, b) {
+      '<=': function (a, b) {
         return a <= b;
       },
-      '>': function(a, b) {
+      '>': function (a, b) {
         return a > b;
       },
-      '>=': function(a, b) {
+      '>=': function (a, b) {
         return a >= b;
       },
     };
@@ -2837,7 +2862,7 @@ export default class StrivenEditor {
    * @returns {Boolean} Returns true if editor is being focused
    */
   isEditorInFocus() {
-    const se = this; 
+    const se = this;
 
     let activeEl = document.activeElement;
     var isEditor = el => {
@@ -2851,141 +2876,122 @@ export default class StrivenEditor {
     return isEditor(activeEl);
   }
 
-  /**
-   * Sets links in the editor to open new windows
-   */
-  setLinkTarget() {
-    const links = [...se.body.querySelectorAll('a')];
-    if (links.length) {
-      links.forEach(link => {
-        if (!link.onclick || link.href) {
-          link.setAttribute('target', '_blank');
-        }
-      });
+  /*
+  parses all links on the editor or links passed and makes them clickable and adds option to change/remove the link
+  */
+  makeLinksClickable(links = []) {
+    const se = this;
+    if (!links.length) {
+      const linkElements = se.body.getElementsByTagName('a');
+      if (linkElements.length > 0) {
+        links = [...linkElements];
+      }
     }
+
+    links.forEach(link => {
+
+      link.onmousemove = e => {
+        e.ctrlKey && (link.style.cursor = 'pointer');
+      };
+
+      link.onclick = e => {
+
+        if (e.ctrlKey) {
+          const anchor = document.createElement('a');
+          anchor.setAttribute('href', link.getAttribute('href'));
+          anchor.setAttribute('target', '_blank');
+          document.body.append(anchor);
+          anchor.click();
+          anchor.remove();
+        } else {
+          if (!link.querySelector('.se-link-options')) {
+            const linkOptions = document.createElement('span');
+            linkOptions.setAttribute('class', 'se-link-options');
+            linkOptions.setAttribute('contenteditable', false);
+            linkOptions.onclick = e => e.stopPropagation();
+            link.append(linkOptions);
+
+            const removeOption = document.createElement('span');
+            removeOption.textContent = 'Remove';
+            removeOption.onclick = (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              linkOptions.remove();
+
+              const replNode = document.createElement('span');
+              replNode.textContent = link.textContent;
+              link.replaceWith(replNode);
+            }
+
+
+            const changeOption = document.createElement('span');
+            changeOption.textContent = 'Change';
+            changeOption.onclick = (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              linkOptions.remove();
+
+              link.classList.add('se-link-to-edit');
+              se.openLinkMenu();
+
+              const linkInputs = se.linkMenu.querySelectorAll('input');
+              linkInputs[0]['value'] = link.getAttribute('href');
+              linkInputs[1]['value'] = link.textContent;
+              linkInputs[2]['checked'] = (link.getAttribute('target') === '_blank');
+
+              setTimeout(() => linkInputs[0].select(), 100);
+            }
+
+            linkOptions.append(changeOption);
+            linkOptions.append(removeOption);
+
+            const optionHandler = () => {
+              try {
+                const r = se.getRange();
+                const rNode = r['commonAncestorContainer']['parentElement'];
+                if (rNode !== link) {
+                  linkOptions.remove();
+                  se.body.removeEventListener('click', optionHandler);
+                }
+              } catch (e) {
+                linkOptions.remove();
+                window.removeEventListener('click', optionHandler);
+              }
+            }
+
+            window.addEventListener('click', optionHandler);
+
+          }
+        }
+      };
+
+      link.onmouseleave = () => (link.style.cursor = null);
+
+      link.setAttribute('contenteditable', true);
+
+    });
   }
 
   /**
-   * Convert links
-   * @param {Boolean} Select the last converted link
-   * @parma {HTMLElement} Element to convert links in
-   */
-  convertLinks(selectLast, el) {
+  * Creates links
+  * @parma {HTMLElement} Element to convert links in
+  */
+  createLinks(el) {
     const se = this;
-   
-    linkify(el || se.body, { target: { url: '_parent' }}, document);
-    const linkElements = se.body.getElementsByTagName('a');
-
-    let lastConverted;
-
-    if(selectLast) {
-      lastConverted = se.body.querySelector('.linkified');
-    }
-
-    if (linkElements.length > 0) {
-      const links = [...linkElements];
-      const convertedLinks = [];
-      links.forEach(link => {
-
-        const href = link.getAttribute('href');
-        const isEmail = href ? href.includes('mailto') : false;
-        const isLinkified =
-          link.classList.contains('linkified') &&
-          !se.validURL(href || link.textContent);
-
-        if (href && (isEmail || isLinkified)) {
-          link.outerHTML = link.textContent;
-        } else {
-          
-          link.onmousemove = e => {
-            e.ctrlKey && (link.style.cursor = 'pointer');
-          };
-
-          link.onclick = e => {
-            if (e.ctrlKey) {
-              const anchor = document.createElement('a');
-              anchor.setAttribute('href', link.getAttribute('href'));
-              document.body.append(anchor);
-              anchor.click();
-              anchor.remove();
-            } else {
-              if(!link.querySelector('.se-link-options')) {
-                const linkOptions = document.createElement('span');
-                linkOptions.setAttribute('class', 'se-link-options'); 
-                linkOptions.setAttribute('contenteditable', false); 
-                linkOptions.onclick = e => e.stopPropagation(); 
-                link.append(linkOptions);
-
-                const removeOption = document.createElement('span');
-                removeOption.textContent = 'Remove';
-                removeOption.onclick = (e) => {
-                  e.preventDefault(); 
-                  e.stopPropagation();
-                  linkOptions.remove();
-                 
-                  const replNode = document.createElement('span');
-                  replNode.textContent = link.textContent;
-                  link.replaceWith(replNode); 
-
-                }
-                
-                
-                const changeOption = document.createElement('span');
-                changeOption.textContent = 'Change';
-                changeOption.onclick = (e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  linkOptions.remove();
-
-                  link.classList.add('se-link-to-edit'); 
-                  se.openLinkMenu();
-                 
-                  const linkInputs = se.linkMenu.querySelectorAll('input');
-                  linkInputs[0]['value'] = link.getAttribute('href');
-                  linkInputs[1]['value'] = link.textContent;
-                  linkInputs[2]['checked'] = (link.getAttribute('target') === '_blank');
-
-                  setTimeout(() => linkInputs[0].select(), 100);
-                }
-
-                linkOptions.append(changeOption);
-                linkOptions.append(removeOption);
-                
-                const optionHandler = () => {
-                  try {
-                    const r = se.getRange();
-                    const rNode = r['commonAncestorContainer']['parentElement'];
-                    if(rNode !== link) {
-                      linkOptions.remove();
-                      se.body.removeEventListener('click', optionHandler);
-                    }
-                  } catch(e) {
-                    linkOptions.remove();
-                    window.removeEventListener('click', optionHandler);
-                  }
-                }
-
-                window.addEventListener('click', optionHandler);
-                
-              }
-            }
-          };
-
-          link.onmouseleave = () => (link.style.cursor = null);
-
-          convertedLinks.push(link);
+    linkify(el || se.body,
+      {
+        target: {
+          url: '_blank'
+        },
+        className: 'linkified',
+        validate: {
+          email: function (value) {
+            return false;
+          }
         }
-        
-        link.classList.remove('linkified');
-        link.setAttribute('contenteditable', true); 
-      
-      });
-    }
+      }, document);
 
-    if(lastConverted && se.range) {
-      se.range.selectNode(lastConverted);
-      se.range.collapse();
-    }
+    this.makeLinksClickable();
 
     setTimeout(() => {
       // Trigger oninput event
@@ -2994,6 +3000,8 @@ export default class StrivenEditor {
       }
     }, 10);
   }
+
+
 
   /*
    * Init Pickr Plugin menu for font colors
@@ -3040,16 +3048,16 @@ export default class StrivenEditor {
     const se = this;
 
     function textDecorationInsert(el) {
-      const r = se.range || new Range(); 
-      se.setRange(r); 
+      const r = se.range || new Range();
+      se.setRange(r);
 
       const b = document.createElement(el);
       const selNode = se.body.querySelector('.se-init-sel') || document.createElement('span');
-      selNode.setAttribute('class', 'se-init-sel'); 
+      selNode.setAttribute('class', 'se-init-sel');
       selNode.innerHTML = '&nbsp;';
-      
+
       b.append(selNode);
-     
+
       const fc = se.body.firstChild;
       (fc && fc.append) ? fc.append(b) : se.body.append(b);
 
@@ -3081,16 +3089,17 @@ export default class StrivenEditor {
         break;
       case 'fullscreen':
         const opt = se.toolbar.querySelector('#toolbar-fullscreen');
-        
-        if(!se.editor.oncollapse) {
+
+        if (!se.editor.oncollapse) {
           se.editor.oncollapse = () => {
-            if(opt.original !== se.body.innerHTML && se.options.change) {
+            if (opt.original !== se.body.innerHTML && se.options.change) {
+              se.createLinks();
               se.options.change(se.getContent());
             }
 
             opt.innerHTML = '';
             opt.append(createSVG(EXPANDICON));
-         
+
             se.editor.style.maxHeight = null;
             document.body.style.overflow = null;
 
@@ -3105,16 +3114,16 @@ export default class StrivenEditor {
         }
 
         if (opt.getAttribute('data-fullscreen')) {
-            se.editor.collapse && se.editor.collapse();
-            se.options.onFullscreenCollapse() && se.options.onFullscreenCollapse();
+          se.editor.collapse && se.editor.collapse();
+          se.options.onFullscreenCollapse && se.options.onFullscreenCollapse();
         } else {
           blowUpElement(se.editor, '#fff', e => {
-            opt.original = se.body.innerHTML; 
+            opt.original = se.body.innerHTML;
             opt.innerHTML = '';
             opt.append(createSVG(COLLAPSEICON));
-           
+
             document.body.style.overflow = 'hidden';
-            
+
             se.body.style.height = '100%';
             se.body.style.minHeight = null;
             se.body.style.maxHeight = null;
@@ -3153,7 +3162,7 @@ export default class StrivenEditor {
               preview: true,
               palette: true,
               hue: true,
-              interaction: {hex: true, input: true},
+              interaction: { hex: true, input: true },
             },
           });
 
@@ -3212,22 +3221,22 @@ export default class StrivenEditor {
 
           pickr.on('show', p => {
             const { app } = p['_root'];
-            if(window.matchMedia('(max-width: 510px)').matches) {
+            if (window.matchMedia('(max-width: 510px)').matches) {
               app.style.left = null;
             }
           });
         }
         break;
       case 'insertOrderedList':
-        if(!se.body.textContent) {
+        if (!se.body.textContent) {
           const list = document.createElement('ol');
-          const item = document.createElement('li'); 
+          const item = document.createElement('li');
           list.append(item);
-          
-          se.body.append(list); 
-          
+
+          se.body.append(list);
+
           const r = se.range || new Range();
-          window.getSelection().removeAllRanges(); 
+          window.getSelection().removeAllRanges();
           window.getSelection().addRange(r);
           r.selectNode(item);
 
@@ -3241,15 +3250,15 @@ export default class StrivenEditor {
         }
         break;
       case 'insertUnorderedList':
-        if(!se.body.textContent) {
+        if (!se.body.textContent) {
           const list = document.createElement('ul');
-          const item = document.createElement('li'); 
+          const item = document.createElement('li');
           list.append(item);
-          
-          se.body.append(list); 
-          
+
+          se.body.append(list);
+
           const r = se.range || new Range();
-          window.getSelection().removeAllRanges(); 
+          window.getSelection().removeAllRanges();
           window.getSelection().addRange(r);
           r.selectNode(list);
 
@@ -3281,68 +3290,68 @@ export default class StrivenEditor {
           se.closeLinkMenu();
         } else {
 
-          if(window.getSelection().toString().split('\n').length > 1) {
+          if (window.getSelection().toString().split('\n').length > 1) {
             return;
           }
 
           function traverseLink(trav, val) {
-            if(trav && trav !== se.body) {
-              
-              if(trav.querySelector) {
-                const travQuery = trav.querySelector(`a[href="${val}"]`) 
-                if(travQuery) {
+            if (trav && trav !== se.body) {
+
+              if (trav.querySelector) {
+                const travQuery = trav.querySelector(`a[href="${val}"]`)
+                if (travQuery) {
                   return travQuery;
                 }
               }
 
-              if(trav.tagName === 'A' && trav.getAttribute('href') === val) {
+              if (trav.tagName === 'A' && trav.getAttribute('href') === val) {
                 return trav;
               } else {
                 return traverseLink(trav.parentElement, val);
               }
-            
+
             } else {
               return se.body.querySelector(`a[href="${val}"]`);
             }
-          
+
           }
           const r = se.getRange();
-          
-          if(r) {
-            
-            if(r.collapsed) {
-            
+
+          if (r) {
+
+            if (r.collapsed) {
+
               const linkToEdit = document.createElement('a');
               linkToEdit.setAttribute('class', 'se-link-to-edit');
-            
+
               r.insertNode(linkToEdit);
-            
+
             } else {
-             
+
               if (se.browser.isFirefox() || se.browser.isEdge()) {
                 document.execCommand('createLink', false, '#');
               } else {
                 document.execCommand('createLink', true, '#');
               }
-            
+
               const travLink = traverseLink(r['startContainer'], '#');
               travLink && travLink.classList.add('se-link-to-edit');
 
             }
 
             se.openLinkMenu();
-          
+
           }
 
           setTimeout(() => {
             const selection = se.linkMenu.querySelector(
               'input[placeholder="Text content"]',
             );
-      
+
             selection && (selection.value = document.getSelection().toString());
             se.linkMenu.querySelector('input').select();
           }, 100);
-        
+
         }
         break;
       case 'image':
@@ -3366,22 +3375,22 @@ export default class StrivenEditor {
         }
         break;
       case 'bold':
-        if(se.body.textContent.trim() === '') {
+        if (se.body.textContent.trim() === '') {
           textDecorationInsert('b');
           break;
         }
       case 'italic':
-        if(se.body.textContent.trim() === '') {
+        if (se.body.textContent.trim() === '') {
           textDecorationInsert('i');
           break;
-        } 
+        }
       case 'underline':
-        if(se.body.textContent.trim() === '') {
+        if (se.body.textContent.trim() === '') {
           textDecorationInsert('u');
           break;
         }
       case 'strikethrough':
-        if(se.body.textContent.trim() === '') {
+        if (se.body.textContent.trim() === '') {
           textDecorationInsert('strike');
           break;
         }

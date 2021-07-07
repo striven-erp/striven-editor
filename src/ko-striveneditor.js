@@ -1,22 +1,22 @@
 import StrivenEditor from './striveneditor';
 
 export default class KoStrivenEditor {
-    constructor(ko, bindingName = 'striveneditor') {
-        if (!ko.bindingHandlers.striveneditor) {
-            ko.bindingHandlers.striveneditor = {
-                init: function (
-                    element,
-                    valueAccessor,
-                    allBindings,
-                    viewModel,
-                    bindingContext,
-                ) {
-                    // Get options
-                    let options = valueAccessor();
-                    // Options must be passed as an observable
-                    if (!ko.isObservable(options)) {
-                        throw 'Options must be an observable.';
-                    }
+  constructor(ko, bindingName = 'striveneditor') {
+    if (!ko.bindingHandlers.striveneditor) {
+      ko.bindingHandlers.striveneditor = {
+        init: function (
+          element,
+          valueAccessor,
+          allBindings,
+          viewModel,
+          bindingContext,
+        ) {
+          // Get options
+          let options = valueAccessor();
+          // Options must be passed as an observable
+          if (!ko.isObservable(options)) {
+            throw 'Options must be an observable.';
+          }
 
                     // Get the value binding in case we are binding the editor's contents to an observable
                     let value = allBindings().value;
@@ -45,17 +45,16 @@ export default class KoStrivenEditor {
                     });
                     let pauseUpdate = false;
 
-                    // Handle updates and changes to value observable
-                    if (ko.isObservable(value)) {
-                        // Listen to input event
-                        editor.body.oninput = e => {
-                            pauseUpdate = true;
-                            value(editor.getContent());
-                            setTimeout(() => {
-                                pauseUpdate = false;
-                            }, 0);
-
-                        };
+          // Handle updates and changes to value observable
+          if (ko.isObservable(value)) {
+            // Listen to input event
+            editor.body.oninput = e => {
+              pauseUpdate = true;
+              value(editor.getContent());
+              setTimeout(function () {
+                pauseUpdate = false;
+              }, 0);
+            };
 
                         // Subscribe to the value observable to detect when it is changed and update the editor
                         value.subscribe(newValue => {
