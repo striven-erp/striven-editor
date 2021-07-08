@@ -49,16 +49,19 @@ export default class StrivenEditor {
     el.addEventListener('blur', function () {
       const menus = se.editor.getElementsByClassName('se-popup-open');
       const inputs = se.editor.getElementsByTagName('input');
-
-      const actives = [...menus, ...inputs, se.body, se.toolbar, se.editor];
+      const colorPicker = se.editor.querySelectorAll('.pcr-app.visible');
+      const actives = [...menus, ...colorPicker, ...inputs, se.body, se.toolbar, se.editor];
       if (
         el.innerHTML != el.data_orig &&
         !se.toolbarClick &&
         !actives.includes(document.activeElement) &&
-        !menus.length
+        !menus.length &&
+        !colorPicker.length
       ) {
         se.createLinks();
-        se.options.change(se.getContent());
+        if (se.options.change) {
+          se.options.change(se.getContent());
+        }
         delete el.data_orig;
       }
     });
@@ -916,9 +919,8 @@ export default class StrivenEditor {
     se.options.placeholder &&
       (body.dataset.placeholder = se.options.placeholder);
 
-    if (se.options.change) {
-      se._bindContenteditableOnChange(body);
-    }
+    se._bindContenteditableOnChange(body);
+
 
     // Execute this function on mouseup and keyup
     const execRange = () => {
@@ -1005,31 +1007,11 @@ export default class StrivenEditor {
             se.options.uploadOnPaste &&
               se.attachFile(dataURLtoFile(res, 'pastedimage'));
           }
-          se.overflow();
+          setTimeout(function () {
+            se.overflow();
+          }, 0)
         });
       }
-
-      // // sanitize of html
-      // if (
-      //   se.options.sanitizePaste &&
-      //   e.clipboardData.types.includes('text/html')
-      // ) {
-      //   e.preventDefault();
-
-      //   let pastedHtmlItem;
-
-      //   for (let i = 0; i < e.clipboardData.items.length; i++) {
-      //     const item = e.clipboardData.items[i];
-      //     item.type === 'text/html' && (pastedHtmlItem = item);
-      //   }
-      //   if (pastedHtmlItem) {
-      //     pastedHtmlItem.getAsString(htmlString => {
-      //       const range = se.getRange();
-      //       range.insertNode(se.scrubHTML(htmlString));
-      //       range.collapse();
-      //     });
-      //   }
-      // }
 
       let pastedTextWithURL = false;
       // pasting text content
@@ -1065,8 +1047,8 @@ export default class StrivenEditor {
       // Wrap pasted link content for resetting the range
       let resolvePaste;
       if (pastedHTML || pastedTextWithURL) {
-        let pasteContent = pastedHTML || pastedTextWithURL
 
+        let pasteContent = pastedHTML || pastedTextWithURL
         let pasteNode = document.createElement('span');
         pasteNode.innerHTML = pasteContent;
 
@@ -1081,24 +1063,19 @@ export default class StrivenEditor {
           pasteNode = this.scrubHTML(pasteNode);
         }
 
-        if(pastedTextWithURL)
-        {
-          this.createLinks(pasteNode);
-        }
-
         e.preventDefault();
 
         pasteNode.setAttribute('class', 'se-pasted-content');
         se.executeCommand('insertHTML', pasteNode.outerHTML);
 
         resolvePaste = () => {
-          // Collapse on pasted content
           const pasteContent = se.body.querySelector('.se-pasted-content');
-          const range = se.getRange();
 
-          if (range && pasteContent) {
-            range.selectNode(pasteContent);
-            range.collapse();
+          if (pasteContent) {
+           
+            if (pastedTextWithURL) {
+              this.createLinks(pasteContent);
+            }
 
             const resContent = () => {
               try {
@@ -1114,17 +1091,9 @@ export default class StrivenEditor {
         }
       }
 
-
-
-
       // After the paste
       setTimeout(() => {
-        // Prune inline styles
-        se.pruneInlineStyles(se.body);
-
-        //clean css classes
-        se.cleanCss(se.body);
-        // Collapse on pasted content containing links
+        // remove the paste container that was added
         resolvePaste && resolvePaste();
 
         // Editor After Paste Handler
@@ -1220,7 +1189,6 @@ export default class StrivenEditor {
 
     const bodyFocus = body.onfocus;
     body.onfocus = e => {
-      console.log('on focus handler');
       !se.browser.isEdge() && se.setRange();
 
       window.addEventListener('mouseup', execRange);
@@ -2991,17 +2959,22 @@ export default class StrivenEditor {
         }
       }, document);
 
-    this.makeLinksClickable();
-
-    setTimeout(() => {
-      // Trigger oninput event
-      if (se.body.oninput) {
-        se.body.oninput();
+    var links = [];
+    if (el) {
+      const linkElements = el.getElementsByTagName('a');
+      if (linkElements.length > 0) {
+        links = [...linkElements];
       }
-    }, 10);
+    }
+    this.makeLinksClickable(links);
+
+    // Trigger oninput event
+    if (se.body.oninput) {
+      se.body.oninput();
+    }
+    // setTimeout(() => {
+    // }, 10);
   }
-
-
 
   /*
    * Init Pickr Plugin menu for font colors
