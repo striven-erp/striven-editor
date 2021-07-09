@@ -1013,7 +1013,6 @@ export default class StrivenEditor {
         });
       }
 
-      let pastedTextWithURL = false;
       // pasting text content
       if (
         e.clipboardData.items &&
@@ -1023,7 +1022,6 @@ export default class StrivenEditor {
         let plainText = e.clipboardData.getData('text/plain');
 
         if (se.validURL(plainText.trim())) {
-          pastedTextWithURL = plainText.trim();
 
           // get meta data
           if (se.options.metaUrl) {
@@ -1045,10 +1043,10 @@ export default class StrivenEditor {
       }
 
       // Wrap pasted link content for resetting the range
-      let resolvePaste;
-      if (pastedHTML || pastedTextWithURL) {
+      if (pastedHTML) {
+        e.preventDefault();
 
-        let pasteContent = pastedHTML || pastedTextWithURL
+        let pasteContent = pastedHTML;
         let pasteNode = document.createElement('span');
         pasteNode.innerHTML = pasteContent;
 
@@ -1063,39 +1061,12 @@ export default class StrivenEditor {
           pasteNode = this.scrubHTML(pasteNode);
         }
 
-        e.preventDefault();
-
         pasteNode.setAttribute('class', 'se-pasted-content');
-        se.executeCommand('insertHTML', pasteNode.outerHTML);
-
-        resolvePaste = () => {
-          const pasteContent = se.body.querySelector('.se-pasted-content');
-
-          if (pasteContent) {
-           
-            if (pastedTextWithURL) {
-              this.createLinks(pasteContent);
-            }
-
-            const resContent = () => {
-              try {
-                pasteContent.outerHTML = pasteContent.innerHTML;
-                se.body.removeEventListener('blur', resContent);
-              } catch (e) {
-                se.body.removeEventListener('blur', resContent);
-              }
-            };
-
-            se.body.addEventListener('blur', resContent);
-          }
-        }
+        se.executeCommand('insertHTML', pasteNode.innerHTML);
       }
 
       // After the paste
       setTimeout(() => {
-        // remove the paste container that was added
-        resolvePaste && resolvePaste();
-
         // Editor After Paste Handler
         se.options.afterPaste && se.options.afterPaste(e);
       }, 10);
