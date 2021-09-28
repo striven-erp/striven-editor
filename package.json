@@ -52,6 +52,7 @@
     "webpack-cli": "^3.3.9"
   },
   "dependencies": {
+    "html-formatter": "^0.1.9",
     "js-beautify": "^1.11.0",
     "linkifyjs": "^2.1.9"
   }

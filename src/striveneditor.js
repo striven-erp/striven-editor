@@ -31,6 +31,9 @@ import linkify from 'linkifyjs/element';
 import './classic.min.css';
 import Pickr from './pickr.min.js';
 
+// Formatting
+import htmlFormatter from "html-formatter";
+
 /* Represents an instance of the Striven Editor */
 export default class StrivenEditor {
   /**
@@ -3011,6 +3014,7 @@ export default class StrivenEditor {
 
     switch (command) {
       case 'html':
+          
         const saveoption = document.createElement('div');
         saveoption.classList.add('se-toolbar-option');
         saveoption.setAttribute('title', 'Design');
@@ -3021,6 +3025,8 @@ export default class StrivenEditor {
         saveoption.onclick = () => {
           saveoption.remove();
           se.body.style.fontFamily = null;
+          // Remove white-space: pre to prevent text wrapping weirdly
+          se.body.style.whiteSpace = null;
 
           se.toolbar.classList.remove('se-html');
           se.setContent(se.body.textContent);
@@ -3029,7 +3035,18 @@ export default class StrivenEditor {
         se.toolbar.prepend(saveoption);
 
         se.body.style.fontFamily = 'Courier';
-        se.body.textContent = se.body.innerHTML;
+
+        // Add this so that the textContent will wrap at line breaks (not br tags)
+        se.body.style.whiteSpace = "pre";
+
+        // Format the HTML so that it looks somewhat pretty
+        let formatedHtml = htmlFormatter.render(se.body.innerHTML, );
+        // This library uses /t for indenting. Replace with spaces to make it less
+        // drastic.
+        formatedHtml = formatedHtml.replaceAll("\t", "  ");
+        // Set the content of the editor to the formatted html
+        se.body.textContent = formatedHtml;
+        
         break;
       case 'fullscreen':
         const opt = se.toolbar.querySelector('#toolbar-fullscreen');
