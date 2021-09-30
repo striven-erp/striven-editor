@@ -32,7 +32,7 @@ import './classic.min.css';
 import Pickr from './pickr.min.js';
 
 // Formatting
-import htmlFormatter from "html-formatter";
+import beautify from "simply-beautiful";
 
 /* Represents an instance of the Striven Editor */
 export default class StrivenEditor {
@@ -488,7 +488,9 @@ export default class StrivenEditor {
       const toolbarTemplate = document.createElement('div');
       toolbarTemplate.id = 'toolbar-template';
       toolbarTemplate.setAttribute('style', 'display: flex');
-
+      toolbarTemplate.addEventListener('click', (ev) => {
+          ev.stopImmediatePropagation();
+        });
       toolbarTemplate.appendChild(se.options.toolbarTemplate);
       toolbar.appendChild(toolbarTemplate);
 
@@ -3040,12 +3042,15 @@ export default class StrivenEditor {
         se.body.style.whiteSpace = "pre";
 
         // Format the HTML so that it looks somewhat pretty
-        let formatedHtml = htmlFormatter.render(se.body.innerHTML, );
-        // This library uses /t for indenting. Replace with spaces to make it less
-        // drastic.
-        formatedHtml = formatedHtml.replaceAll("\t", "  ");
+        var options = {
+            indent_size: 2,
+            unformatted: []
+        };
+
+        let formatedHtml = beautify.html(se.body.innerHTML, options);
         // Set the content of the editor to the formatted html
         se.body.textContent = formatedHtml;
+        se.overflow();
         
         break;
       case 'fullscreen':
