@@ -488,9 +488,6 @@ export default class StrivenEditor {
       const toolbarTemplate = document.createElement('div');
       toolbarTemplate.id = 'toolbar-template';
       toolbarTemplate.setAttribute('style', 'display: flex');
-      toolbarTemplate.addEventListener('click', (ev) => {
-          ev.stopImmediatePropagation();
-        });
       toolbarTemplate.appendChild(se.options.toolbarTemplate);
       toolbar.appendChild(toolbarTemplate);
 
