@@ -2064,20 +2064,26 @@ export default class StrivenEditor {
    * Gets the content of the editor if there are attached files or provided content
    * @returns {String} Returns the HTML String of the editor's content
    */
-  getContent() {
+   getContent() {
     const se = this;
-
-    const body = se.pruneScripts(se.body);
+    let html=se.body;
+    const htmlView = !!se.editor.querySelector('.se-html');
+    if(htmlView){
+        let dv= document.createElement('div');
+        dv.innerHTML=se.body.textContent;
+        
+        html=dv;
+    }
+     const body = se.pruneScripts(html);
 
     // Remove contenteditable tags for body
     [...body.querySelectorAll('[contenteditable="true"]')]
       .forEach(ce => ce.removeAttribute('contenteditable'));
 
-    const text = body.textContent;
 
-    if (text || se.body.getElementsByTagName('img').length) {
-      const htmlView = !!se.editor.querySelector('.se-html');
-      return htmlView ? text : body.innerHTML;
+    if (body.textContent || se.body.getElementsByTagName('img').length) {
+      // const htmlView = !!se.editor.querySelector('.se-html');
+      return body.innerHTML;
     } else {
       return null;
     }
