@@ -50,7 +50,7 @@ export default class StrivenEditor {
     });
 
     el.addEventListener('blur', function () {
-      const menus = se.editor.getElementsByClassName('se-popup-open');
+      const menus = se.editor.getElementsByClassName('se-popup-open:not(.se-toolbar-group)');
       const inputs = se.editor.getElementsByTagName('input');
       const colorPicker = se.editor.querySelectorAll('.pcr-app.visible');
       const actives = [...menus, ...colorPicker, ...inputs, se.body, se.toolbar, se.editor];
