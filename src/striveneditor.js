@@ -934,7 +934,6 @@ export default class StrivenEditor {
 
     // Paste Handler
     body.onpaste = e => {
-
       // Editor Paste Handler
       if (se.options.onPaste) {
         const content = se.options.onPaste(e);
@@ -971,19 +970,17 @@ export default class StrivenEditor {
           reader.onerror = error => reject(error);
         });
 
-      // Paste image logic for Edge
-      if (
-        se.browser.isEdge() &&
-        e.clipboardData.items &&
-        e.clipboardData.items.length > 0 &&
-        e.clipboardData.items[0].type.includes('image')
-      ) {
-        convertImage(e.clipboardData.items[0].getAsFile()).then(res => {
-          document.execCommand('insertImage', false, res);
-        });
-      }
+      const afterPaste = () => {
+        // After the paste
+        setTimeout(() => {
+          // Editor After Paste Handler
+          se.options.afterPaste && se.options.afterPaste(e);
+        }, 10);
 
-      // Paste image logic
+        se.overflow();
+      };
+
+      // Paste image logic 
       if (
         e.clipboardData.files &&
         e.clipboardData.files.length > 0 &&
@@ -1012,7 +1009,10 @@ export default class StrivenEditor {
           setTimeout(function () {
             se.overflow();
           }, 0)
+        }).finally(()=>{
+          afterPaste();
         });
+        return true;
       }
 
       // pasting text content
@@ -1048,9 +1048,8 @@ export default class StrivenEditor {
       if (pastedHTML) {
         e.preventDefault();
 
-        let pasteContent = pastedHTML;
         let pasteNode = document.createElement('span');
-        pasteNode.innerHTML = pasteContent;
+        pasteNode.innerHTML = pastedHTML;
 
         //cleanup styles
         this.pruneInlineStyles(pasteNode);
@@ -1067,13 +1066,7 @@ export default class StrivenEditor {
         se.executeCommand('insertHTML', pasteNode.innerHTML);
       }
 
-      // After the paste
-      setTimeout(() => {
-        // Editor After Paste Handler
-        se.options.afterPaste && se.options.afterPaste(e);
-      }, 10);
-
-      se.overflow();
+      afterPaste();
     };
 
     body.onkeydown = e => {
@@ -2064,17 +2057,17 @@ export default class StrivenEditor {
    * Gets the content of the editor if there are attached files or provided content
    * @returns {String} Returns the HTML String of the editor's content
    */
-   getContent() {
+  getContent() {
     const se = this;
-    let html=se.body;
+    let html = se.body;
     const htmlView = !!se.editor.querySelector('.se-html');
-    if(htmlView){
-        let dv= document.createElement('div');
-        dv.innerHTML=se.body.textContent;
-        
-        html=dv;
+    if (htmlView) {
+      let dv = document.createElement('div');
+      dv.innerHTML = se.body.textContent;
+
+      html = dv;
     }
-     const body = se.pruneScripts(html);
+    const body = se.pruneScripts(html);
 
     // Remove contenteditable tags for body
     [...body.querySelectorAll('[contenteditable="true"]')]
@@ -3019,7 +3012,7 @@ export default class StrivenEditor {
 
     switch (command) {
       case 'html':
-          
+
         const saveoption = document.createElement('div');
         saveoption.classList.add('se-toolbar-option');
         saveoption.setAttribute('title', 'Design');
@@ -3046,15 +3039,15 @@ export default class StrivenEditor {
 
         // Format the HTML so that it looks somewhat pretty
         var options = {
-            indent_size: 2,
-            unformatted: []
+          indent_size: 2,
+          unformatted: []
         };
 
         let formatedHtml = beautify.html(se.body.innerHTML, options);
         // Set the content of the editor to the formatted html
         se.body.textContent = formatedHtml;
         se.overflow();
-        
+
         break;
       case 'fullscreen':
         const opt = se.toolbar.querySelector('#toolbar-fullscreen');
