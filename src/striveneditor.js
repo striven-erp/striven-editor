@@ -204,6 +204,9 @@ export default class StrivenEditor {
       if (e.key === 'Escape') {
         [...se.body.querySelectorAll('.se-link-options')]
           .forEach(o => o.remove());
+
+        [...se.body.querySelectorAll('.se-image-options')]
+          .forEach(o => o.remove());
       }
     });
 
@@ -1226,6 +1229,7 @@ export default class StrivenEditor {
       se.textBuffer = null;
 
       se.clearLinksToEdit();
+      se.clearImagesToEdit();
 
       bodyBlur && bodyBlur();
     };
@@ -1441,6 +1445,7 @@ export default class StrivenEditor {
     imageMenuFormLabel.classList.add('se-form-label');
     imageMenuFormLabel.textContent = 'Image URL';
 
+    // Set up image URL input field
     imageMenuFormSourceInput.classList.add('se-form-input');
     se.options.useBootstrap &&
       imageMenuFormSourceInput.classList.add('form-control');
@@ -1448,20 +1453,22 @@ export default class StrivenEditor {
     imageMenuFormSourceInput.type = 'text';
     imageMenuFormSourceInput.placeholder = 'Insert a Link';
 
+    // Set up the buttons for the image form
     imageMenuButtons.classList.add('se-popup-button-container');
-
+    // Set types
     imageMenuButton.type = 'button';
     imageMenuCloseButton.type = 'button';
 
+    // Insert button
     imageMenuButton.classList.add('se-popup-button', 'se-button-primary');
     imageMenuButton.textContent = 'Insert Image';
 
-    imageMenuCloseButton.classList.add(
-      'se-popup-button',
-      'se-button-secondary',
-    );
+    // Close Button
+    imageMenuCloseButton.classList.add('se-popup-button', 'se-button-secondary');
     imageMenuCloseButton.textContent = 'Close';
 
+    // Add the label and input fields to a div. This will get cloned for the input fields
+    // like width and height.
     imageMenuForm.appendChild(imageMenuFormLabel);
     imageMenuForm.appendChild(imageMenuFormSourceInput);
 
@@ -1471,7 +1478,7 @@ export default class StrivenEditor {
     const imageMenuHeightFormLabel = imageMenuHeightForm.querySelector('p');
 
     imageMenuHeightFormInput.placeholder = 'Image Height';
-    imageMenuHeightFormLabel.textContent = 'Height';
+    imageMenuHeightFormLabel.textContent = 'Height (px)';
 
     // Width Input Form
     const imageMenuWidthForm = imageMenuForm.cloneNode(true);
@@ -1479,40 +1486,89 @@ export default class StrivenEditor {
     const imageMenuWidthFormLabel = imageMenuWidthForm.querySelector('p');
 
     imageMenuWidthFormInput.placeholder = 'Image Width';
-    imageMenuWidthFormLabel.textContent = 'Width';
+    imageMenuWidthFormLabel.textContent = 'Width (px)';
 
+    // Set up alternate text input
+    const imageMenuAltTextForm = imageMenuForm.cloneNode(true);
+    const imageMenuAltTextInput = imageMenuAltTextForm.querySelector('input');
+    const imageMenuAltTextLabel = imageMenuAltTextForm.querySelector('p');
+
+    imageMenuAltTextInput.placeholder = 'Image Description';
+    imageMenuAltTextLabel.textContent = 'Alternate Text';
+
+    // Set up title text input
+    const imageMenuTitleForm = imageMenuForm.cloneNode(true);
+    const imageMenuTitleInput = imageMenuTitleForm.querySelector('input');
+    const imageMenuTitleLabel = imageMenuTitleForm.querySelector('p');
+
+    imageMenuTitleInput.placeholder = 'Tooltip Text';
+    imageMenuTitleLabel.textContent = 'Title';
+
+    // Register click handler
     imageMenuButton.onclick = e => {
       se.body.focus();
       se.setRange();
 
+      // Get the values of the input fields
       const linkValue = imageMenuFormSourceInput.value;
+      const altTextValue = imageMenuAltTextInput.value;
+      const titleValue = imageMenuTitleInput.value;
       const heightValue = imageMenuHeightFormInput.value;
       const widthValue = imageMenuWidthFormInput.value;
 
       if (linkValue) {
-        if (se.browser.isFirefox() || se.browser.isEdge()) {
-          document.execCommand('insertImage', false, linkValue);
-        } else {
-          document.execCommand('insertImage', true, linkValue);
+
+        // Check if we are inserting a new image or editing an existing one
+        let imageToEdit = se.body.querySelector(".se-image-to-edit");
+        if (!imageToEdit) {
+          // No editing image found, so this is an insert. Insert the image.
+          if (se.browser.isFirefox() || se.browser.isEdge()) {
+            document.execCommand('insertImage', false, linkValue);
+          } else {
+            document.execCommand('insertImage', true, linkValue);
+          }
+
+          // Get the image we just inserted by querying the img tags and looking for the one
+          // that matches the image url.
+          let insertedImages = [...se.body.querySelectorAll(`img`)].filter(img => img.src === linkValue);
+          // Get the last one that was added
+          imageToEdit = insertedImages[insertedImages.length - 1];
+
+        }
+        else{
+          // This is an image that we are editing, update the src attribute
+          imageToEdit.classList.remove('se-image-to-edit');
+          imageToEdit.setAttribute('src', `${linkValue}`);
         }
 
-        let insertedImage = [...se.body.querySelectorAll(`img`)].filter(
-          img => img.src === linkValue,
-        );
-        insertedImage = insertedImage[insertedImage.length - 1];
-        insertedImage &&
-          insertedImage.setAttribute('height', `${heightValue}px`);
-        insertedImage && insertedImage.setAttribute('width', `${widthValue}px`);
-
+        // Update / insert
+        if (imageToEdit){
+          // Add the attributes for the image
+          imageToEdit.setAttribute('height', `${heightValue}px`);
+          imageToEdit.setAttribute('width', `${widthValue}px`);
+          imageToEdit.setAttribute('alt', `${altTextValue}`);
+          imageToEdit.setAttribute('title', `${titleValue}`);
+        }
+        
+        // Clear the inputs
+        imageMenuFormSourceInput.value = '';
+        imageMenuAltTextInput.value = '';
+        imageMenuTitleInput.value = '';
         imageMenuHeightFormInput.value = '';
         imageMenuWidthFormInput.value = '';
-        imageMenuFormSourceInput.value = '';
+
+        // Clean up
         se.closeImageMenu();
+        se.makeImagesClickable();
+        se.clearImagesToEdit();
+
       } else {
         se.body.focus();
         se.closeImageMenu();
+
       }
     };
+
     imageMenuCloseButton.onclick = e => {
       se.body.focus();
       se.closeImageMenu();
@@ -1523,10 +1579,14 @@ export default class StrivenEditor {
 
     imageMenu.appendChild(imageMenuHeader);
 
-    imageMenu.appendChild(imageMenuHeightForm);
-    imageMenu.appendChild(imageMenuWidthForm);
+    // Add the fields to the image form
     imageMenu.appendChild(imageMenuForm);
-
+    imageMenu.appendChild(imageMenuAltTextForm);
+    imageMenu.appendChild(imageMenuTitleForm);
+    imageMenu.appendChild(imageMenuWidthForm);
+    imageMenu.appendChild(imageMenuHeightForm);
+    
+    // Add the buttons
     imageMenuButtons.appendChild(imageMenuButton);
     imageMenuButtons.appendChild(imageMenuCloseButton);
 
@@ -2404,6 +2464,19 @@ export default class StrivenEditor {
 
   }
 
+  clearImagesToEdit(force) {
+    const se = this;
+
+    if (force || (se.imageMenu && !se.imageMenu.classList.contains('se-popup-open'))) {
+      [...se.body.querySelectorAll('.se-link-options')]
+        .forEach(opt => opt.remove());
+
+      [...se.body.querySelectorAll('a.se-image-to-edit')]
+        .forEach(lnk => (lnk.outerHTML = lnk.textContent));
+    }
+
+  }
+
   /**
    * Closes the editor's link menu popup
    */
@@ -2464,6 +2537,7 @@ export default class StrivenEditor {
     if (evt.which === 27) {
       //clear unused links 
       se.clearLinksToEdit(true);
+      se.clearImagesToEdit(true);
 
       //close all open popups
       se.closeAllMenus();
@@ -2499,6 +2573,7 @@ export default class StrivenEditor {
     if (html) {
       se.body.innerHTML = html;
       se.makeLinksClickable();
+      se.makeImagesClickable();
     }
   }
 
@@ -2815,7 +2890,7 @@ export default class StrivenEditor {
     };
     return isEditor(activeEl);
   }
-
+  
   /*
   parses all links on the editor or links passed and makes them clickable and adds option to change/remove the link
   */
@@ -2836,78 +2911,158 @@ export default class StrivenEditor {
 
       link.onclick = e => {
 
-        if (e.ctrlKey) {
-          const anchor = document.createElement('a');
-          anchor.setAttribute('href', link.getAttribute('href'));
-          anchor.setAttribute('target', '_blank');
-          document.body.append(anchor);
-          anchor.click();
-          anchor.remove();
-        } else {
-          if (!link.querySelector('.se-link-options')) {
-            const linkOptions = document.createElement('span');
-            linkOptions.setAttribute('class', 'se-link-options');
-            linkOptions.setAttribute('contenteditable', false);
-            linkOptions.onclick = e => e.stopPropagation();
-            link.append(linkOptions);
+        if (!link.querySelector('.se-link-options')) {
+          const linkOptions = document.createElement('span');
+          linkOptions.setAttribute('class', 'se-link-options');
+          linkOptions.setAttribute('contenteditable', false);
+          linkOptions.onclick = e => e.stopPropagation();
+          link.append(linkOptions);
 
-            const removeOption = document.createElement('span');
-            removeOption.textContent = 'Remove';
-            removeOption.onclick = (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              linkOptions.remove();
+          const removeOption = document.createElement('span');
+          removeOption.textContent = 'Remove';
+          removeOption.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            linkOptions.remove();
 
-              const replNode = document.createElement('span');
-              replNode.textContent = link.textContent;
-              link.replaceWith(replNode);
-            }
-
-
-            const changeOption = document.createElement('span');
-            changeOption.textContent = 'Change';
-            changeOption.onclick = (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              linkOptions.remove();
-
-              link.classList.add('se-link-to-edit');
-              se.openLinkMenu();
-
-              const linkInputs = se.linkMenu.querySelectorAll('input');
-              linkInputs[0]['value'] = link.getAttribute('href');
-              linkInputs[1]['value'] = link.textContent;
-              linkInputs[2]['checked'] = (link.getAttribute('target') === '_blank');
-
-              setTimeout(() => linkInputs[0].select(), 100);
-            }
-
-            linkOptions.append(changeOption);
-            linkOptions.append(removeOption);
-
-            const optionHandler = () => {
-              try {
-                const r = se.getRange();
-                const rNode = r['commonAncestorContainer']['parentElement'];
-                if (rNode !== link) {
-                  linkOptions.remove();
-                  se.body.removeEventListener('click', optionHandler);
-                }
-              } catch (e) {
-                linkOptions.remove();
-                window.removeEventListener('click', optionHandler);
-              }
-            }
-
-            window.addEventListener('click', optionHandler);
-
+            const replNode = document.createElement('span');
+            replNode.textContent = link.textContent;
+            link.replaceWith(replNode);
           }
+
+
+          const changeOption = document.createElement('span');
+          changeOption.textContent = 'Change';
+          changeOption.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            linkOptions.remove();
+
+            link.classList.add('se-link-to-edit');
+            se.openLinkMenu();
+
+            const linkInputs = se.linkMenu.querySelectorAll('input');
+            linkInputs[0]['value'] = link.getAttribute('href');
+            linkInputs[1]['value'] = link.textContent;
+            linkInputs[2]['checked'] = (link.getAttribute('target') === '_blank');
+
+            setTimeout(() => linkInputs[0].select(), 100);
+          }
+
+          linkOptions.append(changeOption);
+          linkOptions.append(removeOption);
+
+          const optionHandler = () => {
+            try {
+              const r = se.getRange();
+              const rNode = r['commonAncestorContainer']['parentElement'];
+              if (rNode !== link) {
+                linkOptions.remove();
+                se.body.removeEventListener('click', optionHandler);
+              }
+            } catch (e) {
+              linkOptions.remove();
+              window.removeEventListener('click', optionHandler);
+            }
+          }
+
+          window.addEventListener('click', optionHandler);
+
         }
       };
 
       link.onmouseleave = () => (link.style.cursor = null);
 
       link.setAttribute('contenteditable', true);
+
+    });
+  }
+
+  /*
+  Parses all images on the editor and makes them clickable and adds option to change/remove the image
+  */
+  makeImagesClickable(images = []) {
+    const se = this;
+    if (!images.length) {
+      const linkElements = se.body.getElementsByTagName('img');
+      if (linkElements.length > 0) {
+        images = [...linkElements];
+      }
+    }
+
+    images.forEach(image => {
+
+      image.onclick = e => {
+        console.log(image)
+        if (!image.nextElementSibling || image.nextElementSibling.className !== "se-image-options" ) {
+          const linkOptions = document.createElement('span');
+          linkOptions.setAttribute('class', 'se-image-options');
+          linkOptions.setAttribute('contenteditable', false);
+          linkOptions.onclick = e => e.stopPropagation();
+          image.after(linkOptions);
+
+          const changeOption = document.createElement('span');
+          changeOption.textContent = 'Edit Image';
+          changeOption.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            linkOptions.remove();
+
+            image.classList.add('se-image-to-edit');
+            se.openImageMenu();
+
+            const linkInputs = se.imageMenu.querySelectorAll('input');
+            linkInputs[0].value = image.getAttribute('src');
+            linkInputs[1].value = image.getAttribute('alt');
+            linkInputs[2].value = image.getAttribute('title');
+            let imageWidth = parseFloat(image.getAttribute('width'));
+            if (isNaN(imageWidth)){
+              // Get width from image element
+              imageWidth = image.clientWidth;
+            }
+
+            let imageHeight = parseFloat(image.getAttribute('height'));
+            if (isNaN(imageHeight)){
+              // Get width from image element
+              imageHeight = image.clientHeight;
+            }
+
+            linkInputs[3].value = imageWidth;
+            linkInputs[4].value = imageHeight;
+
+            setTimeout(() => linkInputs[0].select(), 100);
+          }
+
+          linkOptions.append(changeOption);
+          
+          const optionHandler = (ev) => {
+            try {
+              if (ev.target !== image) {
+                linkOptions.remove();
+                se.body.removeEventListener('click', optionHandler);
+              }
+            } catch (e) {
+              linkOptions.remove();
+              window.removeEventListener('click', optionHandler);
+            }
+          }
+
+          window.addEventListener('click', optionHandler);
+
+          // When user presses a key, hide the menu
+          const keyPressHandler = () => {
+            if (linkOptions){
+              linkOptions.remove();
+            }
+            se.body.removeEventListener('keypress', keyPressHandler);
+          };
+          se.body.addEventListener('keypress', keyPressHandler);
+
+        }
+        
+      };
+
+      //image.setAttribute('contenteditable', true);
 
     });
   }
