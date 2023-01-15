@@ -1013,6 +1013,7 @@ export default class StrivenEditor {
             se.overflow();
           }, 0)
         }).finally(()=>{
+          se.makeImagesClickable();
           afterPaste();
         });
         return true;
@@ -1521,6 +1522,7 @@ export default class StrivenEditor {
         // Check if we are inserting a new image or editing an existing one
         let imageToEdit = se.body.querySelector(".se-image-to-edit");
         if (!imageToEdit) {
+          
           // No editing image found, so this is an insert. Insert the image.
           if (se.browser.isFirefox() || se.browser.isEdge()) {
             document.execCommand('insertImage', false, linkValue);
