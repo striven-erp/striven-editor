@@ -1127,35 +1127,35 @@ export default class StrivenEditor {
       se.toolbarState();
     };
 
-    addEventListener('keyup', (e) => {
-      const tab = (e.key === 'Tab' || e.keyCode === 9);
-      if (tab && document.activeElement === se.body) {
-        if (se.body.textContent.trim() === '') {
-          const r = se.getRange();
+    // addEventListener('keyup', (e) => {
+    //   const tab = (e.key === 'Tab' || e.keyCode === 9);
+    //   if (tab && document.activeElement === se.body) {
+    //     if (se.body.textContent.trim() === '') {
+    //       const r = se.getRange();
 
-          if (r) {
-            const selNode = document.createElement('span');
-            selNode.innerHTML = '&nbsp;';
-            se.body.append(selNode);
+    //       if (r) {
+    //         const selNode = document.createElement('span');
+    //         selNode.innerHTML = '&nbsp;';
+    //         se.body.append(selNode);
 
-            r.selectNode(selNode);
-            r.collapse();
-          }
+    //         r.selectNode(selNode);
+    //         r.collapse();
+    //       }
 
-        } else {
-          const r = se.getRange();
+    //     } else {
+    //       const r = se.getRange();
 
-          if (r) {
-            r.selectNodeContents(se.body);
-            r.collapse();
-          }
-        }
-      }
+    //       if (r) {
+    //         r.selectNodeContents(se.body);
+    //         r.collapse();
+    //       }
+    //     }
+    //   }
 
-      if (tab && document.activeElement !== se.body && se.body.textContent.trim() === '') {
-        se.clearContent();
-      }
-    });
+    //   if (tab && document.activeElement !== se.body && se.body.textContent.trim() === '') {
+    //     se.clearContent();
+    //   }
+    // });
 
     const bodyFocus = body.onfocus;
     body.onfocus = e => {
@@ -1505,6 +1505,16 @@ export default class StrivenEditor {
     imageMenuTitleInput.placeholder = 'Tooltip Text';
     imageMenuTitleLabel.textContent = 'Title';
 
+    const clearImageMenuInputs = function(){
+      // Clear the inputs
+      imageMenuFormSourceInput.value = '';
+      imageMenuAltTextInput.value = '';
+      imageMenuTitleInput.value = '';
+      imageMenuHeightFormInput.value = '';
+      imageMenuWidthFormInput.value = '';
+
+    };
+
     // Register click handler
     imageMenuButton.onclick = e => {
       se.body.focus();
@@ -1553,16 +1563,11 @@ export default class StrivenEditor {
         }
         
         // Clear the inputs
-        imageMenuFormSourceInput.value = '';
-        imageMenuAltTextInput.value = '';
-        imageMenuTitleInput.value = '';
-        imageMenuHeightFormInput.value = '';
-        imageMenuWidthFormInput.value = '';
+        clearImageMenuInputs();
 
         // Clean up
         se.closeImageMenu();
         se.makeImagesClickable();
-        se.clearImagesToEdit();
 
       } else {
         se.body.focus();
@@ -1574,6 +1579,7 @@ export default class StrivenEditor {
     imageMenuCloseButton.onclick = e => {
       se.body.focus();
       se.closeImageMenu();
+      clearImageMenuInputs();
     };
 
     imageMenuHeader.classList.add('se-popup-header');
@@ -2408,6 +2414,13 @@ export default class StrivenEditor {
       se.toolbar.querySelector('#toolbar-image'),
       se.imageMenu,
     );
+
+    // Clear the input fields
+    const imageInputs = se.imageMenu.querySelectorAll('input');
+    for (const imageInput of imageInputs){
+      imageInput.value = '';
+    }
+
     se.imageMenu.classList.add('se-popup-open');
 
     se.imageMenu.dataset.active = 'true';
@@ -2460,21 +2473,33 @@ export default class StrivenEditor {
       [...se.body.querySelectorAll('.se-link-options')]
         .forEach(opt => opt.remove());
 
-      [...se.body.querySelectorAll('a.se-link-to-edit[href="#"]')]
-        .forEach(lnk => (lnk.outerHTML = lnk.textContent));
+      for (const lnk of se.body.querySelectorAll('a.se-link-to-edit[href="#"]')){
+        lnk.outerHTML = lnk.textContent;
+      }
+
+      for (const lnk of se.body.querySelectorAll('.se-link-to-edit')){
+        lnk.classList.remove("se-link-to-edit");
+      }
     }
 
   }
 
   clearImagesToEdit(force) {
     const se = this;
-
+    
     if (force || (se.imageMenu && !se.imageMenu.classList.contains('se-popup-open'))) {
-      [...se.body.querySelectorAll('.se-link-options')]
-        .forEach(opt => opt.remove());
+      
+      // Find any lingering edit menus
+      const imageEditMenus = se.body.querySelectorAll('.se-image-options');
+      for (const menu of imageEditMenus){
+        menu.remove();
+      }        
 
-      [...se.body.querySelectorAll('a.se-image-to-edit')]
-        .forEach(lnk => (lnk.outerHTML = lnk.textContent));
+      // Clear the edit class from the images
+      const imagesToEdit = se.body.querySelectorAll('.se-image-to-edit');
+      for (const img of imagesToEdit){
+        img.classList.remove("se-image-to-edit");
+      }
     }
 
   }
@@ -2489,6 +2514,7 @@ export default class StrivenEditor {
     se.linkMenu.classList.remove('se-popup-open');
     se.linkMenu.dataset.active = 'false';
     se.removePopupEscapeHandler();
+    se.clearLinksToEdit();
   }
 
   /**
@@ -2501,6 +2527,7 @@ export default class StrivenEditor {
     se.imageMenu.classList.remove('se-popup-open');
     se.imageMenu.dataset.active = 'false';
     se.removePopupEscapeHandler();
+    se.clearImagesToEdit();
   }
 
   closeTableMenu() {
@@ -2995,20 +3022,20 @@ export default class StrivenEditor {
     images.forEach(image => {
 
       image.onclick = e => {
-        console.log(image)
+        
         if (!image.nextElementSibling || image.nextElementSibling.className !== "se-image-options" ) {
-          const linkOptions = document.createElement('span');
-          linkOptions.setAttribute('class', 'se-image-options');
-          linkOptions.setAttribute('contenteditable', false);
-          linkOptions.onclick = e => e.stopPropagation();
-          image.after(linkOptions);
+          const editImageMenu = document.createElement('span');
+          editImageMenu.setAttribute('class', 'se-image-options');
+          editImageMenu.setAttribute('contenteditable', false);
+          editImageMenu.onclick = e => e.stopPropagation();
+          image.after(editImageMenu);
 
           const changeOption = document.createElement('span');
           changeOption.textContent = 'Edit Image';
           changeOption.onclick = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            linkOptions.remove();
+            editImageMenu.remove();
 
             image.classList.add('se-image-to-edit');
             se.openImageMenu();
@@ -3035,26 +3062,23 @@ export default class StrivenEditor {
             setTimeout(() => linkInputs[0].select(), 100);
           }
 
-          linkOptions.append(changeOption);
+          editImageMenu.append(changeOption);
           
+          // When user clicks anywhere but the image, remove the menu
           const optionHandler = (ev) => {
-            try {
-              if (ev.target !== image) {
-                linkOptions.remove();
-                se.body.removeEventListener('click', optionHandler);
-              }
-            } catch (e) {
-              linkOptions.remove();
+            
+            if (ev.target !== image) {
+              editImageMenu.remove();
               window.removeEventListener('click', optionHandler);
             }
           }
 
           window.addEventListener('click', optionHandler);
 
-          // When user presses a key, hide the menu
+          // When user presses a key, remove the menu
           const keyPressHandler = () => {
-            if (linkOptions){
-              linkOptions.remove();
+            if (editImageMenu){
+              editImageMenu.remove();
             }
             se.body.removeEventListener('keypress', keyPressHandler);
           };
