@@ -1337,9 +1337,8 @@ export default class StrivenEditor {
         }
 
         // trigger input event
-        if (se.body.oninput) {
-          se.body.oninput();
-        }
+        let inpEvent = new Event('input',{cancelable:true, bubbles:true});
+        se.body.dispatchEvent(inpEvent);
 
         se.closeLinkMenu();
       } else {
@@ -3141,12 +3140,10 @@ export default class StrivenEditor {
     }
     this.makeLinksClickable(links);
 
-    // Trigger oninput event
-    if (se.body.oninput) {
-      se.body.oninput();
-    }
-    // setTimeout(() => {
-    // }, 10);
+    // Trigger input event
+    let inpEvent = new Event('input',{cancelable:true, bubbles:true});
+    se.body.dispatchEvent(inpEvent);
+
   }
 
   /*
