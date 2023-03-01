@@ -1969,9 +1969,6 @@ export default class StrivenEditor {
           }
 
           if (menu) {
-            // menu.style.padding = '0 10px';
-            menu.style.cursor = 'pointer';
-            menu.style.userSelect = 'none';
 
             menu.style.display = isResponsive ? 'flex' : 'none';
             menu.onclick = e => {
