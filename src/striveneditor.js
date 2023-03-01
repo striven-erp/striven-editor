@@ -426,6 +426,7 @@ export default class StrivenEditor {
 
       toolbarMenu.classList.add('se-toolbar-menu');
       toolbarMenu.id = `menu-${group}`;
+      toolbarMenu.setAttribute("data-name", group);
 
       // toolbarMenuIcon.classList.add(se.options.fontPack);
       // toolbarMenuIcon.classList.add(se.optionGroups[group].menu);
@@ -465,6 +466,7 @@ export default class StrivenEditor {
           optionSpan.classList.add('se-toolbar-option');
           optionSpan.id = `toolbar-${option}`;
           optionSpan.title = denormalizeCamel(option);
+          optionSpan.setAttribute("data-group-name", group);
 
           switch (option) {
             case 'removeFormat':
@@ -1967,9 +1969,6 @@ export default class StrivenEditor {
           }
 
           if (menu) {
-            // menu.style.padding = '0 10px';
-            menu.style.cursor = 'pointer';
-            menu.style.userSelect = 'none';
 
             menu.style.display = isResponsive ? 'flex' : 'none';
             menu.onclick = e => {
@@ -2352,9 +2351,26 @@ export default class StrivenEditor {
    */
   setMenuOffset(button, menu) {
     const se = this;
+    // Get the rect of the button to position the pop up. Sometimes, this may not be available
+    // yet, so we will need to open the menu to let the browser calculate bounds.
+    let buttonRect = button.getClientRects()[0];
+
+    // Find the group that has the same group name as the button
+    if (!buttonRect){
+      const toolbarMenu = se.toolbarMenus?.find((menu) => menu.getAttribute("data-name") === button.getAttribute("data-group-name"));
+      if (toolbarMenu){
+        // Trigger the toolbar menu because if we don't, and the mode is responsive, then the button is technically not there
+        // yet and the below code will fail because the button dimensions can't be retrieved.
+        toolbarMenu.onclick();
+        // Close the menu immediately so it isn't visible. This should be enough for the browser
+        // to calculate the rects
+        se.closeAllMenus();
+      }
+    }
 
     const editorRect = se.editor.getClientRects()[0];
-    const buttonRect = button.getClientRects()[0];
+    // Get the rect of the button. Hopefully, the browser has already calculated this when we forced the menu open.
+    buttonRect = button.getClientRects()[0];
     const buttonOffset = buttonRect.left - editorRect.left;
     const menuRight = buttonOffset + menu.clientWidth;
 
@@ -2365,7 +2381,8 @@ export default class StrivenEditor {
       offset = buttonOffset;
     }
 
-    menu.style.left = `${offset}px`;
+    menu.style.left = `${offset}px`;  
+    
   }
 
   /**
@@ -2373,7 +2390,7 @@ export default class StrivenEditor {
    */
   openLinkMenu() {
     const se = this;
-
+    
     se.closeAllMenus();
 
     se.setMenuOffset(
