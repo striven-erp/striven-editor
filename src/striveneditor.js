@@ -2955,8 +2955,15 @@ export default class StrivenEditor {
       };
 
       link.onclick = e => {
-
-        if (!link.querySelector('.se-link-options')) {
+        if(e.ctrlKey || e.metaKey){
+          const anchor = document.createElement('a');
+          anchor.setAttribute('href', link.getAttribute('href'));
+          anchor.setAttribute('target', '_blank');
+          document.body.append(anchor);
+          anchor.click();
+          anchor.remove();
+        }
+        else if (!link.querySelector('.se-link-options')) {
           const linkOptions = document.createElement('span');
           linkOptions.setAttribute('class', 'se-link-options');
           linkOptions.setAttribute('contenteditable', false);
