@@ -2139,6 +2139,9 @@ export default class StrivenEditor {
     [...body.querySelectorAll('[contenteditable="true"]')]
       .forEach(ce => ce.removeAttribute('contenteditable'));
 
+    //remove any link and image options
+    [...body.querySelectorAll('.se-link-options')].forEach(lOpt=>lOpt.remove());
+    [...body.querySelectorAll('.se-image-options')].forEach(iOpt=>iOpt.remove());
 
     if (body.textContent || se.body.getElementsByTagName('img').length) {
       // const htmlView = !!se.editor.querySelector('.se-html');
