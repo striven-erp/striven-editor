@@ -132,6 +132,7 @@ export default class StrivenEditor {
           'insertUnorderedList',
           'attachment',
           'link',
+          'image',
           ...customs,
         ];
 
