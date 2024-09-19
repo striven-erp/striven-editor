@@ -132,6 +132,7 @@ export default class StrivenEditor {
           'insertUnorderedList',
           'attachment',
           'link',
+          'image',
           ...customs,
         ];
 
@@ -1014,7 +1015,7 @@ export default class StrivenEditor {
           setTimeout(function () {
             se.overflow();
           }, 0)
-        }).finally(()=>{
+        }).finally(() => {
           se.makeImagesClickable();
           afterPaste();
         });
@@ -1337,7 +1338,7 @@ export default class StrivenEditor {
         }
 
         // trigger input event
-        let inpEvent = new Event('input',{cancelable:true, bubbles:true});
+        let inpEvent = new Event('input', { cancelable: true, bubbles: true });
         se.body.dispatchEvent(inpEvent);
 
         se.closeLinkMenu();
@@ -1506,7 +1507,7 @@ export default class StrivenEditor {
     imageMenuTitleInput.placeholder = 'Tooltip Text';
     imageMenuTitleLabel.textContent = 'Title';
 
-    const clearImageMenuInputs = function(){
+    const clearImageMenuInputs = function () {
       // Clear the inputs
       imageMenuFormSourceInput.value = '';
       imageMenuAltTextInput.value = '';
@@ -1533,7 +1534,7 @@ export default class StrivenEditor {
         // Check if we are inserting a new image or editing an existing one
         let imageToEdit = se.body.querySelector(".se-image-to-edit");
         if (!imageToEdit) {
-          
+
           // No editing image found, so this is an insert. Insert the image.
           if (se.browser.isFirefox() || se.browser.isEdge()) {
             document.execCommand('insertImage', false, linkValue);
@@ -1548,21 +1549,21 @@ export default class StrivenEditor {
           imageToEdit = insertedImages[insertedImages.length - 1];
 
         }
-        else{
+        else {
           // This is an image that we are editing, update the src attribute
           imageToEdit.classList.remove('se-image-to-edit');
           imageToEdit.setAttribute('src', `${linkValue}`);
         }
 
         // Update / insert
-        if (imageToEdit){
+        if (imageToEdit) {
           // Add the attributes for the image
           imageToEdit.setAttribute('height', `${heightValue}px`);
           imageToEdit.setAttribute('width', `${widthValue}px`);
           imageToEdit.setAttribute('alt', `${altTextValue}`);
           imageToEdit.setAttribute('title', `${titleValue}`);
         }
-        
+
         // Clear the inputs
         clearImageMenuInputs();
 
@@ -1594,7 +1595,7 @@ export default class StrivenEditor {
     imageMenu.appendChild(imageMenuTitleForm);
     imageMenu.appendChild(imageMenuWidthForm);
     imageMenu.appendChild(imageMenuHeightForm);
-    
+
     // Add the buttons
     imageMenuButtons.appendChild(imageMenuButton);
     imageMenuButtons.appendChild(imageMenuCloseButton);
@@ -2054,7 +2055,6 @@ export default class StrivenEditor {
       se.toolbarMenus.forEach(menu => menu && (menu.style.display = 'none'));
 
       hideOption('strikethrough');
-      hideOption('image');
       hideOption('insertOrderedList');
       hideOption('textAlign');
       hideOption('removeFormat');
@@ -2140,8 +2140,8 @@ export default class StrivenEditor {
       .forEach(ce => ce.removeAttribute('contenteditable'));
 
     //remove any link and image options
-    [...body.querySelectorAll('.se-link-options')].forEach(lOpt=>lOpt.remove());
-    [...body.querySelectorAll('.se-image-options')].forEach(iOpt=>iOpt.remove());
+    [...body.querySelectorAll('.se-link-options')].forEach(lOpt => lOpt.remove());
+    [...body.querySelectorAll('.se-image-options')].forEach(iOpt => iOpt.remove());
 
     if (body.textContent || se.body.getElementsByTagName('img').length) {
       // const htmlView = !!se.editor.querySelector('.se-html');
@@ -2359,9 +2359,9 @@ export default class StrivenEditor {
     let buttonRect = button.getClientRects()[0];
 
     // Find the group that has the same group name as the button
-    if (!buttonRect){
+    if (!buttonRect) {
       const toolbarMenu = se.toolbarMenus?.find((menu) => menu.getAttribute("data-name") === button.getAttribute("data-group-name"));
-      if (toolbarMenu){
+      if (toolbarMenu) {
         // Trigger the toolbar menu because if we don't, and the mode is responsive, then the button is technically not there
         // yet and the below code will fail because the button dimensions can't be retrieved.
         toolbarMenu.onclick();
@@ -2384,8 +2384,8 @@ export default class StrivenEditor {
       offset = buttonOffset;
     }
 
-    menu.style.left = `${offset}px`;  
-    
+    menu.style.left = `${offset}px`;
+
   }
 
   /**
@@ -2393,7 +2393,7 @@ export default class StrivenEditor {
    */
   openLinkMenu() {
     const se = this;
-    
+
     se.closeAllMenus();
 
     se.setMenuOffset(
@@ -2404,6 +2404,8 @@ export default class StrivenEditor {
 
     se.linkMenu.dataset.active = 'true';
     se.addPopupEscapeHandler();
+
+    se.linkMenu.scrollIntoView();
 
     const submitEvt = e => {
       if (e.key === 'Enter') {
@@ -2436,7 +2438,7 @@ export default class StrivenEditor {
 
     // Clear the input fields
     const imageInputs = se.imageMenu.querySelectorAll('input');
-    for (const imageInput of imageInputs){
+    for (const imageInput of imageInputs) {
       imageInput.value = '';
     }
 
@@ -2444,6 +2446,8 @@ export default class StrivenEditor {
 
     se.imageMenu.dataset.active = 'true';
     se.addPopupEscapeHandler();
+
+    se.imageMenu.scrollIntoView();
 
     const submitEvt = e => {
       if (e.key === 'Enter') {
@@ -2492,11 +2496,11 @@ export default class StrivenEditor {
       [...se.body.querySelectorAll('.se-link-options')]
         .forEach(opt => opt.remove());
 
-      for (const lnk of se.body.querySelectorAll('a.se-link-to-edit[href="#"]')){
+      for (const lnk of se.body.querySelectorAll('a.se-link-to-edit[href="#"]')) {
         lnk.outerHTML = lnk.textContent;
       }
 
-      for (const lnk of se.body.querySelectorAll('.se-link-to-edit')){
+      for (const lnk of se.body.querySelectorAll('.se-link-to-edit')) {
         lnk.classList.remove("se-link-to-edit");
       }
     }
@@ -2505,18 +2509,18 @@ export default class StrivenEditor {
 
   clearImagesToEdit(force) {
     const se = this;
-    
+
     if (force || (se.imageMenu && !se.imageMenu.classList.contains('se-popup-open'))) {
-      
+
       // Find any lingering edit menus
       const imageEditMenus = se.body.querySelectorAll('.se-image-options');
-      for (const menu of imageEditMenus){
+      for (const menu of imageEditMenus) {
         menu.remove();
-      }        
+      }
 
       // Clear the edit class from the images
       const imagesToEdit = se.body.querySelectorAll('.se-image-to-edit');
-      for (const img of imagesToEdit){
+      for (const img of imagesToEdit) {
         img.classList.remove("se-image-to-edit");
       }
     }
@@ -2938,7 +2942,7 @@ export default class StrivenEditor {
     };
     return isEditor(activeEl);
   }
-  
+
   /*
   parses all links on the editor or links passed and makes them clickable and adds option to change/remove the link
   */
@@ -2958,7 +2962,7 @@ export default class StrivenEditor {
       };
 
       link.onclick = e => {
-        if(e.ctrlKey || e.metaKey){
+        if (e.ctrlKey || e.metaKey) {
           const anchor = document.createElement('a');
           anchor.setAttribute('href', link.getAttribute('href'));
           anchor.setAttribute('target', '_blank');
@@ -3048,8 +3052,8 @@ export default class StrivenEditor {
     images.forEach(image => {
 
       image.onclick = e => {
-        
-        if (!image.nextElementSibling || image.nextElementSibling.className !== "se-image-options" ) {
+
+        if (!image.nextElementSibling || image.nextElementSibling.className !== "se-image-options") {
           const editImageMenu = document.createElement('span');
           editImageMenu.setAttribute('class', 'se-image-options');
           editImageMenu.setAttribute('contenteditable', false);
@@ -3071,13 +3075,13 @@ export default class StrivenEditor {
             linkInputs[1].value = image.getAttribute('alt');
             linkInputs[2].value = image.getAttribute('title');
             let imageWidth = parseFloat(image.getAttribute('width'));
-            if (isNaN(imageWidth)){
+            if (isNaN(imageWidth)) {
               // Get width from image element
               imageWidth = image.clientWidth;
             }
 
             let imageHeight = parseFloat(image.getAttribute('height'));
-            if (isNaN(imageHeight)){
+            if (isNaN(imageHeight)) {
               // Get width from image element
               imageHeight = image.clientHeight;
             }
@@ -3089,10 +3093,10 @@ export default class StrivenEditor {
           }
 
           editImageMenu.append(changeOption);
-          
+
           // When user clicks anywhere but the image, remove the menu
           const optionHandler = (ev) => {
-            
+
             if (ev.target !== image) {
               editImageMenu.remove();
               window.removeEventListener('click', optionHandler);
@@ -3103,7 +3107,7 @@ export default class StrivenEditor {
 
           // When user presses a key, remove the menu
           const keyPressHandler = () => {
-            if (editImageMenu){
+            if (editImageMenu) {
               editImageMenu.remove();
             }
             se.body.removeEventListener('keypress', keyPressHandler);
@@ -3111,7 +3115,7 @@ export default class StrivenEditor {
           se.body.addEventListener('keypress', keyPressHandler);
 
         }
-        
+
       };
 
       //image.setAttribute('contenteditable', true);
@@ -3148,7 +3152,7 @@ export default class StrivenEditor {
     this.makeLinksClickable(links);
 
     // Trigger input event
-    let inpEvent = new Event('input',{cancelable:true, bubbles:true});
+    let inpEvent = new Event('input', { cancelable: true, bubbles: true });
     se.body.dispatchEvent(inpEvent);
 
   }
