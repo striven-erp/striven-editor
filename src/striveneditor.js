@@ -2405,7 +2405,7 @@ export default class StrivenEditor {
     se.linkMenu.dataset.active = 'true';
     se.addPopupEscapeHandler();
 
-    se.linkMenu.scrollIntoView();
+    se.linkMenu.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 
     const submitEvt = e => {
       if (e.key === 'Enter') {
@@ -2446,8 +2446,7 @@ export default class StrivenEditor {
 
     se.imageMenu.dataset.active = 'true';
     se.addPopupEscapeHandler();
-
-    se.imageMenu.scrollIntoView();
+    se.imageMenu.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 
     const submitEvt = e => {
       if (e.key === 'Enter') {
