@@ -2405,7 +2405,7 @@ export default class StrivenEditor {
     se.linkMenu.dataset.active = 'true';
     se.addPopupEscapeHandler();
 
-    se.linkMenu.scrollIntoView();
+    se.linkMenu.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 
     const submitEvt = e => {
       if (e.key === 'Enter') {
@@ -2446,8 +2446,7 @@ export default class StrivenEditor {
 
     se.imageMenu.dataset.active = 'true';
     se.addPopupEscapeHandler();
-
-    se.imageMenu.scrollIntoView();
+    se.imageMenu.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 
     const submitEvt = e => {
       if (e.key === 'Enter') {
@@ -2522,6 +2521,11 @@ export default class StrivenEditor {
       const imagesToEdit = se.body.querySelectorAll('.se-image-to-edit');
       for (const img of imagesToEdit) {
         img.classList.remove("se-image-to-edit");
+        let wrapper= img.parentElement;
+        if(wrapper.classList.contains('se-image-wrapper')){
+          wrapper.parentElement.insertBefore(img, wrapper);
+          wrapper.remove();
+        }
       }
     }
 
@@ -3054,6 +3058,14 @@ export default class StrivenEditor {
       image.onclick = e => {
 
         if (!image.nextElementSibling || image.nextElementSibling.className !== "se-image-options") {
+          let imageWrapper = image.parentElement
+          if(!imageWrapper.classList.contains('se-image-wrapper')){
+            imageWrapper = document.createElement('div');
+            imageWrapper.classList.add('se-image-wrapper');
+            imageWrapper.setAttribute('contenteditable', false);
+            image.parentElement.insertBefore(imageWrapper,image);
+            imageWrapper.appendChild(image);
+          }
           const editImageMenu = document.createElement('span');
           editImageMenu.setAttribute('class', 'se-image-options');
           editImageMenu.setAttribute('contenteditable', false);

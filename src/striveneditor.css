@@ -56,6 +56,15 @@
   font-style: normal;
   font-weight: normal;
 }
+.striven-editor .se-body .se-image-wrapper{
+  position:relative;
+  display: inline-block;
+}
+.striven-editor .se-body .se-image-options {
+  left:0;
+  bottom:0px;
+}
+
 
 .striven-editor .se-body .se-link-options span,
 .striven-editor .se-body .se-image-options span {
