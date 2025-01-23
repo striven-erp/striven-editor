@@ -2143,8 +2143,7 @@ export default class StrivenEditor {
     [...body.querySelectorAll('.se-link-options')].forEach(lOpt => lOpt.remove());
     [...body.querySelectorAll('.se-image-options')].forEach(iOpt => iOpt.remove());
 
-    if (body.textContent || se.body.getElementsByTagName('img').length) {
-      // const htmlView = !!se.editor.querySelector('.se-html');
+    if (body.textContent || se.body.getElementsByTagName('img').length || se.body.getElementsByTagName('iframe').length) {
       return body.innerHTML;
     } else {
       return null;
@@ -2521,8 +2520,8 @@ export default class StrivenEditor {
       const imagesToEdit = se.body.querySelectorAll('.se-image-to-edit');
       for (const img of imagesToEdit) {
         img.classList.remove("se-image-to-edit");
-        let wrapper= img.parentElement;
-        if(wrapper.classList.contains('se-image-wrapper')){
+        let wrapper = img.parentElement;
+        if (wrapper.classList.contains('se-image-wrapper')) {
           wrapper.parentElement.insertBefore(img, wrapper);
           wrapper.remove();
         }
@@ -3059,11 +3058,11 @@ export default class StrivenEditor {
 
         if (!image.nextElementSibling || image.nextElementSibling.className !== "se-image-options") {
           let imageWrapper = image.parentElement
-          if(!imageWrapper.classList.contains('se-image-wrapper')){
+          if (!imageWrapper.classList.contains('se-image-wrapper')) {
             imageWrapper = document.createElement('div');
             imageWrapper.classList.add('se-image-wrapper');
             imageWrapper.setAttribute('contenteditable', false);
-            image.parentElement.insertBefore(imageWrapper,image);
+            image.parentElement.insertBefore(imageWrapper, image);
             imageWrapper.appendChild(image);
           }
           const editImageMenu = document.createElement('span');
@@ -3141,19 +3140,21 @@ export default class StrivenEditor {
   */
   createLinks(el) {
     const se = this;
-    linkify(el || se.body,
-      {
-        target: {
-          url: '_blank'
-        },
-        className: 'linkified',
-        validate: {
-          email: function (value) {
-            return false;
+    const htmlView = !!se.editor.querySelector('.se-html');
+    if (!htmlView) {
+      linkify(el || se.body,
+        {
+          target: {
+            url: '_blank'
+          },
+          className: 'linkified',
+          validate: {
+            email: function (value) {
+              return false;
+            }
           }
-        }
-      }, document);
-
+        }, document);
+    }
     var links = [];
     if (el) {
       const linkElements = el.getElementsByTagName('a');
