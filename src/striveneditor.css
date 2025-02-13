@@ -10,208 +10,224 @@
 /** Editor **/
 
 .striven-editor {
-  border: 1px solid #ddd;
-  background-color: #fff;
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  font-family: 'Segoe UI', Arial;
-  max-width: 100%;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    font-family: 'Segoe UI', Arial;
+    max-width: 100%;
 }
 
 .striven-editor .se-body {
-  position: relative;
-  outline: none;
-  padding: 10px 20px;
-  min-height: auto;
-  max-height: auto;
-  height: auto;
-  word-break: break-word;
+    position: relative;
+    outline: none;
+    padding: 10px 20px;
+    min-height: auto;
+    max-height: auto;
+    height: auto;
+    word-break: break-word;
 }
 
 .striven-editor .se-body:empty::after {
-  content: attr(data-placeholder);
-  color: #777;
+    content: attr(data-placeholder);
+    color: #777;
 }
 
 .striven-editor .se-body table {
-  width: max-content;
+    width: max-content;
 }
 
 .striven-editor .se-body a {
-  position: relative;
+    position: relative;
 }
 
 .striven-editor .se-body .se-link-options,
 .striven-editor .se-body .se-image-options {
-  position: absolute;
-  /*left: 0;*/
-  /*top: 100%;*/
-  padding: 7px; 
-  background-color: #fff;
-  min-width: max-content;
-  border: 1px solid #ddd;
-  box-shadow: 5px 5px 5px #ddd;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: normal;
+    position: absolute;
+    /*left: 0;*/
+    /*top: 100%;*/
+    padding: 7px;
+    background-color: #fff;
+    min-width: max-content;
+    border: 1px solid #ddd;
+    box-shadow: 5px 5px 5px #000;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: normal;
 }
-.striven-editor .se-body .se-image-wrapper{
-  position:relative;
-  display: inline-block;
+.striven-editor .se-body .se-image-wrapper {
+    position: relative;
+    display: inline-block;
 }
 .striven-editor .se-body .se-image-options {
-  left:0;
-  bottom:0px;
+    left: 0;
+    bottom: 0px;
 }
-
 
 .striven-editor .se-body .se-link-options span,
 .striven-editor .se-body .se-image-options span {
-  cursor: pointer;
-  color: #428bca;
-  text-decoration: underline;
+    cursor: pointer;
+    color: #428bca;
+    text-decoration: underline;
 }
 
 .striven-editor .se-body .se-link-options span:first-child:after {
-  content: '|';
-  margin: 0 5px;
-  color: #000;
+    content: '|';
+    margin: 0 5px;
+    color: #000;
 }
 
-.striven-editor .se-body .se-file-drop-dropzone {
-  height: 90%;
-  width: 95%;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  margin: auto;
-  position: absolute;
-  border: 5px dashed #ddd;
-  background-color: rgba(0, 0, 0, 0.025);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.striven-editor .se-file-drop-dropzone {
+    border: 5px dashed #ddd;
+    background-color: rgba(0, 0, 0, 0.025);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.striven-editor .se-body .se-file-drop-dropzone p {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #777;
-  user-select: none;
-  text-align: center;
-  font-size: 25px;
+.striven-editor .se-file-drop-dropzone.dropzone-hot {
+    border: 5px dashed #428bca;
+}
+
+.striven-editor .se-file-drop-dropzone.dropzone-overlay {
+    height: 90%;
+    width: 95%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    margin: auto;
+    position: absolute;
+}
+
+.striven-editor .se-file-drop-dropzone p {
+    padding: 5px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #777;
+    user-select: none;
+    text-align: center;
+    font-size: 25px;
+}
+
+.striven-editor .se-popup .se-file-drop-dropzone p {
+    font-size: 16px;
+}
+
+.striven-editor .se-file-drop-dropzone svg > path {
+    fill: #777 !important;
 }
 
 /** Toolbar **/
 
 .striven-editor .se-toolbar {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  min-height: 40px;
-  transition: height 200ms;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    min-height: 40px;
+    transition: height 200ms;
 }
 
 .striven-editor .se-toolbar .se-divider-section {
-  height: 100%;
-  width: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    height: 100%;
+    width: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .striven-editor .se-toolbar .se-divider-section .se-divider-bar {
-  height: 50%;
-  width: 1px;
-  background-color: #ddd;
+    height: 50%;
+    width: 1px;
+    background-color: #ddd;
 }
 
 @media (max-width: 1000px) {
-  .striven-editor .se-toolbar .se-divider-section {
-    display: none;
-  }
+    .striven-editor .se-toolbar .se-divider-section {
+        display: none;
+    }
 }
 
 .striven-editor .se-html .se-toolbar-group {
-  display: none !important;
+    display: none !important;
 }
 
 .striven-editor .se-html .se-toolbar-selection {
-  display: none !important;
+    display: none !important;
 }
 
 .striven-editor .se-html .se-divider-section {
-  display: none !important;
+    display: none !important;
 }
 
 .striven-editor .se-html .se-toolbar-menu {
-  display: none !important;
+    display: none !important;
 }
 
 .striven-editor .se-toolbar-close {
-  height: 0px;
+    height: 0px;
 }
 
 .striven-editor .se-toolbar.se-toolbar-top {
-  align-items: flex-start;
+    align-items: flex-start;
 }
 
 .striven-editor .se-toolbar.se-toolbar-bottom {
-  align-items: flex-end;
+    align-items: flex-end;
 }
 
 .striven-editor .se-toolbar-options {
-  display: flex;
-  margin-right: 10px;
+    display: flex;
+    margin-right: 10px;
 }
 
 .striven-editor .se-toolbar-option {
-  border: 1px solid transparent;
-  display: inline-block;
-  padding: 4px 7px;
-  cursor: pointer;
-  user-select: none;
-  line-height: 2em;
+    border: 1px solid transparent;
+    display: inline-block;
+    padding: 4px 7px;
+    cursor: pointer;
+    user-select: none;
+    line-height: 2em;
 }
 
 .striven-editor .se-toolbar-option svg {
-  width: 16px;
-  height: 14px;
+    width: 16px;
+    height: 14px;
 }
 
 .striven-editor .se-toolbar-option img {
-  width: 16px;
-  height: 14px;
-  vertical-align: middle;
+    width: 16px;
+    height: 14px;
+    vertical-align: middle;
 }
 
 .striven-editor .se-toolbar .se-arrow-span svg {
-  transform: translateY(2px);
+    transform: translateY(2px);
 }
 
 .striven-editor .se-toolbar.se-toolbar-bottom .se-arrow-span svg {
-  transform: rotate(180deg) translateY(-3px);
+    transform: rotate(180deg) translateY(-3px);
 }
 
 .striven-editor .se-toolbar-option.se-toolbar-option-active {
-  border: 1px solid rgba(0, 0, 0, 0.25);
-  background-color: #d4e7fc;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    background-color: #d4e7fc;
 }
 
 .striven-editor .se-toolbar-option:hover.se-toolbar-option-active {
-  background-color: #b6d6fa;
+    background-color: #b6d6fa;
 }
 
 .striven-editor .se-toolbar-group {
-  z-index: 500;
-  background-color: transparent;
-  display: flex;
-  align-items: stretch;
+    z-index: 500;
+    background-color: transparent;
+    display: flex;
+    align-items: stretch;
 }
 
 .striven-editor .se-toolbar-group[data-open='true'] {
-  z-index: 1000;
+    z-index: 1000;
 }
 
 /* 
@@ -235,40 +251,40 @@
 */
 
 .striven-editor .se-toolbar-option > svg {
-  transform: scale(1); /* chrome bug fix */
-  vertical-align: middle;
+    transform: scale(1); /* chrome bug fix */
+    vertical-align: middle;
 }
 
 .striven-editor .se-toolbar-option:hover,
 .striven-editor .se-toolbar-option:focus,
 .striven-editor .se-toolbar-option:active {
-  background-color: #eee;
-  border-color: transparent;
+    background-color: #eee;
+    border-color: transparent;
 }
 
 .striven-editor .se-toolbar #toolbar-template {
-  min-height: 40px;
-  flex-grow: 1;
-  justify-content: flex-end;
+    min-height: 40px;
+    flex-grow: 1;
+    justify-content: flex-end;
 }
 
 .striven-editor .se-toolbar .se-toolbar-selection {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: transparent;
-  cursor: pointer;
-  padding: 0 5px;
-  transition: background-color 100ms;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 0 5px;
+    transition: background-color 100ms;
 }
 
 .striven-editor .se-toolbar .se-toolbar-selection:hover {
-  background-color: #eee;
+    background-color: #eee;
 }
 
 .striven-editor .se-toolbar .se-toolbar-selection p {
-  margin: 0;
-  background-color: transparent;
+    margin: 0;
+    background-color: transparent;
 }
 
 /*
@@ -290,211 +306,211 @@
 */
 
 .striven-editor .se-toolbar .se-toolbar-color {
-  height: 16px;
-  width: 16px;
+    height: 16px;
+    width: 16px;
 }
 
 .striven-editor .se-toolbar .se-toolbar-colorholder {
-  /* padding: 4px;          */
-  /* border: 1px solid #ddd;*/
-  /* background-color: #eee;*/
-  transition: background-color 100ms;
+    /* padding: 4px;          */
+    /* border: 1px solid #ddd;*/
+    /* background-color: #eee;*/
+    transition: background-color 100ms;
 }
 
 .striven-editor .se-toolbar .se-toolbar-colorholder:hover {
-  background-color: #ddd;
+    background-color: #ddd;
 }
 
 .striven-editor .se-toolbar-popup-option {
-  padding: 10px 15px;
-  background-color: transparent;
-  transition: background-color 200ms;
-  font-size: 16px;
-  cursor: pointer;
+    padding: 10px 15px;
+    background-color: transparent;
+    transition: background-color 200ms;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 .striven-editor .se-toolbar-popup-option:hover {
-  background-color: #eee;
+    background-color: #eee;
 }
 
 /** Toolbar Menu **/
 
 .striven-editor .se-toolbar-menu {
-  border: 1px solid transparent;
-  padding: 4px 7px;
-  cursor: pointer;
-  align-items: center;
-  user-select: none;
+    border: 1px solid transparent;
+    padding: 4px 7px;
+    cursor: pointer;
+    align-items: center;
+    user-select: none;
 }
 
 .striven-editor .se-toolbar-menu:hover {
-  background-color: #eee;
+    background-color: #eee;
 }
 
 .striven-editor .se-toolbar-menu > svg {
-  transform: scale(1); /* chrome bug fix */
-  vertical-align: middle;
+    transform: scale(1); /* chrome bug fix */
+    vertical-align: middle;
 }
 
 /** File Element **/
 
 .striven-editor .se-file {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  margin: 10px;
-  position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    position: relative;
 }
 
 .striven-editor p.se-file-name {
-  font-weight: bold;
-  font-size: 14px;
-  margin: 0;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 0;
 }
 
 .striven-editor .se-file-size {
-  font-size: 12px;
-  margin: 2px 0;
+    font-size: 12px;
+    margin: 2px 0;
 }
 
 .striven-editor .se-remove-link {
-  margin: 0;
-  user-select: none;
-  color: black;
-  position: absolute;
-  right: 5px;
-  top: -5px;
-  cursor: pointer;
-  background-color: #fff;
+    margin: 0;
+    user-select: none;
+    color: black;
+    position: absolute;
+    right: 5px;
+    top: -5px;
+    cursor: pointer;
+    background-color: #fff;
 }
 .striven-editor .se-remove-link:hover,
 .striven-editor .se-remove-link:focus,
 .striven-editor .se-remove-link:active {
-  color: #ddd;
+    color: #ddd;
 }
 
 /** Meta Item **/
 
 .striven-editor .se-meta-item {
-  width: 100%;
-  display: flex;
-  margin: 10px;
-  position: relative;
+    width: 100%;
+    display: flex;
+    margin: 10px;
+    position: relative;
 }
 
 .striven-editor .se-meta-image {
-  margin-right: 10px;
-  height: 50px;
-  width: 75px;
+    margin-right: 10px;
+    height: 50px;
+    width: 75px;
 }
 
 .striven-editor .se-meta-data-title {
-  font-weight: bold;
-  margin: 0;
+    font-weight: bold;
+    margin: 0;
 }
 
 .striven-editor .se-metadata-section,
 .striven-editor .se-files-section {
-  display: flex;
-  flex-wrap: wrap;
-  z-index: 500;
+    display: flex;
+    flex-wrap: wrap;
+    z-index: 500;
 }
 
 /** Popup Menu **/
 
 .striven-editor .se-popup {
-  visibility: hidden;
-  position: absolute;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  padding: 5px;
-  z-index: 1000;
-  opacity: 0;
-  transition: opacity, transform, box-shadow, 500ms;
+    visibility: hidden;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 5px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity, transform, box-shadow, 500ms;
 }
 
 .striven-editor .se-popup.se-popup-top {
-  top: 40px;
-  transform: translateY(-30px);
+    top: 40px;
+    transform: translateY(-30px);
 }
 
 .striven-editor .se-popup.se-popup-bottom {
-  bottom: 40px;
-  transform: translateY(30px);
+    bottom: 40px;
+    transform: translateY(30px);
 }
 
 .striven-editor .se-popup.se-popup-open {
-  visibility: visible;
-  transform: translateY(0);
-  box-shadow: 5px 5px 5px #ddd;
-  opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    box-shadow: 5px 5px 5px #000;
+    opacity: 1;
 }
 
 .striven-editor .se-popup-header {
-  color: #888;
-  font-size: 12px;
-  margin: 0;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 3px;
+    color: #888;
+    font-size: 12px;
+    margin: 0;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 3px;
 }
 
-.striven-editor .se-popup > .se-popup-form {
-  display: flex;
-  justify-content: space-between;
-  margin: 5px 0;
+.striven-editor .se-popup .se-popup-form {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
 }
 
-.striven-editor .se-popup > .se-popup-form > .se-form-label {
-  margin: 8px 10px 8px 0;
-  font-size: 12px;
-  text-align: right;
-  margin-right: 10px;
+.striven-editor .se-popup .se-popup-form > .se-form-label {
+    margin: 8px 10px 8px 0;
+    font-size: 12px;
+    text-align: right;
+    margin-right: 10px;
 }
 
-.striven-editor .se-popup > .se-popup-form > .se-form-input {
-  outline: none;
-  padding: 5px;
+.striven-editor .se-popup .se-popup-form > .se-form-input {
+    outline: none;
+    padding: 5px;
 }
 
 @media (min-width: 900px) {
-  .striven-editor .se-popup > .se-popup-form > .se-form-input {
-    width: 250px;
-  }
+    .striven-editor .se-popup .se-popup-form > .se-form-input {
+        width: 250px;
+    }
 }
 
 .striven-editor .se-popup-button-container {
-  float: right;
+    float: right;
 }
 
 .striven-editor .se-popup-button {
-  cursor: pointer;
-  padding: 6px 12px;
-  border: 1px solid transparent;
-  font-size: 14px;
-  outline: none;
-  color: #333;
-  margin: 2px;
+    cursor: pointer;
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    font-size: 14px;
+    outline: none;
+    color: #333;
+    margin: 2px;
 }
 
 .striven-editor .se-popup-button.se-button-primary {
-  border-color: #357ebd;
-  background-color: #428bca;
-  color: #fff;
+    border-color: #357ebd;
+    background-color: #428bca;
+    color: #fff;
 }
 .striven-editor .se-popup-button.se-button-secondary {
-  border-color: #ccc;
-  background-color: #fff;
-  color: #333;
+    border-color: #ccc;
+    background-color: #fff;
+    color: #333;
 }
 .striven-editor .se-popup-button.se-button-primary:hover,
 .striven-editor .se-popup-button.se-button-primary:active,
 .striven-editor .se-popup-button.se-button-primary:focus {
-  background-color: #285e8e;
-  border-color: #285e8e;
+    background-color: #285e8e;
+    border-color: #285e8e;
 }
 .striven-editor .se-popup-button.se-button-secondary:hover,
 .striven-editor .se-popup-button.se-button-secondary:active,
 .striven-editor .se-popup-button.se-button-secondary:focus {
-  background-color: #d4d4d4;
-  border-color: #8c8c8c;
+    background-color: #d4d4d4;
+    border-color: #8c8c8c;
 }

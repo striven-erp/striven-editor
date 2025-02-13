@@ -4,13 +4,7 @@ export default class KoStrivenEditor {
     constructor(ko, bindingName = 'striveneditor') {
         if (!ko.bindingHandlers.striveneditor) {
             ko.bindingHandlers.striveneditor = {
-                init: function (
-                    element,
-                    valueAccessor,
-                    allBindings,
-                    viewModel,
-                    bindingContext,
-                ) {
+                init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
                     // Get options
                     let options = valueAccessor();
                     // Options must be passed as an observable
@@ -31,7 +25,7 @@ export default class KoStrivenEditor {
                     let changeOpt = options().change;
                     if (changeOpt) {
                         if (ko.isObservable(changeOpt)) {
-                            onChange = val => changeOpt(val);
+                            onChange = (val) => changeOpt(val);
                         } else {
                             onChange = changeOpt;
                         }
@@ -40,15 +34,14 @@ export default class KoStrivenEditor {
                     let editor = new StrivenEditor(element, {
                         ...options(),
                         change: onChange,
-                        toolbarTemplate:
-                            options().toolbarTemplate && options().toolbarTemplate(),
+                        toolbarTemplate: options().toolbarTemplate && options().toolbarTemplate()
                     });
                     let pauseUpdate = false;
 
                     // Handle updates and changes to value observable
                     if (ko.isObservable(value)) {
                         // Listen to input event
-                        editor.body.oninput = e => {
+                        editor.body.oninput = (e) => {
                             pauseUpdate = true;
                             value(editor.getContent());
                             setTimeout(function () {
@@ -57,7 +50,7 @@ export default class KoStrivenEditor {
                         };
 
                         // Subscribe to the value observable to detect when it is changed and update the editor
-                        value.subscribe(newValue => {
+                        value.subscribe((newValue) => {
                             // Update the content if it's not being updated from within the editor
                             if (!pauseUpdate) {
                                 editor.setContent(newValue);
@@ -70,8 +63,7 @@ export default class KoStrivenEditor {
 
                     ko.applyBindings(bindingContext, editor.toolbar);
                     return { controlsDescendantBindings: true };
-
-                },
+                }
             };
         }
     }
