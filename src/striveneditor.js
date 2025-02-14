@@ -11,11 +11,12 @@ import {
     FONTSIZES,
     COLLAPSEICON,
     EXPANDICON,
-    DESIGNICON
+    DESIGNICON,
+    UPLOADICON
 } from './defaults.js';
 
 // Helpers
-import { createSVG, denormalizeCamel, blowUpElement } from './utils';
+import { createSVG, denormalizeCamel, blowUpElement, getImageWidth, getImageDataURL } from './utils';
 
 // Polyfills
 import ResizeObserver from 'resize-observer-polyfill';
@@ -922,15 +923,6 @@ export default class StrivenEditor {
                 });
             }
 
-            // Converty file to encoding
-            const convertImage = (file) =>
-                new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = (error) => reject(error);
-                });
-
             const afterPaste = () => {
                 // After the paste
                 setTimeout(() => {
@@ -945,7 +937,7 @@ export default class StrivenEditor {
             if (e.clipboardData.files && e.clipboardData.files.length > 0 && e.clipboardData.files[0].type.includes('image')) {
                 e.preventDefault();
 
-                convertImage(e.clipboardData.files[0])
+                getImageDataURL(e.clipboardData.files[0])
                     .then((res) => {
                         if (se.options.imageUrl) {
                             se.getImage(res)
@@ -1354,10 +1346,17 @@ export default class StrivenEditor {
 
         const imageMenu = document.createElement('div');
         const imageMenuHeader = document.createElement('div');
+        // Upload tab button
         const imageMenuUploadTabButton = document.createElement('button');
+        imageMenuUploadTabButton.classList.add('se-tab-button', 'se-tab-button-upload', 'tab-button-active');
+        // Link tab button
         const imageMenuLinkTabButton = document.createElement('button');
+        imageMenuLinkTabButton.classList.add('se-tab-button', 'se-tab-button-link');
 
+        // Image Menu Tabs
         const imageMenuUploadTab = document.createElement('div');
+        imageMenuUploadTab.classList.add('se-image-menu-tab', 'se-image-menu-upload-tab');
+
         const imageMenuLinkTab = document.createElement('div');
         imageMenuUploadTab.classList.add('se-image-menu-tab', 'se-image-menu-link-tab');
         imageMenuLinkTab.style.display = 'none';
@@ -1375,7 +1374,7 @@ export default class StrivenEditor {
 
         const imageMenuUploadDropZoneText = document.createElement('p');
         imageMenuUploadDropZoneText.textContent = 'Click to upload OR drag and drop images here';
-        imageMenuUploadDropZone.appendChild(createSVG(DESIGNICON, undefined, '48px', '48px'));
+        imageMenuUploadDropZone.appendChild(createSVG(UPLOADICON, undefined, '48px', '48px'));
         imageMenuUploadDropZone.appendChild(imageMenuUploadDropZoneText);
 
         // Link form inputs
@@ -1467,48 +1466,79 @@ export default class StrivenEditor {
 
         // Process files
         const processFiles = function (files) {
-            for (const i of files) {
+            return new Promise((resolve) => {
+                // Create an image tag string with a width of 90% the se.body element if it is wider than the body, but not to exceed a width of 1200px
+                const bodyWidth = se.body.offsetWidth;
+                const processPromises = [];
 
-                // Check if the file is an image
-                if (!i.type.includes('image')) {
-                    continue;
+                for (const file of files) {
+                    // Check if the file is an image
+                    if (!file.type.includes('image')) {
+                        continue;
+                    }
+
+                    const processPromise = new Promise((processPromiseResolve) => {
+                        getImageDataURL(file).then((dataUrl) => {
+                            // Get the width of the image
+                            getImageWidth(dataUrl).then((width) => {
+                                // If the image is wider than the body, set the width to 90% of the body width
+                                if (width > bodyWidth) {
+                                    // Set the width to 90%
+                                    width = bodyWidth * 0.9;
+                                }
+
+                                if (width > 1200) {
+                                    width = 1200;
+                                }
+
+                                // Create the image tag to insert
+                                const imgTag = `<img src="${dataUrl}" width="${width}px" alt=""/>`;
+
+                                if (se.browser.isFirefox() || se.browser.isEdge()) {
+                                    document.execCommand('insertHTML', false, imgTag);
+                                } else {
+                                    document.execCommand('insertHTML', true, imgTag);
+                                }
+
+                                processPromiseResolve();
+                            });
+                        });
+                    });
+
+                    processPromises.push(processPromise);
                 }
 
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const dataUrl = e.target.result;
-
-                    if (se.browser.isFirefox() || se.browser.isEdge()) {
-                        document.execCommand('insertImage', false, dataUrl);
-                    } else {
-                        document.execCommand('insertImage', true, dataUrl);
-                    }
-                };
-
-                reader.readAsDataURL(i);
-            }
+                // Resolve the promise when all the images have been processed
+                Promise.all(processPromises).then(() => {
+                    resolve();
+                });
+            });
         };
 
         // Register click handlers
-        let activeTab = 'upload';
+
         // Create an event handler for upload tab click that will show the upload tab
         imageMenuUploadTabButton.onclick = (e) => {
-            // Set the active tab to the upload tab
-            activeTab = 'upload';
             // Hide the link tab
             imageMenuLinkTab.style.display = 'none';
             // Show the upload tab
             imageMenuUploadTab.style.display = 'block';
+            // Make this tab active
+            imageMenuUploadTabButton.classList.add('tab-button-active');
+            // Remove the active class from the link tab
+            imageMenuLinkTabButton.classList.remove('tab-button-active');
         };
 
         // Create an event handler for the link tab click that will show the link tab
         imageMenuLinkTabButton.onclick = (e) => {
-            // Set the active tab to the link tab
-            activeTab = 'link';
             // Hide the upload tab
             imageMenuUploadTab.style.display = 'none';
             // Show the link tab
             imageMenuLinkTab.style.display = 'block';
+            // Make this tab active
+            imageMenuLinkTabButton.classList.add('tab-button-active');
+            // Remove the active class from the upload tab
+            imageMenuUploadTabButton.classList.remove('tab-button-active');
         };
 
         // Create an event handler for when the images are selected
@@ -1522,18 +1552,18 @@ export default class StrivenEditor {
             const files = e.target.files;
 
             // For each file, get the data url and insert the image
-            processFiles(files);
-
-            // Clean up
-            se.closeImageMenu();
-            se.makeImagesClickable();
-            // Clear the inputs
-            clearImageMenuInputs();
+            processFiles(files).then(() => {
+                // Clean up
+                se.closeImageMenu();
+                se.makeImagesClickable();
+                // Clear the inputs
+                clearImageMenuInputs();
+            });
         };
 
         // When clicking on the dropzone, trigger the file input
         imageMenuUploadDropZone.onclick = (e) => {
-          se.body.focus();
+            se.body.focus();
             // Trigger the file input
             imageMenuUploadInput.click();
         };
@@ -1552,13 +1582,15 @@ export default class StrivenEditor {
         imageMenuUploadDropZone.ondrop = (e) => {
             e.preventDefault();
             imageMenuUploadDropZone.classList.remove('dropzone-hot');
-            // Process the files
-            processFiles(e.dataTransfer.files);
-            // Clean up
-            se.closeImageMenu();
-            se.makeImagesClickable();
-            // Clear the inputs
-            clearImageMenuInputs();
+
+            // For each file, get the data url and insert the image
+            processFiles(e.dataTransfer.files).then(() => {
+                // Clean up
+                se.closeImageMenu();
+                se.makeImagesClickable();
+                // Clear the inputs
+                clearImageMenuInputs();
+            });
         };
 
         // Insert image button click event
@@ -1621,9 +1653,6 @@ export default class StrivenEditor {
             se.closeImageMenu();
             clearImageMenuInputs();
         };
-
-        imageMenuHeader.classList.add('se-popup-header');
-        //imageMenuHeader.innerText = 'Insert Image';
 
         // Set the tab text
         imageMenuUploadTabButton.textContent = 'Upload';
@@ -2428,12 +2457,22 @@ export default class StrivenEditor {
     /**
      * Opens the editor's image menu popup
      */
-    openImageMenu() {
+    openImageMenu(isEdit) {
         const se = this;
 
         se.closeAllMenus();
 
         se.setMenuOffset(se.toolbar.querySelector('#toolbar-image'), se.imageMenu);
+
+        // Select the tab buttons
+        const imageMenuUploadTabButton = se.imageMenu.querySelector('.se-tab-button-upload');
+        const imageMenuLinkTabButton = se.imageMenu.querySelector('.se-tab-button-link');
+
+        if (isEdit) {
+            imageMenuLinkTabButton.click();
+        } else {
+            imageMenuUploadTabButton.click();
+        }
 
         // Clear the input fields
         const imageInputs = se.imageMenu.querySelectorAll('input');
@@ -3008,7 +3047,7 @@ export default class StrivenEditor {
                         editImageMenu.remove();
 
                         image.classList.add('se-image-to-edit');
-                        se.openImageMenu();
+                        se.openImageMenu(true);
 
                         const linkInputs = se.imageMenu.querySelectorAll('input');
                         linkInputs[0].value = image.getAttribute('src');

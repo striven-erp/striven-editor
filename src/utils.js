@@ -89,3 +89,29 @@ export const blowUpElement = (el, bg = '#fff', onExpand) => {
     window.addEventListener('keydown', escapeEvt);
     el.addEventListener('keydown', escapeEvt);
 };
+
+/**
+ * Gets the width of an image
+ * @param {string} url
+ * @returns
+ */
+export const getImageWidth = (url) => {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(img.width);
+        img.src = url;
+    });
+};
+
+/**
+ * Gets the data URL of an image
+ * @param {File} file
+ * @returns
+ */
+export const getImageDataURL = (file) =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+    });

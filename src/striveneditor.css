@@ -514,3 +514,20 @@
     background-color: #d4d4d4;
     border-color: #8c8c8c;
 }
+
+/* Button tabs. Style button to look like a tab with rounded top borders */
+.striven-editor .se-tab-button {
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    padding: 5px;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Active class for the active tab */
+.striven-editor .se-tab-button.tab-button-active {
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+}
