@@ -61,8 +61,8 @@
     display: inline-block;
 }
 .striven-editor .se-body .se-image-options {
-    left: 0;
-    bottom: 0px;
+    left: 10px;
+    bottom: -40px;
 }
 
 .striven-editor .se-body .se-link-options span,
