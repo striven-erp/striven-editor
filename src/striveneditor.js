@@ -2190,13 +2190,12 @@ export default class StrivenEditor {
         [...body.querySelectorAll('.se-link-options')].forEach((lOpt) => lOpt.remove());
         [...body.querySelectorAll('.se-image-options')].forEach((iOpt) => iOpt.remove());
 
-        if (body.textContent || se.body.getElementsByTagName('img').length) {
-            // const htmlView = !!se.editor.querySelector('.se-html');
-            return body.innerHTML;
-        } else {
-            return null;
-        }
+    if (body.textContent || se.body.getElementsByTagName('img').length || se.body.getElementsByTagName('iframe').length) {
+      return body.innerHTML;
+    } else {
+      return null;
     }
+  }
 
     /**
      * Get the range of the window
@@ -3098,36 +3097,35 @@ export default class StrivenEditor {
         });
     }
 
-    /**
-     * Creates links
-     * @parma {HTMLElement} Element to convert links in
-     */
-    createLinks(el) {
-        const se = this;
-        linkify(
-            el || se.body,
-            {
-                target: {
-                    url: '_blank'
-                },
-                className: 'linkified',
-                validate: {
-                    email: function (value) {
-                        return false;
-                    }
-                }
-            },
-            document
-        );
-
-        var links = [];
-        if (el) {
-            const linkElements = el.getElementsByTagName('a');
-            if (linkElements.length > 0) {
-                links = [...linkElements];
+  /**
+  * Creates links
+  * @parma {HTMLElement} Element to convert links in
+  */
+  createLinks(el) {
+    const se = this;
+    const htmlView = !!se.editor.querySelector('.se-html');
+    if (!htmlView) {
+      linkify(el || se.body,
+        {
+          target: {
+            url: '_blank'
+          },
+          className: 'linkified',
+          validate: {
+            email: function (value) {
+              return false;
             }
-        }
-        this.makeLinksClickable(links);
+          }
+        }, document);
+    }
+    var links = [];
+    if (el) {
+      const linkElements = el.getElementsByTagName('a');
+      if (linkElements.length > 0) {
+        links = [...linkElements];
+      }
+    }
+    this.makeLinksClickable(links);
 
         // Trigger input event
         let inpEvent = new Event('input', { cancelable: true, bubbles: true });
