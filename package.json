@@ -42,6 +42,7 @@
     "metascraper-image": "^5.7.4",
     "metascraper-title": "^5.7.4",
     "metascraper-url": "^5.7.4",
+    "prettier": "^3.5.1",
     "resize-observer-polyfill": "^1.5.1",
     "shortid": "^2.2.15",
     "style-loader": "^1.0.0",

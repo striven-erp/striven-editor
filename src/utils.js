@@ -1,4 +1,4 @@
-/** 
+/**
  * Constructs an SVG from a viewBox and d property
  * @param {Object} Object with viewBox and d property
  * @param {String} Fill color for the svg
@@ -7,17 +7,17 @@
  * @returns {HTMLElement} Returns SVG Element
  */
 export const createSVG = (svgData, fillColor = '#000', height = 16, width = 16) => {
-  const {viewBox, d} = svgData;
-  const xmlns = 'http://www.w3.org/2000/svg';
+    const { viewBox, d } = svgData;
+    const xmlns = 'http://www.w3.org/2000/svg';
 
-  const icon = document.createElement('div');
-  const svg = `<svg width="${width}" height="${height}" viewBox="${viewBox}" xmlns="${xmlns}">`;
-  const path = `<path fill="${fillColor}" d="${d}"/>`;
+    const icon = document.createElement('div');
+    const svg = `<svg width="${width}" height="${height}" viewBox="${viewBox}" xmlns="${xmlns}">`;
+    const path = `<path fill="${fillColor}" d="${d}"/>`;
 
-  icon.innerHTML = `${svg}${path}</svg>`;
+    icon.innerHTML = `${svg}${path}</svg>`;
 
-  return icon.querySelector('svg');
-}
+    return icon.querySelector('svg');
+};
 
 /**
  * Converts camel case string to a readable sentence
@@ -25,16 +25,16 @@ export const createSVG = (svgData, fillColor = '#000', height = 16, width = 16) 
  * @returns {String} Readable sentence
  */
 export const denormalizeCamel = (text) => {
-  const result = text.replace( /([A-Z])/g, " $1" );
-  const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
-  
-  return finalResult;
-}
+    const result = text.replace(/([A-Z])/g, ' $1');
+    const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
+
+    return finalResult;
+};
 
 /**
- * Expand DOM element 
+ * Expand DOM element
  * @param {HTMLElement} el Element to expand
- * @param {String} bg Background color of expanded content 
+ * @param {String} bg Background color of expanded content
  * @param {Function} onExpand Handler function called when element is expanded
  */
 export const blowUpElement = (el, bg = '#fff', onExpand) => {
@@ -67,25 +67,51 @@ export const blowUpElement = (el, bg = '#fff', onExpand) => {
     el.collapse = () => reset();
 
     const escapeEvt = (e) => {
-      if (e.key) {
-          switch (e.key) {
-              case 'Escape':
-                  el.dataset.expanded === 'true' && reset();
-                  break;
-              default:
-                  break;
-          }
-      } else {
-          switch (e.keyCode) {
-              case 13:
-                  el.dataset.expanded === 'true' && reset();
-                  break;
-              default:
-                  break;
-          }
-      }
-    }
+        if (e.key) {
+            switch (e.key) {
+                case 'Escape':
+                    el.dataset.expanded === 'true' && reset();
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (e.keyCode) {
+                case 13:
+                    el.dataset.expanded === 'true' && reset();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     window.addEventListener('keydown', escapeEvt);
     el.addEventListener('keydown', escapeEvt);
-}
+};
+
+/**
+ * Gets the width of an image
+ * @param {string} url
+ * @returns
+ */
+export const getImageWidth = (url) => {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(img.width);
+        img.src = url;
+    });
+};
+
+/**
+ * Gets the data URL of an image
+ * @param {File} file
+ * @returns
+ */
+export const getImageDataURL = (file) =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+    });
