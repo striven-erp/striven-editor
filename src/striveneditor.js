@@ -16,7 +16,7 @@ import {
 } from './defaults.js';
 
 // Helpers
-import { createSVG, denormalizeCamel, blowUpElement, getImageWidth, getImageDataURL } from './utils';
+import { createSVG, denormalizeCamel, blowUpElement, getImageWidth, getImageDataURL, computeImageWidth } from './utils';
 
 // Polyfills
 import ResizeObserver from 'resize-observer-polyfill';
@@ -894,6 +894,7 @@ export default class StrivenEditor {
             }
         };
 
+
         // Paste Handler
         body.onpaste = (e) => {
             // Editor Paste Handler
@@ -904,23 +905,6 @@ export default class StrivenEditor {
                     se.executeCommand('insertHTML', content);
                     return true;
                 }
-            }
-
-            // Convert envoding to file
-            function dataURLtoFile(dataurl, filename) {
-                var arr = dataurl.split(','),
-                    mime = arr[0].match(/:(.*?);/)[1],
-                    bstr = atob(arr[1]),
-                    n = bstr.length,
-                    u8arr = new Uint8Array(n);
-                while (n--) {
-                    u8arr[n] = bstr.charCodeAt(n);
-                }
-
-                const file = new File([u8arr], filename, { type: mime });
-                return new File([u8arr], `${file.name}.${file.type.split('/').pop()}`, {
-                    type: file.type
-                });
             }
 
             const afterPaste = () => {
@@ -937,32 +921,10 @@ export default class StrivenEditor {
             if (e.clipboardData.files && e.clipboardData.files.length > 0 && e.clipboardData.files[0].type.includes('image')) {
                 e.preventDefault();
 
-                getImageDataURL(e.clipboardData.files[0])
-                    .then((res) => {
-                        if (se.options.imageUrl) {
-                            se.getImage(res)
-                                .then((data) => {
-                                    document.execCommand('insertImage', true, data.imageRef);
-                                })
-                                .catch((err) => {
-                                    document.execCommand('insertImage', true, res);
-                                });
-                        } else {
-                            if (se.browser.isFirefox() || se.browser.isEdge()) {
-                                document.execCommand('insertImage', false, res);
-                            } else {
-                                document.execCommand('insertImage', true, res);
-                            }
-                            se.options.uploadOnPaste && se.attachFile(dataURLtoFile(res, 'pastedimage'));
-                        }
-                        setTimeout(function () {
-                            se.overflow();
-                        }, 0);
-                    })
-                    .finally(() => {
-                        se.makeImagesClickable();
-                        afterPaste();
-                    });
+                se.insertImage(e.clipboardData.files[0]).finally(() => {
+                    afterPaste();
+                });
+
                 return true;
             }
 
@@ -1467,8 +1429,6 @@ export default class StrivenEditor {
         // Process files
         const processFiles = function (files) {
             return new Promise((resolve) => {
-                // Create an image tag string with a width of 90% the se.body element if it is wider than the body, but not to exceed a width of 1200px
-                const bodyWidth = se.body.offsetWidth;
                 const processPromises = [];
 
                 for (const file of files) {
@@ -1477,33 +1437,26 @@ export default class StrivenEditor {
                         continue;
                     }
 
-                    const processPromise = new Promise((processPromiseResolve) => {
-                        getImageDataURL(file).then((dataUrl) => {
-                            // Get the width of the image
-                            getImageWidth(dataUrl).then((width) => {
-                                // If the image is wider than the body, set the width to 90% of the body width
-                                if (width > bodyWidth) {
-                                    // Set the width to 90%
-                                    width = bodyWidth * 0.9;
-                                }
+                    // const processPromise = new Promise((processPromiseResolve) => {
+                    //     getImageDataURL(file).then((dataUrl) => {
+                    //         // Get the width of the image
+                    //         getImageWidth(dataUrl).then((width) => {
+                    //             width = computeImageWidth(width, bodyWidth);
 
-                                if (width > 1200) {
-                                    width = 1200;
-                                }
+                    //             // Create the image tag to insert
+                    //             const imgTag = `<img src="${dataUrl}" width="${width}px" alt=""/>`;
 
-                                // Create the image tag to insert
-                                const imgTag = `<img src="${dataUrl}" width="${width}px" alt=""/>`;
+                    //             if (se.browser.isFirefox() || se.browser.isEdge()) {
+                    //                 document.execCommand('insertHTML', false, imgTag);
+                    //             } else {
+                    //                 document.execCommand('insertHTML', true, imgTag);
+                    //             }
 
-                                if (se.browser.isFirefox() || se.browser.isEdge()) {
-                                    document.execCommand('insertHTML', false, imgTag);
-                                } else {
-                                    document.execCommand('insertHTML', true, imgTag);
-                                }
-
-                                processPromiseResolve();
-                            });
-                        });
-                    });
+                    //             processPromiseResolve();
+                    //         });
+                    //     });
+                    // });
+                    const processPromise = se.insertImage(file);
 
                     processPromises.push(processPromise);
                 }
@@ -1555,7 +1508,6 @@ export default class StrivenEditor {
             processFiles(files).then(() => {
                 // Clean up
                 se.closeImageMenu();
-                se.makeImagesClickable();
                 // Clear the inputs
                 clearImageMenuInputs();
             });
@@ -1587,7 +1539,6 @@ export default class StrivenEditor {
             processFiles(e.dataTransfer.files).then(() => {
                 // Clean up
                 se.closeImageMenu();
-                se.makeImagesClickable();
                 // Clear the inputs
                 clearImageMenuInputs();
             });
@@ -1630,8 +1581,8 @@ export default class StrivenEditor {
                 // Update / insert
                 if (imageToEdit) {
                     // Add the attributes for the image
-                    imageToEdit.setAttribute('height', `${heightValue}px`);
-                    imageToEdit.setAttribute('width', `${widthValue}px`);
+                    imageToEdit.style.height = `${heightValue}px`;
+                    imageToEdit.style.width = `${widthValue}px`;
                     imageToEdit.setAttribute('alt', `${altTextValue}`);
                     imageToEdit.setAttribute('title', `${titleValue}`);
                 }
@@ -2190,12 +2141,12 @@ export default class StrivenEditor {
         [...body.querySelectorAll('.se-link-options')].forEach((lOpt) => lOpt.remove());
         [...body.querySelectorAll('.se-image-options')].forEach((iOpt) => iOpt.remove());
 
-    if (body.textContent || se.body.getElementsByTagName('img').length || se.body.getElementsByTagName('iframe').length) {
-      return body.innerHTML;
-    } else {
-      return null;
+        if (body.textContent || se.body.getElementsByTagName('img').length || se.body.getElementsByTagName('iframe').length) {
+            return body.innerHTML;
+        } else {
+            return null;
+        }
     }
-  }
 
     /**
      * Get the range of the window
@@ -2207,7 +2158,7 @@ export default class StrivenEditor {
             if (selection) {
                 return window.getSelection().getRangeAt(0);
             }
-        } catch (e) {}
+        } catch (e) { }
     }
 
     /**
@@ -2678,7 +2629,7 @@ export default class StrivenEditor {
                 window.getSelection().removeAllRanges();
                 window.getSelection().addRange(se.range);
             }
-        } catch (e) {}
+        } catch (e) { }
     }
 
     /**
@@ -3097,35 +3048,35 @@ export default class StrivenEditor {
         });
     }
 
-  /**
-  * Creates links
-  * @parma {HTMLElement} Element to convert links in
-  */
-  createLinks(el) {
-    const se = this;
-    const htmlView = !!se.editor.querySelector('.se-html');
-    if (!htmlView) {
-      linkify(el || se.body,
-        {
-          target: {
-            url: '_blank'
-          },
-          className: 'linkified',
-          validate: {
-            email: function (value) {
-              return false;
+    /**
+    * Creates links
+    * @parma {HTMLElement} Element to convert links in
+    */
+    createLinks(el) {
+        const se = this;
+        const htmlView = !!se.editor.querySelector('.se-html');
+        if (!htmlView) {
+            linkify(el || se.body,
+                {
+                    target: {
+                        url: '_blank'
+                    },
+                    className: 'linkified',
+                    validate: {
+                        email: function (value) {
+                            return false;
+                        }
+                    }
+                }, document);
+        }
+        var links = [];
+        if (el) {
+            const linkElements = el.getElementsByTagName('a');
+            if (linkElements.length > 0) {
+                links = [...linkElements];
             }
-          }
-        }, document);
-    }
-    var links = [];
-    if (el) {
-      const linkElements = el.getElementsByTagName('a');
-      if (linkElements.length > 0) {
-        links = [...linkElements];
-      }
-    }
-    this.makeLinksClickable(links);
+        }
+        this.makeLinksClickable(links);
 
         // Trigger input event
         let inpEvent = new Event('input', { cancelable: true, bubbles: true });
@@ -3534,4 +3485,49 @@ export default class StrivenEditor {
             });
         }
     }
+
+    /**
+     * Inserts image into the editor, uploads to the server if imageUrl is provided otherwise uses data:image url
+     * @param {*} file 
+     * @returns 
+     */
+    insertImage(file) {
+        const se=this;
+        return new Promise((resolveImageInsert) => {
+            const bodyWidth = se.body.offsetWidth;
+            getImageDataURL(file).then((imgDataUrl) => {
+                getImageWidth(imgDataUrl).then((width) => {
+                    width = computeImageWidth(width, bodyWidth);
+
+                    // Create the image tag to insert
+                    const imgTag = `<img src="${imgDataUrl}" style="width:${width}px" alt=""/>`;
+
+                    if (se.options.imageUrl) {
+                        //upload image if imageUrl is provided
+                        se.getImage(imgDataUrl)
+                            .then((data) => {
+                                document.execCommand('insertHTML', true, `<img src="${data.imageRef}" style="width:${width}px" alt=""/>`);
+                            })
+                            .catch((err) => {
+                                document.execCommand('insertHTML', true, imgTag);
+                            });
+                    }
+                    else {
+                        if (se.browser.isFirefox() || se.browser.isEdge()) {
+                            document.execCommand('insertHTML', false, imgTag);
+                        } else {
+                            document.execCommand('insertHTML', true, imgTag);
+                        }
+                    }
+                    setTimeout(function () {
+                        se.overflow();
+                    }, 0);
+
+                    resolveImageInsert();
+                }).finally(() => {
+                    se.makeImagesClickable();
+                });
+            });
+        });
+    };
 }
