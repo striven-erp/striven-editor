@@ -104,6 +104,26 @@ export const getImageWidth = (url) => {
 };
 
 /**
+ * Computes the width of an image based on the body width
+ * @param {Int} imageWidth 
+ * @param {Int} bodyWidth 
+ * @returns {Int} computed width
+ */
+export const computeImageWidth = (imageWidth, bodyWidth) => {
+    let newWidth = imageWidth;
+    // If the image is wider than the body, set the width to 90% of the body width
+    if (imageWidth > bodyWidth) {
+        // Set the width to 90%
+        newWidth = bodyWidth * 0.9;
+    }
+
+    if (newWidth > 1200) {
+        newWidth = 1200;
+    }
+    return newWidth;
+}
+
+/**
  * Gets the data URL of an image
  * @param {File} file
  * @returns
