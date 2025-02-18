@@ -45,8 +45,8 @@
 .striven-editor .se-body .se-link-options,
 .striven-editor .se-body .se-image-options {
     position: absolute;
-    /*left: 0;*/
-    /*top: 100%;*/
+    left: 10px;
+    bottom: -40px;
     padding: 7px;
     background-color: #fff;
     min-width: max-content;
@@ -55,15 +55,13 @@
     font-size: 12px;
     font-style: normal;
     font-weight: normal;
+    z-index: 1;
 }
 .striven-editor .se-body .se-image-wrapper {
     position: relative;
     display: inline-block;
 }
-.striven-editor .se-body .se-image-options {
-    left: 10px;
-    bottom: -40px;
-}
+
 
 .striven-editor .se-body .se-link-options span,
 .striven-editor .se-body .se-image-options span {
