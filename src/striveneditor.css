@@ -27,6 +27,7 @@
     max-height: auto;
     height: auto;
     word-break: break-word;
+    padding-bottom:32px;
 }
 
 .striven-editor .se-body:empty::after {
@@ -41,12 +42,84 @@
 .striven-editor .se-body a {
     position: relative;
 }
+.striven-editor .se-body .se-image-wrapper {
+    position: relative;
+    display: inline-block;
+    border: 1px dashed #000;
+}
+
+.striven-editor .se-body .se-image-wrapper img {
+    max-width: 100%;
+}
+
+.striven-editor .se-body .se-image-wrapper .resize-handle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: rgb(255, 255, 255);
+    border: 1px solid rgb(0, 0, 0);
+    cursor: pointer;
+}
+
+/* Positioning resize handles */
+.striven-editor .se-body .se-image-wrapper .resize-handle.top-left {
+    top: -5px;
+    left: -5px;
+    cursor: nwse-resize;
+}
+
+.striven-editor .se-body .se-image-wrapper .resize-handle.top-right {
+    top: -5px;
+    right: -5px;
+    cursor: nesw-resize;
+}
+
+.striven-editor .se-body .se-image-wrapper .resize-handle.bottom-left {
+    bottom: -5px;
+    left: -5px;
+    cursor: nesw-resize;
+}
+
+.striven-editor .se-body .se-image-wrapper .resize-handle.bottom-right {
+    bottom: -5px;
+    right: -5px;
+    cursor: nwse-resize;
+}
+
+.striven-editor .se-body .se-image-wrapper .resize-handle.top-middle {
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: ns-resize;
+}
+
+.striven-editor .se-body .se-image-wrapper .resize-handle.bottom-middle {
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: ns-resize;
+}
+
+.striven-editor .se-body .se-image-wrapper .resize-handle.left-middle {
+    left: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: ew-resize;
+}
+
+.striven-editor .se-body .se-image-wrapper .resize-handle.right-middle {
+    right: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: ew-resize;
+}
+
 
 .striven-editor .se-body .se-link-options,
 .striven-editor .se-body .se-image-options {
     position: absolute;
-    /*left: 0;*/
-    /*top: 100%;*/
+    left: 10px;
+    bottom: -30px;
     padding: 7px;
     background-color: #fff;
     min-width: max-content;
@@ -56,14 +129,11 @@
     font-style: normal;
     font-weight: normal;
 }
-.striven-editor .se-body .se-image-wrapper {
-    position: relative;
-    display: inline-block;
-}
-.striven-editor .se-body .se-image-options {
+
+/* .striven-editor .se-body .se-image-options {
     left: 10px;
     bottom: -40px;
-}
+} */
 
 .striven-editor .se-body .se-link-options span,
 .striven-editor .se-body .se-image-options span {

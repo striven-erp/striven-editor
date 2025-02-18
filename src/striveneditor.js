@@ -1581,8 +1581,8 @@ export default class StrivenEditor {
                 // Update / insert
                 if (imageToEdit) {
                     // Add the attributes for the image
-                    imageToEdit.style.height = `${heightValue}px`;
-                    imageToEdit.style.width = `${widthValue}px`;
+                    imageToEdit.setAttribute('height', `${heightValue}px`);
+                    imageToEdit.setAttribute('width', `${widthValue}px`);
                     imageToEdit.setAttribute('alt', `${altTextValue}`);
                     imageToEdit.setAttribute('title', `${titleValue}`);
                 }
@@ -2966,15 +2966,77 @@ export default class StrivenEditor {
     makeImagesClickable(images = []) {
         const se = this;
         if (!images.length) {
-            const linkElements = se.body.getElementsByTagName('img');
-            if (linkElements.length > 0) {
-                images = [...linkElements];
+            const imageElements = se.body.getElementsByTagName('img');
+            if (imageElements.length > 0) {
+                images = [...imageElements];
             }
         }
 
+        const  startResize= function(e, img, handlePosition) {
+            e.preventDefault();
+    
+            let startX = e.clientX;
+            let startY = e.clientY;
+            let startWidth = img.offsetWidth;
+            let startHeight = img.offsetHeight;
+            let startLeft = img.offsetLeft;
+            let startTop = img.offsetTop;
+    
+            function mouseMoveHandler(e) {
+                let deltaX = e.clientX - startX;
+                let deltaY = e.clientY - startY;
+                //todo: use seame method to change height and width when resizing using handles and the edit method
+                switch (handlePosition) {
+                    case 'top-left':
+                        img.width = startWidth - deltaX;
+                        img.height = startHeight - deltaY;
+                        img.style.left = startLeft + deltaX + 'px';
+                        img.style.top = startTop + deltaY + 'px';
+                        break;
+                    case 'top-right':
+                        img.width = startWidth + deltaX;
+                        img.height = startHeight - deltaY;
+                        img.style.top = startTop + deltaY + 'px';
+                        break;
+                    case 'bottom-left':
+                        img.width = startWidth - deltaX;
+                        img.height = startHeight + deltaY;
+                        img.style.left = startLeft + deltaX + 'px';
+                        break;
+                    case 'bottom-right':
+                        img.width = startWidth + deltaX;
+                        img.height = startHeight + deltaY;
+                        break;
+                    case 'top-middle':
+                        img.height = startHeight - deltaY;
+                        img.style.top = startTop + deltaY + 'px';
+                        break;
+                    case 'bottom-middle':
+                        img.height = startHeight + deltaY;
+                        break;
+                    case 'left-middle':
+                        img.width = startWidth - deltaX;
+                        img.style.left = startLeft + deltaX + 'px';
+                        break;
+                    case 'right-middle':
+                        img.width = startWidth + deltaX;
+                        break;
+                }
+            }
+    
+            function mouseUpHandler() {
+                document.removeEventListener('mousemove', mouseMoveHandler);
+                document.removeEventListener('mouseup', mouseUpHandler);
+            }
+    
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
+        }
+        
         images.forEach((image) => {
             image.onclick = (e) => {
                 if (!image.nextElementSibling || image.nextElementSibling.className !== 'se-image-options') {
+                    let resizeHandles=[];
                     let imageWrapper = image.parentElement;
                     if (!imageWrapper.classList.contains('se-image-wrapper')) {
                         imageWrapper = document.createElement('div');
@@ -2982,7 +3044,22 @@ export default class StrivenEditor {
                         imageWrapper.setAttribute('contenteditable', false);
                         image.parentElement.insertBefore(imageWrapper, image);
                         imageWrapper.appendChild(image);
+
+                        // Add resize handles (8 in total)
+                        const positions = ['top-left', 'top-middle', 'top-right', 'left-middle', 'right-middle', 'bottom-left', 'bottom-middle', 'bottom-right'];
+                        positions.forEach((pos) => {
+                            let handle = document.createElement('div');
+                            resizeHandles.push(handle);
+                            handle.classList.add('resize-handle', pos);
+                            imageWrapper.appendChild(handle);
+
+                            handle.addEventListener('mousedown', function (e) {
+                                e.preventDefault();
+                                startResize(e, image, pos);
+                            });
+                        });
                     }
+
                     const editImageMenu = document.createElement('span');
                     editImageMenu.setAttribute('class', 'se-image-options');
                     editImageMenu.setAttribute('contenteditable', false);
@@ -3025,28 +3102,29 @@ export default class StrivenEditor {
 
                     // When user clicks anywhere but the image, remove the menu
                     const optionHandler = (ev) => {
-                        if (ev.target !== image) {
-                            editImageMenu.remove();
-                            window.removeEventListener('click', optionHandler);
+                        if (imageWrapper?.parentNode && ev.target !== image && !resizeHandles.includes(ev.target)) {
+                            imageWrapper.parentNode.replaceChild(image, imageWrapper);
                         }
+                        window.removeEventListener('click', optionHandler);
                     };
 
                     window.addEventListener('click', optionHandler);
 
                     // When user presses a key, remove the menu
                     const keyPressHandler = () => {
-                        if (editImageMenu) {
-                            editImageMenu.remove();
+                        if (imageWrapper?.parentNode) {
+                            imageWrapper.parentNode.replaceChild(image, imageWrapper);
                         }
                         se.body.removeEventListener('keypress', keyPressHandler);
                     };
                     se.body.addEventListener('keypress', keyPressHandler);
                 }
             };
-
-            //image.setAttribute('contenteditable', true);
         });
     }
+
+
+    
 
     /**
     * Creates links
@@ -3492,7 +3570,7 @@ export default class StrivenEditor {
      * @returns 
      */
     insertImage(file) {
-        const se=this;
+        const se = this;
         return new Promise((resolveImageInsert) => {
             const bodyWidth = se.body.offsetWidth;
             getImageDataURL(file).then((imgDataUrl) => {
@@ -3500,13 +3578,13 @@ export default class StrivenEditor {
                     width = computeImageWidth(width, bodyWidth);
 
                     // Create the image tag to insert
-                    const imgTag = `<img src="${imgDataUrl}" style="width:${width}px" alt=""/>`;
+                    const imgTag = `<img src="${imgDataUrl}" width="${width}px" alt=""/>`;
 
                     if (se.options.imageUrl) {
                         //upload image if imageUrl is provided
                         se.getImage(imgDataUrl)
                             .then((data) => {
-                                document.execCommand('insertHTML', true, `<img src="${data.imageRef}" style="width:${width}px" alt=""/>`);
+                                document.execCommand('insertHTML', true, `<img src="${data.imageRef}" width="${width}px" alt=""/>`);
                             })
                             .catch((err) => {
                                 document.execCommand('insertHTML', true, imgTag);
