@@ -27,7 +27,7 @@ import linkify from 'linkifyjs/element';
 // Pickr
 //import './classic.min.css';
 //import Pickr from './pickr.min.js';
-import '@simonwep/pickr/dist/themes/classic.min.css';   // 'classic' theme
+import '@simonwep/pickr/dist/themes/classic.min.css'; // 'classic' theme
 import Pickr from '@simonwep/pickr/dist/pickr.es5.min';
 
 // Formatting
@@ -76,7 +76,7 @@ export default class StrivenEditor {
      */
     constructor(el, options) {
         const se = this;
-        
+
         // Webpack inserts the package.json version
         se['_version'] = __VERSION__;
 
@@ -895,7 +895,6 @@ export default class StrivenEditor {
             }
         };
 
-
         // Paste Handler
         body.onpaste = (e) => {
             // Editor Paste Handler
@@ -1319,7 +1318,7 @@ export default class StrivenEditor {
         imageMenuUploadTab.classList.add('se-image-menu-tab', 'se-image-menu-upload-tab');
 
         const imageMenuLinkTab = document.createElement('div');
-        imageMenuUploadTab.classList.add('se-image-menu-tab', 'se-image-menu-link-tab');
+        imageMenuLinkTab.classList.add('se-image-menu-tab', 'se-image-menu-link-tab');
         imageMenuLinkTab.style.display = 'none';
 
         // Upload form inputs
@@ -2137,7 +2136,7 @@ export default class StrivenEditor {
             if (selection) {
                 return window.getSelection().getRangeAt(0);
             }
-        } catch (e) { }
+        } catch (e) {}
     }
 
     /**
@@ -2607,7 +2606,7 @@ export default class StrivenEditor {
                 window.getSelection().removeAllRanges();
                 window.getSelection().addRange(se.range);
             }
-        } catch (e) { }
+        } catch (e) {}
     }
 
     /**
@@ -2939,14 +2938,15 @@ export default class StrivenEditor {
     }
 
     /**
-    * Creates links
-    * @parma {HTMLElement} Element to convert links in
-    */
+     * Creates links
+     * @parma {HTMLElement} Element to convert links in
+     */
     createLinks(el) {
         const se = this;
         const htmlView = !!se.editor.querySelector('.se-html');
         if (!htmlView) {
-            linkify(el || se.body,
+            linkify(
+                el || se.body,
                 {
                     target: {
                         url: '_blank'
@@ -2957,7 +2957,9 @@ export default class StrivenEditor {
                             return false;
                         }
                     }
-                }, document);
+                },
+                document
+            );
         }
         var links = [];
         if (el) {
@@ -3146,8 +3148,7 @@ export default class StrivenEditor {
                             palette: true,
                             hue: true,
                             interaction: { hex: true, input: true }
-                        },
-
+                        }
                     });
 
                     se.initPickrMenu(pickr, () => {
@@ -3196,7 +3197,6 @@ export default class StrivenEditor {
 
                         se.body.focus();
                     });
-
                 }
                 break;
             case 'insertOrderedList':
@@ -3373,8 +3373,8 @@ export default class StrivenEditor {
 
     /**
      * Inserts image into the editor, uploads to the server if imageUrl is provided otherwise uses data:image url
-     * @param {*} file 
-     * @returns 
+     * @param {*} file
+     * @returns
      */
     insertImage(file) {
         const se = this;
@@ -3396,8 +3396,7 @@ export default class StrivenEditor {
                             .catch((err) => {
                                 document.execCommand('insertHTML', true, imgTag);
                             });
-                    }
-                    else {
+                    } else {
                         if (se.browser.isFirefox() || se.browser.isEdge()) {
                             document.execCommand('insertHTML', false, imgTag);
                         } else {
@@ -3409,19 +3408,19 @@ export default class StrivenEditor {
                     }, 0);
 
                     resolveImageInsert();
-                })
+                });
             });
         });
-    };
+    }
 
     /**
      * handles click event to show image editing option and resize markers on an image placed in editor body
-     * @param {*} e 
+     * @param {*} e
      */
-    handleImageClick(target) {   
+    handleImageClick(target) {
         const se = this;
         if (target.tagName === 'IMG') {
-            const image=target;
+            const image = target;
 
             if (!image.nextElementSibling || image.nextElementSibling.className !== 'se-image-options') {
                 let resizeHandles = [];
@@ -3442,7 +3441,16 @@ export default class StrivenEditor {
                     imageWrapper.appendChild(resizeMarker);
 
                     // Add resize handles (8 in total)
-                    const positions = ['top-left', 'top-middle', 'top-right', 'left-middle', 'right-middle', 'bottom-left', 'bottom-middle', 'bottom-right'];
+                    const positions = [
+                        'top-left',
+                        'top-middle',
+                        'top-right',
+                        'left-middle',
+                        'right-middle',
+                        'bottom-left',
+                        'bottom-middle',
+                        'bottom-right'
+                    ];
                     positions.forEach((pos) => {
                         let handle = document.createElement('div');
                         resizeHandles.push(handle);
@@ -3498,10 +3506,7 @@ export default class StrivenEditor {
 
                 // When user clicks anywhere but the image, remove the menu
                 const optionHandler = (ev) => {
-                    if (imageWrapper?.parentNode &&
-                        ev.target !== image && ev.target !== imageWrapper &&
-                        !resizeHandles.includes(ev.target)) {
-
+                    if (imageWrapper?.parentNode && ev.target !== image && ev.target !== imageWrapper && !resizeHandles.includes(ev.target)) {
                         imageWrapper.parentNode.replaceChild(image, imageWrapper);
                         window.removeEventListener('click', optionHandler);
                     }
