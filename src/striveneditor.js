@@ -76,8 +76,7 @@ export default class StrivenEditor {
      */
     constructor(el, options) {
         const se = this;
-        console.log('You are using a local version of @striven-erp/striven-editor');
-
+        
         // Webpack inserts the package.json version
         se['_version'] = __VERSION__;
 
