@@ -53,6 +53,7 @@
     "webpack-cli": "^4.10.0"
   },
   "dependencies": {
+    "@simonwep/pickr": "^1.9.1",
     "js-beautify": "^1.11.0",
     "linkifyjs": "^2.1.9",
     "simply-beautiful": "^0.2.10"

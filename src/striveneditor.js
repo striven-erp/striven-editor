@@ -25,8 +25,10 @@ import ResizeObserver from 'resize-observer-polyfill';
 import linkify from 'linkifyjs/element';
 
 // Pickr
-import './classic.min.css';
-import Pickr from './pickr.min.js';
+//import './classic.min.css';
+//import Pickr from './pickr.min.js';
+import '@simonwep/pickr/dist/themes/classic.min.css';   // 'classic' theme
+import Pickr from '@simonwep/pickr/dist/pickr.es5.min';
 
 // Formatting
 import beautify from 'simply-beautiful';
@@ -3145,7 +3147,8 @@ export default class StrivenEditor {
                             palette: true,
                             hue: true,
                             interaction: { hex: true, input: true }
-                        }
+                        },
+
                     });
 
                     se.initPickrMenu(pickr, () => {
@@ -3195,12 +3198,6 @@ export default class StrivenEditor {
                         se.body.focus();
                     });
 
-                    pickr.on('show', (p) => {
-                        const { app } = p['_root'];
-                        if (window.matchMedia('(max-width: 510px)').matches) {
-                            app.style.left = null;
-                        }
-                    });
                 }
                 break;
             case 'insertOrderedList':
