@@ -1122,16 +1122,14 @@ export default class StrivenEditor {
         };
 
         const bodyClick = body.onclick;
-        body.onclick = () => {
+        body.onclick = (event) => {
             se.closeAllMenus();
             se.setFontStates();
             body.textContent && se.toolbarState();
-            bodyClick && bodyClick;
-        };
 
-        const bodyKeyPress = body.onkeypress;
-        body.onkeypress = () => {
-            bodyKeyPress && bodyKeyPress();
+            se.handleImageClick(event.target);
+
+            bodyClick && bodyClick();
         };
 
         return body;
@@ -1573,7 +1571,6 @@ export default class StrivenEditor {
 
                 // Clean up
                 se.closeImageMenu();
-                se.makeImagesClickable();
             } else {
                 se.body.focus();
                 se.closeImageMenu();
@@ -2591,7 +2588,6 @@ export default class StrivenEditor {
         if (html) {
             se.body.innerHTML = html;
             se.makeLinksClickable();
-            se.makeImagesClickable();
         }
     }
 
@@ -2938,190 +2934,6 @@ export default class StrivenEditor {
             link.onmouseleave = () => (link.style.cursor = null);
 
             link.setAttribute('contenteditable', true);
-        });
-    }
-
-    /*
-  Parses all images on the editor and makes them clickable and adds option to change/remove the image
-  */
-    makeImagesClickable(images = []) {
-        const se = this;
-        if (!images.length) {
-            const imageElements = se.body.getElementsByTagName('img');
-            if (imageElements.length > 0) {
-                images = [...imageElements];
-            }
-        }
-
-        const startResize = function (e, resizeMarker, handlePosition, img) {
-            e.preventDefault();
-
-            let startX = e.clientX;
-            let startY = e.clientY;
-            let startWidth = img.offsetWidth;
-            let startHeight = img.offsetHeight;
-            let startLeft = img.offsetLeft;
-            let startTop = img.offsetTop;
-
-            function mouseMoveHandler(e) {
-                let deltaX = e.clientX - startX;
-                let deltaY = e.clientY - startY;
-
-                //update position and dimension of resize marker to show the resize effect
-                switch (handlePosition) {
-                    case 'top-left':
-                        resizeMarker.style.width = startWidth - deltaX + 'px';
-                        resizeMarker.style.height = startHeight - deltaY + 'px';
-                        resizeMarker.style.left = startLeft + deltaX + 'px';
-                        resizeMarker.style.top = startTop + deltaY + 'px';
-                        break;
-                    case 'top-right':
-                        resizeMarker.style.width = startWidth + deltaX + 'px';
-                        resizeMarker.style.height = startHeight - deltaY + 'px';
-                        resizeMarker.style.top = startTop + deltaY + 'px';
-                        break;
-                    case 'bottom-left':
-                        resizeMarker.style.width = startWidth - deltaX + 'px';
-                        resizeMarker.style.height = startHeight + deltaY + 'px';
-                        resizeMarker.style.left = startLeft + deltaX + 'px';
-                        break;
-                    case 'bottom-right':
-                        resizeMarker.style.width = startWidth + deltaX + 'px';
-                        resizeMarker.style.height = startHeight + deltaY + 'px';
-                        break;
-                    case 'top-middle':
-                        resizeMarker.style.height = startHeight - deltaY + 'px';
-                        resizeMarker.style.top = startTop + deltaY + 'px';
-                        break;
-                    case 'bottom-middle':
-                        resizeMarker.style.height = startHeight + deltaY + 'px';
-                        break;
-                    case 'left-middle':
-                        resizeMarker.style.width = startWidth - deltaX + 'px';
-                        resizeMarker.style.left = startLeft + deltaX + 'px';
-                        break;
-                    case 'right-middle':
-                        resizeMarker.style.width = startWidth + deltaX + 'px';
-                        break;
-                }
-            }
-
-            function mouseUpHandler() {
-                //set properties of the image to the resized marker
-                img.width = parseFloat(resizeMarker.style.width);
-                img.height = parseFloat(resizeMarker.style.height);
-                img.style.left = resizeMarker.style.left;
-                img.style.top = resizeMarker.style.top;
-                //restore the marker back to the original position
-                resizeMarker.style.left = 0;
-                resizeMarker.style.top = 0;
-
-                document.removeEventListener('mousemove', mouseMoveHandler);
-                document.removeEventListener('mouseup', mouseUpHandler);
-            }
-
-            document.addEventListener('mousemove', mouseMoveHandler);
-            document.addEventListener('mouseup', mouseUpHandler);
-        }
-
-        images.forEach((image) => {
-            image.onclick = (e) => {
-                if (!image.nextElementSibling || image.nextElementSibling.className !== 'se-image-options') {
-                    let resizeHandles = [];
-                    let imageWrapper = image.parentElement;
-                    if (!imageWrapper.classList.contains('se-image-wrapper')) {
-                        //wrapper not present, create one
-                        imageWrapper = document.createElement('div');
-                        imageWrapper.classList.add('se-image-wrapper');
-                        imageWrapper.setAttribute('contenteditable', false);
-                        image.parentElement.insertBefore(imageWrapper, image);
-                        imageWrapper.appendChild(image);
-
-                        //Add a div that shows resize marker
-                        const resizeMarker = document.createElement('div');
-                        resizeMarker.classList.add('resize-marker');
-                        resizeMarker.style.width = image.clientWidth + 'px';
-                        resizeMarker.style.height = image.clientHeight + 'px';
-                        imageWrapper.appendChild(resizeMarker);
-
-                        // Add resize handles (8 in total)
-                        const positions = ['top-left', 'top-middle', 'top-right', 'left-middle', 'right-middle', 'bottom-left', 'bottom-middle', 'bottom-right'];
-                        positions.forEach((pos) => {
-                            let handle = document.createElement('div');
-                            resizeHandles.push(handle);
-                            handle.classList.add('resize-handle', pos);
-                            imageWrapper.appendChild(handle);
-
-                            handle.addEventListener('mousedown', function (e) {
-                                e.preventDefault();
-                                startResize(e, resizeMarker, pos, image);
-                            });
-                        });
-                    }
-
-                    const editImageMenu = document.createElement('span');
-                    editImageMenu.setAttribute('class', 'se-image-options');
-                    editImageMenu.setAttribute('contenteditable', false);
-                    editImageMenu.onclick = (e) => e.stopPropagation();
-                    image.after(editImageMenu);
-
-                    const changeOption = document.createElement('span');
-                    changeOption.textContent = 'Edit Image';
-                    changeOption.onclick = (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        editImageMenu.remove();
-
-                        image.classList.add('se-image-to-edit');
-                        se.openImageMenu(true);
-
-                        const linkInputs = se.imageMenu.querySelectorAll('input');
-                        linkInputs[0].value = image.getAttribute('src');
-                        linkInputs[1].value = image.getAttribute('alt');
-                        linkInputs[2].value = image.getAttribute('title');
-                        let imageWidth = parseFloat(image.getAttribute('width'));
-                        if (isNaN(imageWidth)) {
-                            // Get width from image element
-                            imageWidth = image.clientWidth;
-                        }
-
-                        let imageHeight = parseFloat(image.getAttribute('height'));
-                        if (isNaN(imageHeight)) {
-                            // Get width from image element
-                            imageHeight = image.clientHeight;
-                        }
-
-                        linkInputs[3].value = imageWidth;
-                        linkInputs[4].value = imageHeight;
-
-                        setTimeout(() => linkInputs[0].select(), 100);
-                    };
-
-                    editImageMenu.append(changeOption);
-
-                    // When user clicks anywhere but the image, remove the menu
-                    const optionHandler = (ev) => {
-                        if (imageWrapper?.parentNode &&
-                            ev.target !== image && ev.target !== imageWrapper &&
-                            !resizeHandles.includes(ev.target)) {
-
-                            imageWrapper.parentNode.replaceChild(image, imageWrapper);
-                            window.removeEventListener('click', optionHandler);
-                        }
-                    };
-
-                    window.addEventListener('click', optionHandler);
-
-                    // When user presses a key, remove the menu
-                    const keyPressHandler = () => {
-                        if (imageWrapper?.parentNode) {
-                            imageWrapper.parentNode.replaceChild(image, imageWrapper);
-                        }
-                        se.body.removeEventListener('keypress', keyPressHandler);
-                    };
-                    se.body.addEventListener('keypress', keyPressHandler);
-                }
-            };
         });
     }
 
@@ -3601,10 +3413,186 @@ export default class StrivenEditor {
                     }, 0);
 
                     resolveImageInsert();
-                }).finally(() => {
-                    se.makeImagesClickable();
-                });
+                })
             });
         });
     };
+
+    /**
+     * handles click event to show image editing option and resize markers on an image placed in editor body
+     * @param {*} e 
+     */
+    handleImageClick(target) {   
+        const se = this;
+        if (target.tagName === 'IMG') {
+            const image=target;
+
+            if (!image.nextElementSibling || image.nextElementSibling.className !== 'se-image-options') {
+                let resizeHandles = [];
+                let imageWrapper = image.parentElement;
+                if (!imageWrapper.classList.contains('se-image-wrapper')) {
+                    //wrapper not present, create one
+                    imageWrapper = document.createElement('div');
+                    imageWrapper.classList.add('se-image-wrapper');
+                    imageWrapper.setAttribute('contenteditable', false);
+                    image.parentElement.insertBefore(imageWrapper, image);
+                    imageWrapper.appendChild(image);
+
+                    //Add a div that shows resize marker
+                    const resizeMarker = document.createElement('div');
+                    resizeMarker.classList.add('resize-marker');
+                    resizeMarker.style.width = image.clientWidth + 'px';
+                    resizeMarker.style.height = image.clientHeight + 'px';
+                    imageWrapper.appendChild(resizeMarker);
+
+                    // Add resize handles (8 in total)
+                    const positions = ['top-left', 'top-middle', 'top-right', 'left-middle', 'right-middle', 'bottom-left', 'bottom-middle', 'bottom-right'];
+                    positions.forEach((pos) => {
+                        let handle = document.createElement('div');
+                        resizeHandles.push(handle);
+                        handle.classList.add('resize-handle', pos);
+                        imageWrapper.appendChild(handle);
+
+                        handle.addEventListener('mousedown', function (e) {
+                            e.preventDefault();
+                            se.startImageResize(e, resizeMarker, pos, image);
+                        });
+                    });
+                }
+
+                const editImageMenu = document.createElement('span');
+                editImageMenu.setAttribute('class', 'se-image-options');
+                editImageMenu.setAttribute('contenteditable', false);
+                editImageMenu.onclick = (e) => e.stopPropagation();
+                image.after(editImageMenu);
+
+                const changeOption = document.createElement('span');
+                changeOption.textContent = 'Edit Image';
+                changeOption.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    editImageMenu.remove();
+
+                    image.classList.add('se-image-to-edit');
+                    se.openImageMenu(true);
+
+                    const linkInputs = se.imageMenu.querySelectorAll('input');
+                    linkInputs[0].value = image.getAttribute('src');
+                    linkInputs[1].value = image.getAttribute('alt');
+                    linkInputs[2].value = image.getAttribute('title');
+                    let imageWidth = parseFloat(image.getAttribute('width'));
+                    if (isNaN(imageWidth)) {
+                        // Get width from image element
+                        imageWidth = image.clientWidth;
+                    }
+
+                    let imageHeight = parseFloat(image.getAttribute('height'));
+                    if (isNaN(imageHeight)) {
+                        // Get width from image element
+                        imageHeight = image.clientHeight;
+                    }
+
+                    linkInputs[3].value = imageWidth;
+                    linkInputs[4].value = imageHeight;
+
+                    setTimeout(() => linkInputs[0].select(), 100);
+                };
+
+                editImageMenu.append(changeOption);
+
+                // When user clicks anywhere but the image, remove the menu
+                const optionHandler = (ev) => {
+                    if (imageWrapper?.parentNode &&
+                        ev.target !== image && ev.target !== imageWrapper &&
+                        !resizeHandles.includes(ev.target)) {
+
+                        imageWrapper.parentNode.replaceChild(image, imageWrapper);
+                        window.removeEventListener('click', optionHandler);
+                    }
+                };
+
+                window.addEventListener('click', optionHandler);
+
+                // When user presses a key, remove the menu
+                const keyPressHandler = () => {
+                    if (imageWrapper?.parentNode) {
+                        imageWrapper.parentNode.replaceChild(image, imageWrapper);
+                    }
+                    se.body.removeEventListener('keypress', keyPressHandler);
+                };
+                se.body.addEventListener('keypress', keyPressHandler);
+            }
+        }
+    }
+
+    startImageResize(e, resizeMarker, handlePosition, img) {
+        e.preventDefault();
+
+        let startX = e.clientX;
+        let startY = e.clientY;
+        let startWidth = img.offsetWidth;
+        let startHeight = img.offsetHeight;
+        let startLeft = img.offsetLeft;
+        let startTop = img.offsetTop;
+
+        function mouseMoveHandler(e) {
+            let deltaX = e.clientX - startX;
+            let deltaY = e.clientY - startY;
+
+            //update position and dimension of resize marker to show the resize effect
+            switch (handlePosition) {
+                case 'top-left':
+                    resizeMarker.style.width = startWidth - deltaX + 'px';
+                    resizeMarker.style.height = startHeight - deltaY + 'px';
+                    resizeMarker.style.left = startLeft + deltaX + 'px';
+                    resizeMarker.style.top = startTop + deltaY + 'px';
+                    break;
+                case 'top-right':
+                    resizeMarker.style.width = startWidth + deltaX + 'px';
+                    resizeMarker.style.height = startHeight - deltaY + 'px';
+                    resizeMarker.style.top = startTop + deltaY + 'px';
+                    break;
+                case 'bottom-left':
+                    resizeMarker.style.width = startWidth - deltaX + 'px';
+                    resizeMarker.style.height = startHeight + deltaY + 'px';
+                    resizeMarker.style.left = startLeft + deltaX + 'px';
+                    break;
+                case 'bottom-right':
+                    resizeMarker.style.width = startWidth + deltaX + 'px';
+                    resizeMarker.style.height = startHeight + deltaY + 'px';
+                    break;
+                case 'top-middle':
+                    resizeMarker.style.height = startHeight - deltaY + 'px';
+                    resizeMarker.style.top = startTop + deltaY + 'px';
+                    break;
+                case 'bottom-middle':
+                    resizeMarker.style.height = startHeight + deltaY + 'px';
+                    break;
+                case 'left-middle':
+                    resizeMarker.style.width = startWidth - deltaX + 'px';
+                    resizeMarker.style.left = startLeft + deltaX + 'px';
+                    break;
+                case 'right-middle':
+                    resizeMarker.style.width = startWidth + deltaX + 'px';
+                    break;
+            }
+        }
+
+        function mouseUpHandler() {
+            //set properties of the image to the resized marker
+            img.width = parseFloat(resizeMarker.style.width);
+            img.height = parseFloat(resizeMarker.style.height);
+            img.style.left = resizeMarker.style.left;
+            img.style.top = resizeMarker.style.top;
+            //restore the marker back to the original position
+            resizeMarker.style.left = 0;
+            resizeMarker.style.top = 0;
+
+            document.removeEventListener('mousemove', mouseMoveHandler);
+            document.removeEventListener('mouseup', mouseUpHandler);
+        }
+
+        document.addEventListener('mousemove', mouseMoveHandler);
+        document.addEventListener('mouseup', mouseUpHandler);
+    }
 }
