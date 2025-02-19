@@ -1437,25 +1437,6 @@ export default class StrivenEditor {
                         continue;
                     }
 
-                    // const processPromise = new Promise((processPromiseResolve) => {
-                    //     getImageDataURL(file).then((dataUrl) => {
-                    //         // Get the width of the image
-                    //         getImageWidth(dataUrl).then((width) => {
-                    //             width = computeImageWidth(width, bodyWidth);
-
-                    //             // Create the image tag to insert
-                    //             const imgTag = `<img src="${dataUrl}" width="${width}px" alt=""/>`;
-
-                    //             if (se.browser.isFirefox() || se.browser.isEdge()) {
-                    //                 document.execCommand('insertHTML', false, imgTag);
-                    //             } else {
-                    //                 document.execCommand('insertHTML', true, imgTag);
-                    //             }
-
-                    //             processPromiseResolve();
-                    //         });
-                    //     });
-                    // });
                     const processPromise = se.insertImage(file);
 
                     processPromises.push(processPromise);
@@ -2972,78 +2953,96 @@ export default class StrivenEditor {
             }
         }
 
-        const  startResize= function(e, img, handlePosition) {
+        const startResize = function (e, resizeMarker, handlePosition, img) {
             e.preventDefault();
-    
+
             let startX = e.clientX;
             let startY = e.clientY;
             let startWidth = img.offsetWidth;
             let startHeight = img.offsetHeight;
             let startLeft = img.offsetLeft;
             let startTop = img.offsetTop;
-    
+
             function mouseMoveHandler(e) {
                 let deltaX = e.clientX - startX;
                 let deltaY = e.clientY - startY;
-                //todo: use seame method to change height and width when resizing using handles and the edit method
+
+                //update position and dimension of resize marker to show the resize effect
                 switch (handlePosition) {
                     case 'top-left':
-                        img.width = startWidth - deltaX;
-                        img.height = startHeight - deltaY;
-                        img.style.left = startLeft + deltaX + 'px';
-                        img.style.top = startTop + deltaY + 'px';
+                        resizeMarker.style.width = startWidth - deltaX + 'px';
+                        resizeMarker.style.height = startHeight - deltaY + 'px';
+                        resizeMarker.style.left = startLeft + deltaX + 'px';
+                        resizeMarker.style.top = startTop + deltaY + 'px';
                         break;
                     case 'top-right':
-                        img.width = startWidth + deltaX;
-                        img.height = startHeight - deltaY;
-                        img.style.top = startTop + deltaY + 'px';
+                        resizeMarker.style.width = startWidth + deltaX + 'px';
+                        resizeMarker.style.height = startHeight - deltaY + 'px';
+                        resizeMarker.style.top = startTop + deltaY + 'px';
                         break;
                     case 'bottom-left':
-                        img.width = startWidth - deltaX;
-                        img.height = startHeight + deltaY;
-                        img.style.left = startLeft + deltaX + 'px';
+                        resizeMarker.style.width = startWidth - deltaX + 'px';
+                        resizeMarker.style.height = startHeight + deltaY + 'px';
+                        resizeMarker.style.left = startLeft + deltaX + 'px';
                         break;
                     case 'bottom-right':
-                        img.width = startWidth + deltaX;
-                        img.height = startHeight + deltaY;
+                        resizeMarker.style.width = startWidth + deltaX + 'px';
+                        resizeMarker.style.height = startHeight + deltaY + 'px';
                         break;
                     case 'top-middle':
-                        img.height = startHeight - deltaY;
-                        img.style.top = startTop + deltaY + 'px';
+                        resizeMarker.style.height = startHeight - deltaY + 'px';
+                        resizeMarker.style.top = startTop + deltaY + 'px';
                         break;
                     case 'bottom-middle':
-                        img.height = startHeight + deltaY;
+                        resizeMarker.style.height = startHeight + deltaY + 'px';
                         break;
                     case 'left-middle':
-                        img.width = startWidth - deltaX;
-                        img.style.left = startLeft + deltaX + 'px';
+                        resizeMarker.style.width = startWidth - deltaX + 'px';
+                        resizeMarker.style.left = startLeft + deltaX + 'px';
                         break;
                     case 'right-middle':
-                        img.width = startWidth + deltaX;
+                        resizeMarker.style.width = startWidth + deltaX + 'px';
                         break;
                 }
             }
-    
+
             function mouseUpHandler() {
+                //set properties of the image to the resized marker
+                img.width = parseFloat(resizeMarker.style.width);
+                img.height = parseFloat(resizeMarker.style.height);
+                img.style.left = resizeMarker.style.left;
+                img.style.top = resizeMarker.style.top;
+                //restore the marker back to the original position
+                resizeMarker.style.left = 0;
+                resizeMarker.style.top = 0;
+
                 document.removeEventListener('mousemove', mouseMoveHandler);
                 document.removeEventListener('mouseup', mouseUpHandler);
             }
-    
+
             document.addEventListener('mousemove', mouseMoveHandler);
             document.addEventListener('mouseup', mouseUpHandler);
         }
-        
+
         images.forEach((image) => {
             image.onclick = (e) => {
                 if (!image.nextElementSibling || image.nextElementSibling.className !== 'se-image-options') {
-                    let resizeHandles=[];
+                    let resizeHandles = [];
                     let imageWrapper = image.parentElement;
                     if (!imageWrapper.classList.contains('se-image-wrapper')) {
+                        //wrapper not present, create one
                         imageWrapper = document.createElement('div');
                         imageWrapper.classList.add('se-image-wrapper');
                         imageWrapper.setAttribute('contenteditable', false);
                         image.parentElement.insertBefore(imageWrapper, image);
                         imageWrapper.appendChild(image);
+
+                        //Add a div that shows resize marker
+                        const resizeMarker = document.createElement('div');
+                        resizeMarker.classList.add('resize-marker');
+                        resizeMarker.style.width = image.clientWidth + 'px';
+                        resizeMarker.style.height = image.clientHeight + 'px';
+                        imageWrapper.appendChild(resizeMarker);
 
                         // Add resize handles (8 in total)
                         const positions = ['top-left', 'top-middle', 'top-right', 'left-middle', 'right-middle', 'bottom-left', 'bottom-middle', 'bottom-right'];
@@ -3055,7 +3054,7 @@ export default class StrivenEditor {
 
                             handle.addEventListener('mousedown', function (e) {
                                 e.preventDefault();
-                                startResize(e, image, pos);
+                                startResize(e, resizeMarker, pos, image);
                             });
                         });
                     }
@@ -3102,10 +3101,13 @@ export default class StrivenEditor {
 
                     // When user clicks anywhere but the image, remove the menu
                     const optionHandler = (ev) => {
-                        if (imageWrapper?.parentNode && ev.target !== image && !resizeHandles.includes(ev.target)) {
+                        if (imageWrapper?.parentNode &&
+                            ev.target !== image && ev.target !== imageWrapper &&
+                            !resizeHandles.includes(ev.target)) {
+
                             imageWrapper.parentNode.replaceChild(image, imageWrapper);
+                            window.removeEventListener('click', optionHandler);
                         }
-                        window.removeEventListener('click', optionHandler);
                     };
 
                     window.addEventListener('click', optionHandler);
@@ -3122,9 +3124,6 @@ export default class StrivenEditor {
             };
         });
     }
-
-
-    
 
     /**
     * Creates links
