@@ -1309,9 +1309,11 @@ export default class StrivenEditor {
         // Upload tab button
         const imageMenuUploadTabButton = document.createElement('button');
         imageMenuUploadTabButton.classList.add('se-tab-button', 'se-tab-button-upload', 'tab-button-active');
+        imageMenuUploadTabButton.type='button';
         // Link tab button
         const imageMenuLinkTabButton = document.createElement('button');
         imageMenuLinkTabButton.classList.add('se-tab-button', 'se-tab-button-link');
+        imageMenuLinkTabButton.type='button';
 
         // Image Menu Tabs
         const imageMenuUploadTab = document.createElement('div');
