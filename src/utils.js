@@ -96,17 +96,18 @@ export const blowUpElement = (el, bg = '#fff', onExpand) => {
  * @returns
  */
 export const getImageWidth = (url) => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const img = new Image();
         img.onload = () => resolve(img.width);
+        img.onerror = () => reject('Error loading image. ');
         img.src = url;
     });
 };
 
 /**
  * Computes the width of an image based on the body width
- * @param {Int} imageWidth 
- * @param {Int} bodyWidth 
+ * @param {Int} imageWidth
+ * @param {Int} bodyWidth
  * @returns {Int} computed width
  */
 export const computeImageWidth = (imageWidth, bodyWidth) => {
@@ -121,7 +122,7 @@ export const computeImageWidth = (imageWidth, bodyWidth) => {
         newWidth = 1200;
     }
     return newWidth;
-}
+};
 
 /**
  * Gets the data URL of an image

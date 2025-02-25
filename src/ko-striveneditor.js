@@ -1,7 +1,7 @@
 import StrivenEditor from './striveneditor';
 
 export default class KoStrivenEditor {
-    constructor(ko, bindingName = 'striveneditor') {
+    constructor(ko, bindingName = 'striveneditor', defaultOptions = {}) {
         if (!ko.bindingHandlers.striveneditor) {
             ko.bindingHandlers.striveneditor = {
                 init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
@@ -30,12 +30,14 @@ export default class KoStrivenEditor {
                             onChange = changeOpt;
                         }
                     }
-
-                    let editor = new StrivenEditor(element, {
+                    
+                    const config = {
+                        ...defaultOptions,
                         ...options(),
                         change: onChange,
                         toolbarTemplate: options().toolbarTemplate && options().toolbarTemplate()
-                    });
+                    }
+                    let editor = new StrivenEditor(element, config );
                     let pauseUpdate = false;
 
                     // Handle updates and changes to value observable
