@@ -1309,11 +1309,11 @@ export default class StrivenEditor {
         // Upload tab button
         const imageMenuUploadTabButton = document.createElement('button');
         imageMenuUploadTabButton.classList.add('se-tab-button', 'se-tab-button-upload', 'tab-button-active');
-        imageMenuUploadTabButton.type='button';
+        imageMenuUploadTabButton.type = 'button';
         // Link tab button
         const imageMenuLinkTabButton = document.createElement('button');
         imageMenuLinkTabButton.classList.add('se-tab-button', 'se-tab-button-link');
-        imageMenuLinkTabButton.type='button';
+        imageMenuLinkTabButton.type = 'button';
 
         // Image Menu Tabs
         const imageMenuUploadTab = document.createElement('div');
@@ -1326,7 +1326,7 @@ export default class StrivenEditor {
         // Upload form inputs
         const imageMenuUploadInput = document.createElement('input');
         imageMenuUploadInput.type = 'file';
-        imageMenuUploadInput.accept = 'image/*';
+        imageMenuUploadInput.accept = 'image/jpeg,image/webp,image/gif,image/png,image/svg+xml,image/bmp,image/x-icon';
         imageMenuUploadInput.multiple = true;
         imageMenuUploadInput.style.display = 'none';
 
@@ -1430,7 +1430,7 @@ export default class StrivenEditor {
         const processFiles = function (files) {
             return new Promise((resolve) => {
                 const processPromises = [];
-
+                
                 for (const file of files) {
                     // Check if the file is an image
                     if (!file.type.includes('image')) {
@@ -1445,6 +1445,7 @@ export default class StrivenEditor {
                 // Resolve the promise when all the images have been processed
                 Promise.all(processPromises).then(() => {
                     resolve();
+
                 });
             });
         };
@@ -1477,7 +1478,6 @@ export default class StrivenEditor {
 
         // Create an event handler for when the images are selected
         imageMenuUploadInput.onchange = (e) => {
-            console.log('Files selected', e.target.files);
 
             se.body.focus();
             se.setRange();
@@ -1504,16 +1504,19 @@ export default class StrivenEditor {
         // Hook up dropzone events
         imageMenuUploadDropZone.ondragover = (e) => {
             e.preventDefault();
+            
             imageMenuUploadDropZone.classList.add('dropzone-hot');
         };
 
         imageMenuUploadDropZone.ondragleave = (e) => {
             e.preventDefault();
+            
             imageMenuUploadDropZone.classList.remove('dropzone-hot');
         };
 
         imageMenuUploadDropZone.ondrop = (e) => {
             e.preventDefault();
+            
             imageMenuUploadDropZone.classList.remove('dropzone-hot');
 
             // For each file, get the data url and insert the image
@@ -1537,9 +1540,11 @@ export default class StrivenEditor {
             const heightValue = imageMenuHeightFormInput.value;
             const widthValue = imageMenuWidthFormInput.value;
 
+            // Check if we are inserting a new image or editing an existing one
+            let imageToEdit = se.body.querySelector('.se-image-to-edit');
+
+            // Link value may be left blank or isn't set because it is a data url image
             if (linkValue) {
-                // Check if we are inserting a new image or editing an existing one
-                let imageToEdit = se.body.querySelector('.se-image-to-edit');
                 if (!imageToEdit) {
                     // No editing image found, so this is an insert. Insert the image.
                     if (se.browser.isFirefox() || se.browser.isEdge()) {
@@ -1558,25 +1563,23 @@ export default class StrivenEditor {
                     imageToEdit.classList.remove('se-image-to-edit');
                     imageToEdit.setAttribute('src', `${linkValue}`);
                 }
-
-                // Update / insert
-                if (imageToEdit) {
-                    // Add the attributes for the image
-                    imageToEdit.setAttribute('height', `${heightValue}px`);
-                    imageToEdit.setAttribute('width', `${widthValue}px`);
-                    imageToEdit.setAttribute('alt', `${altTextValue}`);
-                    imageToEdit.setAttribute('title', `${titleValue}`);
-                }
-
-                // Clear the inputs
-                clearImageMenuInputs();
-
-                // Clean up
-                se.closeImageMenu();
-            } else {
-                se.body.focus();
-                se.closeImageMenu();
             }
+
+            // Add / update the attributes for the image
+            if (imageToEdit && (linkValue || imageToEdit.dataset.dataUrl)) {
+                // Add the attributes for the image
+                imageToEdit.setAttribute('height', `${heightValue}px`);
+                imageToEdit.setAttribute('width', `${widthValue}px`);
+                imageToEdit.setAttribute('alt', `${altTextValue}`);
+                imageToEdit.setAttribute('title', `${titleValue}`);
+            }
+
+            // Clear the inputs
+            clearImageMenuInputs();
+            // Focus the body
+            se.body.focus();
+            // Clean up
+            se.closeImageMenu();
         };
 
         imageMenuCloseButton.onclick = (e) => {
@@ -2162,11 +2165,26 @@ export default class StrivenEditor {
      */
     getImage(imageEncoding) {
         const se = this;
-        return fetch(se.options.imageUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ imageEncoding })
-        }).then((res) => res.json());
+        return new Promise((resolve, reject) => {
+            fetch(se.options.imageUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ imageEncoding })
+            })
+                .then((response) => {
+                    response
+                        .json()
+                        .then((data) => {
+                            resolve(data);
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
     }
 
     /**
@@ -2408,6 +2426,8 @@ export default class StrivenEditor {
         const imageInputs = se.imageMenu.querySelectorAll('input');
         for (const imageInput of imageInputs) {
             imageInput.value = '';
+            // Enable the input
+            imageInput.removeAttribute('disabled');
         }
 
         se.imageMenu.classList.add('se-popup-open');
@@ -3379,39 +3399,48 @@ export default class StrivenEditor {
      * @returns
      */
     insertImage(file) {
+
         const se = this;
         return new Promise((resolveImageInsert) => {
             const bodyWidth = se.body.offsetWidth;
-            getImageDataURL(file).then((imgDataUrl) => {
-                getImageWidth(imgDataUrl).then((width) => {
-                    width = computeImageWidth(width, bodyWidth);
+            getImageDataURL(file)
+                .then((imgDataUrl) => {
+                    getImageWidth(imgDataUrl)
+                        .then((width) => {
+                            width = computeImageWidth(width, bodyWidth);
 
-                    // Create the image tag to insert
-                    const imgTag = `<img src="${imgDataUrl}" width="${width}px" alt=""/>`;
+                            // Create the image tag to insert
+                            const imgTag = `<img src="${imgDataUrl}" width="${width}px" alt="" data-data-url="true"/>`;
 
-                    if (se.options.imageUrl) {
-                        //upload image if imageUrl is provided
-                        se.getImage(imgDataUrl)
-                            .then((data) => {
-                                document.execCommand('insertHTML', true, `<img src="${data.imageRef}" width="${width}px" alt=""/>`);
-                            })
-                            .catch((err) => {
-                                document.execCommand('insertHTML', true, imgTag);
-                            });
-                    } else {
-                        if (se.browser.isFirefox() || se.browser.isEdge()) {
-                            document.execCommand('insertHTML', false, imgTag);
-                        } else {
-                            document.execCommand('insertHTML', true, imgTag);
-                        }
-                    }
-                    setTimeout(function () {
-                        se.overflow();
-                    }, 0);
+                            if (se.options.imageUrl) {
+                                //upload image if imageUrl is provided
+                                se.getImage(imgDataUrl)
+                                    .then((imageUrl) => {
+                                        document.execCommand('insertHTML', true, `<img src="${imageUrl}" width="${width}px" alt=""/>`);
+                                    })
+                                    .catch((err) => {
+                                        document.execCommand('insertHTML', true, imgTag);
+                                    });
+                            } else {
+                                if (se.browser.isFirefox() || se.browser.isEdge()) {
+                                    document.execCommand('insertHTML', false, imgTag);
+                                } else {
+                                    document.execCommand('insertHTML', true, imgTag);
+                                }
+                            }
+                            setTimeout(function () {
+                                se.overflow();
+                            }, 0);
 
-                    resolveImageInsert();
+                            resolveImageInsert();
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                        });
+                })
+                .catch((err) => {
+                    console.error(err);
                 });
-            });
         });
     }
 
@@ -3482,8 +3511,21 @@ export default class StrivenEditor {
                     image.classList.add('se-image-to-edit');
                     se.openImageMenu(true);
 
+                    // Get from the data-data-url attribute whether this link is a data url. The data attribute will be true if it is
+                    const isDataUrl = image.dataset.dataUrl;
+
                     const linkInputs = se.imageMenu.querySelectorAll('input');
-                    linkInputs[0].value = image.getAttribute('src');
+                    // If the image is a data url, we need to disable the source input and not set the value
+                    if (isDataUrl) {
+                        // Disable the input
+                        linkInputs[0].setAttribute('disabled', 'disabled');
+                    } else {
+                        // Enable the input
+                        linkInputs[0].removeAttribute('disabled');
+                        // Set the url of the image in the input
+                        linkInputs[0].value = image.getAttribute('src');
+                    }
+
                     linkInputs[1].value = image.getAttribute('alt');
                     linkInputs[2].value = image.getAttribute('title');
                     let imageWidth = parseFloat(image.getAttribute('width'));
