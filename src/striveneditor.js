@@ -16,7 +16,7 @@ import {
 } from './defaults.js';
 
 // Helpers
-import { createSVG, denormalizeCamel, blowUpElement, getImageWidth, getImageDataURL, computeImageWidth } from './utils';
+import { createSVG, denormalizeCamel, blowUpElement, getImageDimensions, getImageDataURL, computeImageDimensions } from './utils';
 
 // Polyfills
 import ResizeObserver from 'resize-observer-polyfill';
@@ -3399,24 +3399,36 @@ export default class StrivenEditor {
      * @returns
      */
     insertImage(file) {
-
         const se = this;
         return new Promise((resolveImageInsert) => {
             const bodyWidth = se.body.offsetWidth;
             getImageDataURL(file)
                 .then((imgDataUrl) => {
-                    getImageWidth(imgDataUrl)
-                        .then((width) => {
-                            width = computeImageWidth(width, bodyWidth);
+                    getImageDimensions(imgDataUrl)
+                        .then(({width, height}) => {
+                            
+                            const {width: newWidth, height: newHeight} = computeImageDimensions(width, height, bodyWidth);
 
                             // Create the image tag to insert
-                            const imgTag = `<img src="${imgDataUrl}" width="${width}px" alt="" data-data-url="true"/>`;
+                            const imgTag = `<img src="${imgDataUrl}" width="${newWidth}px" alt="" data-data-url="true"/>`;
 
                             if (se.options.imageUrl) {
+                                // Generate a random string to use as the image name
+                                const randomString = 'image-' + Math.random().toString(36);
+                                // Insert image with a temporary src
+                                document.execCommand('insertHTML', true, `
+                                    <div id="${randomString}" style="width:${newWidth}px; height: ${newHeight}px; background-color: #eee;display: flex; align-items: center; justify-content: center;" >
+                                        <svg width="25%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>cloud-upload-outline</title><path d="M6.5 20Q4.22 20 2.61 18.43 1 16.85 1 14.58 1 12.63 2.17 11.1 3.35 9.57 5.25 9.15 5.88 6.85 7.75 5.43 9.63 4 12 4 14.93 4 16.96 6.04 19 8.07 19 11 20.73 11.2 21.86 12.5 23 13.78 23 15.5 23 17.38 21.69 18.69 20.38 20 18.5 20H13Q12.18 20 11.59 19.41 11 18.83 11 18V12.85L9.4 14.4L8 13L12 9L16 13L14.6 14.4L13 12.85V18H18.5Q19.55 18 20.27 17.27 21 16.55 21 15.5 21 14.45 20.27 13.73 19.55 13 18.5 13H17V11Q17 8.93 15.54 7.46 14.08 6 12 6 9.93 6 8.46 7.46 7 8.93 7 11H6.5Q5.05 11 4.03 12.03 3 13.05 3 14.5 3 15.95 4.03 17 5.05 18 6.5 18H9V20M12 13Z" /></svg>
+                                    </div>`);
+                                
                                 //upload image if imageUrl is provided
                                 se.getImage(imgDataUrl)
                                     .then((imageUrl) => {
-                                        document.execCommand('insertHTML', true, `<img src="${imageUrl}" width="${width}px" alt=""/>`);
+                                        // Replace the temporary image with the uploaded image
+                                        const tempImg = document.getElementById(randomString);
+                                        tempImg.outerHTML = `<img id="${randomString}" src="${imageUrl}" width="${newWidth}px" alt=""/>`;
+
+                                        //document.execCommand('insertHTML', true, `<img id="${randomString}" src="${imageUrl}" width="${newWidth}px" alt=""/>`);
                                     })
                                     .catch((err) => {
                                         document.execCommand('insertHTML', true, imgTag);
