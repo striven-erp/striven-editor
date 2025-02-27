@@ -166,7 +166,7 @@
 }
 
 .striven-editor .se-file-drop-dropzone.dropzone-hot {
-    border: 5px dashed #428bca;
+    border: 2px dashed #428bca;
 }
 
 .striven-editor .se-file-drop-dropzone.dropzone-overlay {

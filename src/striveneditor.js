@@ -1430,7 +1430,7 @@ export default class StrivenEditor {
         const processFiles = function (files) {
             return new Promise((resolve) => {
                 const processPromises = [];
-                
+
                 for (const file of files) {
                     // Check if the file is an image
                     if (!file.type.includes('image')) {
@@ -1504,19 +1504,19 @@ export default class StrivenEditor {
         // Hook up dropzone events
         imageMenuUploadDropZone.ondragover = (e) => {
             e.preventDefault();
-            
+
             imageMenuUploadDropZone.classList.add('dropzone-hot');
         };
 
         imageMenuUploadDropZone.ondragleave = (e) => {
             e.preventDefault();
-            
+
             imageMenuUploadDropZone.classList.remove('dropzone-hot');
         };
 
         imageMenuUploadDropZone.ondrop = (e) => {
             e.preventDefault();
-            
+
             imageMenuUploadDropZone.classList.remove('dropzone-hot');
 
             // For each file, get the data url and insert the image
@@ -2141,7 +2141,7 @@ export default class StrivenEditor {
             if (selection) {
                 return window.getSelection().getRangeAt(0);
             }
-        } catch (e) {}
+        } catch (e) { }
     }
 
     /**
@@ -2628,7 +2628,7 @@ export default class StrivenEditor {
                 window.getSelection().removeAllRanges();
                 window.getSelection().addRange(se.range);
             }
-        } catch (e) {}
+        } catch (e) { }
     }
 
     /**
@@ -3412,11 +3412,12 @@ export default class StrivenEditor {
                             // Create the image tag to insert
                             const imgTag = `<img src="${imgDataUrl}" width="${newWidth}px" alt="" data-data-url="true"/>`;
 
+                            const showUI = !(se.browser.isFirefox() || se.browser.isEdge())
                             if (se.options.imageUrl) {
                                 // Generate a random string to use as the image name
                                 const randomString = 'image-' + Math.random().toString(36);
                                 // Insert image with a temporary src
-                                document.execCommand('insertHTML', true, `
+                                document.execCommand('insertHTML', showUI, `
                                     <div id="${randomString}" style="width:${newWidth}px; height: ${newHeight}px; background-color: #eee;display: flex; align-items: center; justify-content: center;" >
                                         <svg width="25%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>cloud-upload-outline</title><path d="M6.5 20Q4.22 20 2.61 18.43 1 16.85 1 14.58 1 12.63 2.17 11.1 3.35 9.57 5.25 9.15 5.88 6.85 7.75 5.43 9.63 4 12 4 14.93 4 16.96 6.04 19 8.07 19 11 20.73 11.2 21.86 12.5 23 13.78 23 15.5 23 17.38 21.69 18.69 20.38 20 18.5 20H13Q12.18 20 11.59 19.41 11 18.83 11 18V12.85L9.4 14.4L8 13L12 9L16 13L14.6 14.4L13 12.85V18H18.5Q19.55 18 20.27 17.27 21 16.55 21 15.5 21 14.45 20.27 13.73 19.55 13 18.5 13H17V11Q17 8.93 15.54 7.46 14.08 6 12 6 9.93 6 8.46 7.46 7 8.93 7 11H6.5Q5.05 11 4.03 12.03 3 13.05 3 14.5 3 15.95 4.03 17 5.05 18 6.5 18H9V20M12 13Z" /></svg>
                                     </div>`);
@@ -3428,17 +3429,12 @@ export default class StrivenEditor {
                                         const tempImg = document.getElementById(randomString);
                                         tempImg.outerHTML = `<img id="${randomString}" src="${imageUrl}" width="${newWidth}px" alt=""/>`;
 
-                                        //document.execCommand('insertHTML', true, `<img id="${randomString}" src="${imageUrl}" width="${newWidth}px" alt=""/>`);
                                     })
                                     .catch((err) => {
-                                        document.execCommand('insertHTML', true, imgTag);
+                                        document.execCommand('insertHTML', showUI, imgTag);
                                     });
                             } else {
-                                if (se.browser.isFirefox() || se.browser.isEdge()) {
-                                    document.execCommand('insertHTML', false, imgTag);
-                                } else {
-                                    document.execCommand('insertHTML', true, imgTag);
-                                }
+                                document.execCommand('insertHTML', showUI, imgTag);
                             }
                             setTimeout(function () {
                                 se.overflow();
@@ -3468,19 +3464,23 @@ export default class StrivenEditor {
             if (!image.nextElementSibling || image.nextElementSibling.className !== 'se-image-options') {
                 let resizeHandles = [];
                 let imageWrapper = image.parentElement;
+                let imageRect = image.getBoundingClientRect();
+
                 if (!imageWrapper.classList.contains('se-image-wrapper')) {
                     //wrapper not present, create one
                     imageWrapper = document.createElement('div');
                     imageWrapper.classList.add('se-image-wrapper');
                     imageWrapper.setAttribute('contenteditable', false);
+                    imageWrapper.style.width = `${imageRect.width}px`;
+                    imageWrapper.style.height = `${imageRect.height}px`;
+
+
                     image.parentElement.insertBefore(imageWrapper, image);
                     imageWrapper.appendChild(image);
 
                     //Add a div that shows resize marker
                     const resizeMarker = document.createElement('div');
                     resizeMarker.classList.add('resize-marker');
-                    resizeMarker.style.width = image.clientWidth + 'px';
-                    resizeMarker.style.height = image.clientHeight + 'px';
                     imageWrapper.appendChild(resizeMarker);
 
                     // Add resize handles (8 in total)
@@ -3503,6 +3503,11 @@ export default class StrivenEditor {
                         handle.addEventListener('mousedown', function (e) {
                             e.preventDefault();
                             se.startImageResize(e, resizeMarker, pos, image);
+                        });
+
+                        handle.addEventListener('touchstart', function (e) {
+                            e.preventDefault();
+                            se.startImageResize(e.touches[0], resizeMarker, pos, image);
                         });
                     });
                 }
@@ -3583,7 +3588,8 @@ export default class StrivenEditor {
     }
 
     startImageResize(e, resizeMarker, handlePosition, img) {
-        e.preventDefault();
+
+        e.preventDefault && e.preventDefault();
 
         let startX = e.clientX;
         let startY = e.clientY;
@@ -3593,6 +3599,8 @@ export default class StrivenEditor {
         let startTop = img.offsetTop;
 
         function mouseMoveHandler(e) {
+            if (e.touches) e = e.touches[0];
+
             let deltaX = e.clientX - startX;
             let deltaY = e.clientY - startY;
 
@@ -3637,10 +3645,18 @@ export default class StrivenEditor {
 
         function mouseUpHandler() {
             //set properties of the image to the resized marker
-            img.width = parseFloat(resizeMarker.style.width);
-            img.height = parseFloat(resizeMarker.style.height);
-            img.style.left = resizeMarker.style.left;
-            img.style.top = resizeMarker.style.top;
+            let resizedRect = resizeMarker.getBoundingClientRect();
+
+            img.width = resizedRect.width;
+            img.height = resizedRect.height;
+            img.style.left = resizedRect.x;
+            img.style.top = resizedRect.y;
+            //reset the wrapper dimension if it's present
+            let imageWrapper = img.parentElement;
+            if (imageWrapper.classList.contains('se-image-wrapper')) {
+                imageWrapper.style.width = `${img.width}px`;
+                imageWrapper.style.height = `${img.height}px`;
+            }
             //restore the marker back to the original position
             resizeMarker.style.left = 0;
             resizeMarker.style.top = 0;
@@ -3651,5 +3667,10 @@ export default class StrivenEditor {
 
         document.addEventListener('mousemove', mouseMoveHandler);
         document.addEventListener('mouseup', mouseUpHandler);
+
+        document.addEventListener('touchmove', mouseMoveHandler);
+        document.addEventListener('mouseend', mouseUpHandler);
+
+
     }
 }
