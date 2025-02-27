@@ -31,7 +31,7 @@ import '@simonwep/pickr/dist/themes/classic.min.css'; // 'classic' theme
 import Pickr from '@simonwep/pickr/dist/pickr.es5.min';
 
 // Formatting
-import beautify from 'simply-beautiful';
+import js_beautify from 'js-beautify';
 
 /* Represents an instance of the Striven Editor */
 export default class StrivenEditor {
@@ -3084,11 +3084,12 @@ export default class StrivenEditor {
 
                 // Format the HTML so that it looks somewhat pretty
                 var options = {
-                    indent_size: 2,
+                    indent_size: 4,
                     unformatted: []
                 };
 
-                let formatedHtml = beautify.html(se.body.innerHTML, options);
+                let formatedHtml = js_beautify.html(se.body.innerHTML, options);
+                
                 // Set the content of the editor to the formatted html
                 se.body.textContent = formatedHtml;
                 se.overflow();
