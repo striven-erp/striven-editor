@@ -1314,10 +1314,12 @@ export default class StrivenEditor {
         const imageMenuUploadTabButton = document.createElement('button');
         imageMenuUploadTabButton.classList.add('se-tab-button', 'se-tab-button-upload', 'tab-button-active');
         imageMenuUploadTabButton.type = 'button';
+        imageMenuUploadTabButton.tabIndex = 1;
         // Link tab button
         const imageMenuLinkTabButton = document.createElement('button');
         imageMenuLinkTabButton.classList.add('se-tab-button', 'se-tab-button-link');
         imageMenuLinkTabButton.type = 'button';
+        imageMenuUploadTabButton.tabIndex = 2;
 
         // Image Menu Tabs
         const imageMenuUploadTab = document.createElement('div');
@@ -1346,7 +1348,7 @@ export default class StrivenEditor {
         // Link form inputs
         const imageMenuForm = document.createElement('div');
         const imageMenuButtons = document.createElement('div');
-        const imageMenuButton = document.createElement('button');
+        const imageInsertButton = document.createElement('button');
         const imageMenuCloseButton = document.createElement('button');
         const imageMenuFormLabel = document.createElement('p');
         const imageMenuFormSourceInput = document.createElement('input');
@@ -1370,12 +1372,13 @@ export default class StrivenEditor {
         // Set up the buttons for the image form
         imageMenuButtons.classList.add('se-popup-button-container');
         // Set types
-        imageMenuButton.type = 'button';
+        imageInsertButton.type = 'button';
         imageMenuCloseButton.type = 'button';
 
         // Insert button
-        imageMenuButton.classList.add('se-popup-button', 'se-button-primary');
-        imageMenuButton.textContent = 'Insert Image';
+        imageInsertButton.classList.add('se-popup-button', 'se-button-primary', 'se-image-insert-button');
+        imageInsertButton.tabIndex = 0;
+        imageInsertButton.textContent = 'Insert Image';
 
         // Close Button
         imageMenuCloseButton.classList.add('se-popup-button', 'se-button-secondary');
@@ -1465,6 +1468,8 @@ export default class StrivenEditor {
             imageMenuUploadTabButton.classList.add('tab-button-active');
             // Remove the active class from the link tab
             imageMenuLinkTabButton.classList.remove('tab-button-active');
+            // Prevent event from bubbling up
+            e.stopPropagation();
         };
 
         // Create an event handler for the link tab click that will show the link tab
@@ -1477,6 +1482,8 @@ export default class StrivenEditor {
             imageMenuLinkTabButton.classList.add('tab-button-active');
             // Remove the active class from the upload tab
             imageMenuUploadTabButton.classList.remove('tab-button-active');
+            // Prevent event from bubbling up
+            e.stopPropagation();
         };
 
         // Create an event handler for when the images are selected
@@ -1531,7 +1538,7 @@ export default class StrivenEditor {
         };
 
         // Insert image button click event
-        imageMenuButton.onclick = (e) => {
+        imageInsertButton.onclick = (e) => {
             se.body.focus();
             se.setRange();
 
@@ -1576,6 +1583,10 @@ export default class StrivenEditor {
                 imageToEdit.setAttribute('title', `${titleValue}`);
             }
 
+            // Call se.overflow in set timeout
+            setTimeout(() => {
+                se.overflow();
+            }, 100);
             // Clear the inputs
             clearImageMenuInputs();
             // Focus the body
@@ -1608,7 +1619,7 @@ export default class StrivenEditor {
         imageMenuLinkTab.appendChild(imageMenuHeightForm);
 
         // Add the buttons
-        imageMenuButtons.appendChild(imageMenuButton);
+        imageMenuButtons.appendChild(imageInsertButton);
         imageMenuButtons.appendChild(imageMenuCloseButton);
 
         imageMenuLinkTab.appendChild(imageMenuButtons);
@@ -1624,6 +1635,7 @@ export default class StrivenEditor {
             inp.onkeydown = (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
+                    imageInsertButton.click();
                 }
             };
         });
@@ -2417,11 +2429,23 @@ export default class StrivenEditor {
         // Select the tab buttons
         const imageMenuUploadTabButton = se.imageMenu.querySelector('.se-tab-button-upload');
         const imageMenuLinkTabButton = se.imageMenu.querySelector('.se-tab-button-link');
+        const imageInsertButton = se.imageMenu.querySelector('.se-image-insert-button');
 
         if (isEdit) {
             imageMenuLinkTabButton.click();
+            imageMenuUploadTabButton.setAttribute('disabled', 'disabled');
+            imageMenuUploadTabButton.style.cursor = 'not-allowed';
+            // Change the text of the insert image button to Update Image    
+            imageInsertButton.textContent = 'Update Image';
+            // Set cursor to indicate disabled
+            
         } else {
             imageMenuUploadTabButton.click();
+            imageMenuUploadTabButton.removeAttribute('disabled');
+            imageMenuUploadTabButton.style.cursor = 'pointer';
+            // Rename insert image button
+            imageInsertButton.textContent = 'Insert Image';
+            
         }
 
         // Clear the input fields
