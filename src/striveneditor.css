@@ -166,7 +166,7 @@
 }
 
 .striven-editor .se-file-drop-dropzone.dropzone-hot {
-    border: 5px dashed #428bca;
+    border: 2px dashed #428bca;
 }
 
 .striven-editor .se-file-drop-dropzone.dropzone-overlay {
@@ -305,7 +305,7 @@
 }
 
 .striven-editor .se-toolbar-group[data-open='true'] {
-    z-index: 1000;
+    z-index: 999;
 }
 
 /* 
@@ -502,7 +502,7 @@
     background-color: #fff;
     border: 1px solid #ddd;
     padding: 5px;
-    z-index: 1000;
+    z-index: 999;
     opacity: 0;
     transition: opacity, transform, box-shadow, 500ms;
 }

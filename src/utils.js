@@ -95,10 +95,10 @@ export const blowUpElement = (el, bg = '#fff', onExpand) => {
  * @param {string} url
  * @returns
  */
-export const getImageWidth = (url) => {
+export const getImageDimensions = (url) => {
     return new Promise((resolve, reject) => {
         const img = new Image();
-        img.onload = () => resolve(img.width);
+        img.onload = () => resolve({width: img.width, height: img.height});
         img.onerror = () => reject('Error loading image. ');
         img.src = url;
     });
@@ -107,10 +107,11 @@ export const getImageWidth = (url) => {
 /**
  * Computes the width of an image based on the body width
  * @param {Int} imageWidth
+ * @param {Int} imageHeight
  * @param {Int} bodyWidth
  * @returns {Int} computed width
  */
-export const computeImageWidth = (imageWidth, bodyWidth) => {
+export const computeImageDimensions = (imageWidth, imageHeight, bodyWidth) => {
     let newWidth = imageWidth;
     // If the image is wider than the body, set the width to 90% of the body width
     if (imageWidth > bodyWidth) {
@@ -121,7 +122,13 @@ export const computeImageWidth = (imageWidth, bodyWidth) => {
     if (newWidth > 1200) {
         newWidth = 1200;
     }
-    return newWidth;
+
+    // Calculate the ratio of image width to height
+    const ratio = imageWidth / imageHeight;
+    // Calculate the new height
+    const newHeight = newWidth / ratio;    
+
+    return {width: newWidth, height: newHeight};
 };
 
 /**
