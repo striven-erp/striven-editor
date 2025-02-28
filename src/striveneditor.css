@@ -197,6 +197,16 @@
     fill: #777 !important;
 }
 
+.striven-editor .se-image-uploading {
+    width: 100%; height: 100%; background-color: #eee;display: flex; align-items: center; justify-content: center;
+}
+
+.striven-editor .se-image-uploading::after {
+    content: 'Uploading...';
+    font-size: 16px;
+    color: #777;
+}
+
 /** Toolbar **/
 
 .striven-editor .se-toolbar {
