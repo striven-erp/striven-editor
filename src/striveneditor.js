@@ -2156,7 +2156,7 @@ export default class StrivenEditor {
             if (selection) {
                 return window.getSelection().getRangeAt(0);
             }
-        } catch (e) {}
+        } catch (e) { }
     }
 
     /**
@@ -2653,7 +2653,7 @@ export default class StrivenEditor {
                 window.getSelection().removeAllRanges();
                 window.getSelection().addRange(se.range);
             }
-        } catch (e) {}
+        } catch (e) { }
     }
 
     /**
@@ -3445,7 +3445,7 @@ export default class StrivenEditor {
             );
 
             const tempImg = document.getElementById(randomString);
-            if (!tempImg){
+            if (!tempImg) {
                 console.error("Failed to insert image into the DOM. Make sure the editor body is focused and try again.");
                 return;
             }
@@ -3650,50 +3650,54 @@ export default class StrivenEditor {
         let startHeight = img.offsetHeight;
         let startLeft = img.offsetLeft;
         let startTop = img.offsetTop;
+        let aspectRatio = startWidth / startHeight; // Maintain original aspect ratio
 
         function mouseMoveHandler(e) {
             if (e.touches) e = e.touches[0];
 
             let deltaX = e.clientX - startX;
             let deltaY = e.clientY - startY;
+            let newWidth, newHeight;
 
             //update position and dimension of resize marker to show the resize effect
             switch (handlePosition) {
                 case 'top-left':
-                    resizeMarker.style.width = startWidth - deltaX + 'px';
-                    resizeMarker.style.height = startHeight - deltaY + 'px';
-                    resizeMarker.style.left = startLeft + deltaX + 'px';
-                    resizeMarker.style.top = startTop + deltaY + 'px';
-                    break;
                 case 'top-right':
-                    resizeMarker.style.width = startWidth + deltaX + 'px';
-                    resizeMarker.style.height = startHeight - deltaY + 'px';
-                    resizeMarker.style.top = startTop + deltaY + 'px';
-                    break;
                 case 'bottom-left':
-                    resizeMarker.style.width = startWidth - deltaX + 'px';
-                    resizeMarker.style.height = startHeight + deltaY + 'px';
-                    resizeMarker.style.left = startLeft + deltaX + 'px';
-                    break;
                 case 'bottom-right':
-                    resizeMarker.style.width = startWidth + deltaX + 'px';
-                    resizeMarker.style.height = startHeight + deltaY + 'px';
+                    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                        newWidth = startWidth + (handlePosition.includes('left') ? -deltaX : deltaX);
+                        newHeight = newWidth / aspectRatio;
+                    } else {
+                        newHeight = startHeight + (handlePosition.includes('top') ? -deltaY : deltaY);
+                        newWidth = newHeight * aspectRatio;
+                    }
                     break;
                 case 'top-middle':
-                    resizeMarker.style.height = startHeight - deltaY + 'px';
-                    resizeMarker.style.top = startTop + deltaY + 'px';
+                    newHeight = startHeight - deltaY;
                     break;
                 case 'bottom-middle':
-                    resizeMarker.style.height = startHeight + deltaY + 'px';
+                    newHeight = startHeight + deltaY;
                     break;
                 case 'left-middle':
-                    resizeMarker.style.width = startWidth - deltaX + 'px';
-                    resizeMarker.style.left = startLeft + deltaX + 'px';
+                    newWidth = startWidth - deltaX;
                     break;
                 case 'right-middle':
-                    resizeMarker.style.width = startWidth + deltaX + 'px';
+                    newWidth = startWidth + deltaX;
                     break;
+                default:
+                    newWidth = startWidth;
+                    newHeight = startHeight;
             }
+
+            if (handlePosition.includes('top')) {
+                resizeMarker.style.top = startTop + deltaY + 'px';
+            }
+            if (handlePosition.includes('left')) {
+                resizeMarker.style.left = startLeft + deltaX + 'px';
+            }
+            resizeMarker.style.width = newWidth + 'px';
+            resizeMarker.style.height = newHeight + 'px';
         }
 
         function mouseUpHandler() {
@@ -3702,14 +3706,13 @@ export default class StrivenEditor {
 
             img.width = resizedRect.width;
             img.height = resizedRect.height;
-            img.style.left = resizedRect.x;
-            img.style.top = resizedRect.y;
             //reset the wrapper dimension if it's present
             let imageWrapper = img.parentElement;
             if (imageWrapper.classList.contains('se-image-wrapper')) {
                 imageWrapper.style.width = `${img.width}px`;
                 imageWrapper.style.height = `${img.height}px`;
             }
+
             //restore the marker back to the original position
             resizeMarker.style.left = 0;
             resizeMarker.style.top = 0;
