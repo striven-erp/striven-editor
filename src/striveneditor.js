@@ -392,7 +392,6 @@ export default class StrivenEditor {
 
         toolbar.onclick = (ev) => {
             se.body.focus();
-            ev.stopPropagation();
         };
 
         // Append Font Options
@@ -3468,7 +3467,7 @@ export default class StrivenEditor {
                                         se._isImageUploading = false;
                                         setTimeout(function () {
                                             se.overflow();
-                                        }, 100);
+                                        }, 1000);
                                     })
                                     .catch((err) => {
                                         // Replace the temporary image with the uploaded image
@@ -3481,7 +3480,7 @@ export default class StrivenEditor {
                                 se._isImageUploading = false;
                                 setTimeout(function () {
                                     se.overflow();
-                                }, 0);
+                                }, 100);
                             }
 
                             resolveImageInsert();
