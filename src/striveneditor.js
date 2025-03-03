@@ -2137,7 +2137,11 @@ export default class StrivenEditor {
 
         //remove any link and image options
         [...body.querySelectorAll('.se-link-options')].forEach((lOpt) => lOpt.remove());
-        [...body.querySelectorAll('.se-image-options')].forEach((iOpt) => iOpt.remove());
+        [...body.querySelectorAll('.se-image-wrapper')].forEach((iwrap) => {
+            //find image inside the wrapper and replace the wrapper with image
+            const img = iwrap.querySelector('img');
+            iwrap.parentNode.replaceChild(img,iwrap);
+        });
 
         if (body.textContent || se.body.getElementsByTagName('img').length || se.body.getElementsByTagName('iframe').length) {
             return body.innerHTML;
@@ -3490,20 +3494,20 @@ export default class StrivenEditor {
                         })
                         .catch((err) => {
                             console.error(err);
-                            // Replace the temporary image with the uploaded image
+                            // Remove temp image
                             tempImg.remove();
                             se._isImageUploading = false;
                         });
                 })
                 .catch((err) => {
                     console.error(err);
-                    // Replace the temporary image with the uploaded image
+                    // Remove temp image
                     tempImg.remove();
                     se._isImageUploading = false;
                 });
         }).catch((err) => {
             console.error(err);
-            // Replace the temporary image with the uploaded image
+            // Remove Temp Image
             tempImg.remove();
             se._isImageUploading = false;
         });
@@ -3644,6 +3648,7 @@ export default class StrivenEditor {
     }
 
     startImageResize(e, resizeMarker, handlePosition, img) {
+        const se=this;
         e.preventDefault && e.preventDefault();
 
         let startX = e.clientX;
@@ -3718,6 +3723,11 @@ export default class StrivenEditor {
             //restore the marker back to the original position
             resizeMarker.style.left = 0;
             resizeMarker.style.top = 0;
+
+            //recompute overflow style
+            setTimeout(function () {
+                se.overflow();
+            }, 0);
 
             document.removeEventListener('mousemove', mouseMoveHandler);
             document.removeEventListener('mouseup', mouseUpHandler);
