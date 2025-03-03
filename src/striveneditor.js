@@ -1437,23 +1437,33 @@ export default class StrivenEditor {
         // Process files
         const processFiles = function (files) {
             return new Promise((resolve) => {
-                const processPromises = [];
-
-                for (const file of files) {
-                    // Check if the file is an image
-                    if (!file.type.includes('image')) {
-                        continue;
-                    }
-
-                    const processPromise = se.insertImage(file);
-
-                    processPromises.push(processPromise);
+                // Create a promise chain to insert each image in the files array only after the previous one is completed.
+                // p = Promise.resolve() is used to start the chain with a resolved promise.
+                let p = Promise.resolve();
+                for (let i = 0; i < files.length; i++) {
+                    p = p.then(() => se.insertImage(files[i]));
                 }
 
-                // Resolve the promise when all the images have been processed
-                Promise.all(processPromises).then(() => {
-                    resolve();
-                });
+                // Add the resolve to the end of the promise chain
+                p.then(() => resolve());
+
+                //const processPromises = [];
+
+                // for (const file of files) {
+                //     // Check if the file is an image
+                //     if (!file.type.includes('image')) {
+                //         continue;
+                //     }
+
+                //     const processPromise = se.insertImage(file);
+
+                //     processPromises.push(processPromise);
+                // }
+
+                // // Resolve the promise when all the images have been processed
+                // Promise.all(processPromises).then(() => {
+                //     resolve();
+                // });
             });
         };
 
@@ -1489,9 +1499,6 @@ export default class StrivenEditor {
 
         // Create an event handler for when the images are selected
         imageMenuUploadInput.onchange = (e) => {
-            se.body.focus();
-            se.setRange();
-
             // Get the files that were selected
             const files = e.target.files;
 
@@ -2140,7 +2147,7 @@ export default class StrivenEditor {
         [...body.querySelectorAll('.se-image-wrapper')].forEach((iwrap) => {
             //find image inside the wrapper and replace the wrapper with image
             const img = iwrap.querySelector('img');
-            iwrap.parentNode.replaceChild(img,iwrap);
+            iwrap.parentNode.replaceChild(img, iwrap);
         });
 
         if (body.textContent || se.body.getElementsByTagName('img').length || se.body.getElementsByTagName('iframe').length) {
@@ -3430,26 +3437,34 @@ export default class StrivenEditor {
      */
     insertImage(file) {
         const se = this;
-
-        return new Promise((resolveImageInsert) => {
+        se.body.focus();
+        se.setRange();
+        return new Promise((resolveImageInsert, reject) => {
             const bodyWidth = se.body.offsetWidth;
 
             const showUI = !(se.browser.isFirefox() || se.browser.isEdge());
             se._isImageUploading = true;
             // Generate a random string to use as the image name
-            const randomString = 'image-' + Math.random().toString(36);
-            
+            //const randomString = 'image-' + Math.random().toString(36);
+            let currentRange = se.getRange();
             // Insert image with a temporary src
-            document.execCommand(
-                'insertHTML',
-                showUI,
-                `<div id="${randomString}" class="se-image-uploading" ></div>`
-            );
+            //document.execCommand('insertHTML', showUI, `<div id="${randomString}"  class="se-image-uploading" ></div>`);
+            //const tempImg = document.getElementById(randomString);
+            const tempImg = document.createElement('div');
+            //tempImg.id = randomString;
+            tempImg.classList.add('se-image-uploading');
+            // Ensre that any selected contents is deleted before inserting
+            currentRange.deleteContents();
+            currentRange.insertNode(tempImg);
+            currentRange.setStartAfter(tempImg);
+            this.range.collapse(true);
 
-            const tempImg = document.getElementById(randomString);
+            se.setRange(currentRange);
 
             if (!tempImg) {
-                console.error('Failed to insert image into the DOM. Make sure the editor body is focused and try again.');
+                const err = 'Failed to insert image into the DOM. Make sure the editor body is focused and try again.';
+
+                reject(err);
                 return;
             }
 
@@ -3472,7 +3487,7 @@ export default class StrivenEditor {
                                             se.overflow();
                                         }, 100);
                                     })
-                                    .catch((err) => {
+                                    .catch(() => {
                                         // Create the image tag to insert
                                         const imgTag = `<img src="${imgDataUrl}" width="${newWidth}px" alt="" data-data-url="true"/>`;
                                         // Replace the temporary image with the uploaded image
@@ -3648,7 +3663,7 @@ export default class StrivenEditor {
     }
 
     startImageResize(e, resizeMarker, handlePosition, img) {
-        const se=this;
+        const se = this;
         e.preventDefault && e.preventDefault();
 
         let startX = e.clientX;
