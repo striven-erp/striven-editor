@@ -16,7 +16,7 @@ import {
 } from './defaults.js';
 
 // Helpers
-import { createSVG, denormalizeCamel, blowUpElement, getImageDimensions, getImageDataURL, computeImageDimensions } from './utils';
+import { createSVG, denormalizeCamel, blowUpElement, getImageDimensions, getImageDataURL, computeImageDimensions, createImageElement } from './utils';
 
 // Polyfills
 import ResizeObserver from 'resize-observer-polyfill';
@@ -926,7 +926,7 @@ export default class StrivenEditor {
             if (e.clipboardData.files && e.clipboardData.files.length > 0 && e.clipboardData.files[0].type.includes('image')) {
                 e.preventDefault();
 
-                se.insertImage(e.clipboardData.files[0]).finally(() => {
+                se.insertImages(e.clipboardData.files).finally(() => {
                     afterPaste();
                 });
 
@@ -1434,39 +1434,6 @@ export default class StrivenEditor {
             imageMenuUploadInput.value = '';
         };
 
-        // Process files
-        const processFiles = function (files) {
-            return new Promise((resolve) => {
-                // Create a promise chain to insert each image in the files array only after the previous one is completed.
-                // p = Promise.resolve() is used to start the chain with a resolved promise.
-                let p = Promise.resolve();
-                for (let i = 0; i < files.length; i++) {
-                    p = p.then(() => se.insertImage(files[i]));
-                }
-
-                // Add the resolve to the end of the promise chain
-                p.then(() => resolve());
-
-                //const processPromises = [];
-
-                // for (const file of files) {
-                //     // Check if the file is an image
-                //     if (!file.type.includes('image')) {
-                //         continue;
-                //     }
-
-                //     const processPromise = se.insertImage(file);
-
-                //     processPromises.push(processPromise);
-                // }
-
-                // // Resolve the promise when all the images have been processed
-                // Promise.all(processPromises).then(() => {
-                //     resolve();
-                // });
-            });
-        };
-
         // Register click handlers
 
         // Create an event handler for upload tab click that will show the upload tab
@@ -1499,13 +1466,14 @@ export default class StrivenEditor {
 
         // Create an event handler for when the images are selected
         imageMenuUploadInput.onchange = (e) => {
+            // Clean up
+            se.closeImageMenu();
+
             // Get the files that were selected
             const files = e.target.files;
 
             // For each file, get the data url and insert the image
-            processFiles(files).then(() => {
-                // Clean up
-                se.closeImageMenu();
+            se.insertImages(files).then(() => {
                 // Clear the inputs
                 clearImageMenuInputs();
             });
@@ -1536,10 +1504,12 @@ export default class StrivenEditor {
 
             imageMenuUploadDropZone.classList.remove('dropzone-hot');
 
+            // Clean up
+            se.closeImageMenu();
+
+            const files = e.dataTransfer.files;
             // For each file, get the data url and insert the image
-            processFiles(e.dataTransfer.files).then(() => {
-                // Clean up
-                se.closeImageMenu();
+            se.insertImages(files).then(() => {
                 // Clear the inputs
                 clearImageMenuInputs();
             });
@@ -3431,42 +3401,67 @@ export default class StrivenEditor {
     }
 
     /**
+     * Inserts a node into the editor
+     * @param {*} node
+     * @param {*} range
+     */
+    insertNode(node, range) {
+        const se = this;
+        // Ensre that any selected contents is deleted before inserting
+        range.deleteContents();
+        range.insertNode(node);
+        range.setStartAfter(node);
+
+        se.setRange(range);
+    }
+
+    /**
+     * Inserts images into the editor
+     * @param {*} files
+     * @returns
+     */
+    insertImages(files) {
+        const se = this;
+        const currentRange = se.getRange();
+
+        return new Promise((resolve) => {
+            // Add busy class to striven editor
+            se.editor.classList.add('se-image-uploading');
+            se._isImageUploading = true;
+
+            // Create a promise chain to insert each image in the files array only after the previous one is completed.
+            // p = Promise.resolve() is used to start the chain with a resolved promise.
+            let p = Promise.resolve();
+            for (const file of files) {
+                // Check if the file is an image
+                if (!file.type.includes('image')) {
+                    continue;
+                }
+                p = p.then(() => se.insertImage(file, currentRange));
+            }
+
+            // Add the resolve to the end of the promise chain
+            p.then(() => {
+                resolve();
+                // Check image overflow
+                setTimeout(() => se.overflow(), 100);
+                // Remove busy class
+                se.editor.classList.remove('se-image-uploading');
+                se._isImageUploading = false;
+            });
+        });
+    }
+
+    /**
      * Inserts image into the editor, uploads to the server if imageUrl is provided otherwise uses data:image url
      * @param {*} file
      * @returns
      */
-    insertImage(file) {
+    insertImage(file, range) {
         const se = this;
-        se.body.focus();
-        se.setRange();
-        return new Promise((resolveImageInsert, reject) => {
+
+        return new Promise((resolveImageInsert) => {
             const bodyWidth = se.body.offsetWidth;
-
-            const showUI = !(se.browser.isFirefox() || se.browser.isEdge());
-            se._isImageUploading = true;
-            // Generate a random string to use as the image name
-            //const randomString = 'image-' + Math.random().toString(36);
-            let currentRange = se.getRange();
-            // Insert image with a temporary src
-            //document.execCommand('insertHTML', showUI, `<div id="${randomString}"  class="se-image-uploading" ></div>`);
-            //const tempImg = document.getElementById(randomString);
-            const tempImg = document.createElement('div');
-            //tempImg.id = randomString;
-            tempImg.classList.add('se-image-uploading');
-            // Ensre that any selected contents is deleted before inserting
-            currentRange.deleteContents();
-            currentRange.insertNode(tempImg);
-            currentRange.setStartAfter(tempImg);
-            this.range.collapse(true);
-
-            se.setRange(currentRange);
-
-            if (!tempImg) {
-                const err = 'Failed to insert image into the DOM. Make sure the editor body is focused and try again.';
-
-                reject(err);
-                return;
-            }
 
             getImageDataURL(file)
                 .then((imgDataUrl) => {
@@ -3478,53 +3473,44 @@ export default class StrivenEditor {
                                 //upload image if imageUrl is provided
                                 se.getImage(imgDataUrl)
                                     .then((imageUrl) => {
-                                        // Replace the temporary image with the uploaded image
-                                        tempImg.outerHTML = `<img src="${imageUrl}" width="${newWidth}px" alt=""/>`;
+                                        const img = createImageElement(imageUrl, newWidth);
 
-                                        se._isImageUploading = false;
+                                        // Ensre that any selected contents is deleted before inserting
+                                        se.insertNode(img, range);
 
-                                        setTimeout(function () {
-                                            se.overflow();
-                                        }, 100);
+                                        resolveImageInsert();
                                     })
                                     .catch(() => {
                                         // Create the image tag to insert
-                                        const imgTag = `<img src="${imgDataUrl}" width="${newWidth}px" alt="" data-data-url="true"/>`;
-                                        // Replace the temporary image with the uploaded image
-                                        tempImg.outerHTML = imgTag;
-                                        se._isImageUploading = false;
+                                        const img = createImageElement(imgDataUrl, newWidth);
+                                        img.setAttribute('data-data-url', 'true');
+
+                                        // Ensre that any selected contents is deleted before inserting
+                                        se.insertNode(img, range);
+
+                                        resolveImageInsert();
                                     });
                             } else {
                                 // Create the image tag to insert
-                                const imgTag = `<img src="${imgDataUrl}" width="${newWidth}px" alt="" data-data-url="true"/>`;
-                                // Replace the temporary image with the uploaded image
-                                tempImg.outerHTML = imgTag;
-                                se._isImageUploading = false;
-                                setTimeout(function () {
-                                    se.overflow();
-                                }, 0);
-                            }
+                                // Create the image tag to insert
+                                const img = createImageElement(imgDataUrl, newWidth);
+                                img.setAttribute('data-data-url', 'true');
 
-                            resolveImageInsert();
+                                // Ensre that any selected contents is deleted before inserting
+                                se.insertNode(img, range);
+
+                                resolveImageInsert();
+                            }
                         })
                         .catch((err) => {
                             console.error(err);
-                            // Remove temp image
-                            tempImg.remove();
-                            se._isImageUploading = false;
                         });
                 })
                 .catch((err) => {
                     console.error(err);
-                    // Remove temp image
-                    tempImg.remove();
-                    se._isImageUploading = false;
                 });
         }).catch((err) => {
             console.error(err);
-            // Remove Temp Image
-            tempImg.remove();
-            se._isImageUploading = false;
         });
     }
 
