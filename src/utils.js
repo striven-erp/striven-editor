@@ -98,7 +98,7 @@ export const blowUpElement = (el, bg = '#fff', onExpand) => {
 export const getImageDimensions = (url) => {
     return new Promise((resolve, reject) => {
         const img = new Image();
-        img.onload = () => resolve({width: img.width, height: img.height});
+        img.onload = () => resolve({ width: img.width, height: img.height });
         img.onerror = () => reject('Error loading image. ');
         img.src = url;
     });
@@ -126,9 +126,9 @@ export const computeImageDimensions = (imageWidth, imageHeight, bodyWidth) => {
     // Calculate the ratio of image width to height
     const ratio = imageWidth / imageHeight;
     // Calculate the new height
-    const newHeight = newWidth / ratio;    
+    const newHeight = newWidth / ratio;
 
-    return {width: newWidth, height: newHeight};
+    return { width: newWidth, height: newHeight };
 };
 
 /**
@@ -143,3 +143,17 @@ export const getImageDataURL = (file) =>
         reader.onload = () => resolve(reader.result);
         reader.onerror = (error) => reject(error);
     });
+
+/**
+ * Creates an image element
+ * @param {*} src
+ * @param {*} width
+ */
+export const createImageElement = (src, width) => {
+    const img = document.createElement('img');
+    img.src = src;
+    img.width = width;
+    img.alt = '';
+
+    return img;
+};
