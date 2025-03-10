@@ -392,7 +392,7 @@ export default class StrivenEditor {
 
         toolbar.onclick = (ev) => {
             se.body.focus();
-            ev.stopPropagation();
+            
         };
 
         // Append Font Options
@@ -923,9 +923,9 @@ export default class StrivenEditor {
             };
 
             // Paste image logic
-            if (e.clipboardData.files && e.clipboardData.files.length > 0 && e.clipboardData.files[0].type.includes('image')) {
+            if (e.clipboardData.files && e.clipboardData.files.length > 0 ) {
                 e.preventDefault();
-
+                
                 se.insertImages(e.clipboardData.files).finally(() => {
                     afterPaste();
                 });
@@ -3437,18 +3437,19 @@ export default class StrivenEditor {
                 if (!file.type.includes('image')) {
                     continue;
                 }
-                p = p.then(() => se.insertImage(file, currentRange));
+                p = p.finally(() => se.insertImage(file, currentRange));
             }
 
             // Add the resolve to the end of the promise chain
-            p.then(() => {
-                resolve();
+            p.finally(() => {
                 // Remove busy class
                 se.editor.classList.remove('se-image-uploading');
                 se._isImageUploading = false;
 
                 // Check image overflow
                 setTimeout(() => se.overflow(), 500);
+
+                resolve();
             });
         });
     }
