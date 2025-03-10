@@ -3443,11 +3443,12 @@ export default class StrivenEditor {
             // Add the resolve to the end of the promise chain
             p.then(() => {
                 resolve();
-                // Check image overflow
-                setTimeout(() => se.overflow(), 100);
                 // Remove busy class
                 se.editor.classList.remove('se-image-uploading');
                 se._isImageUploading = false;
+
+                // Check image overflow
+                setTimeout(() => se.overflow(), 500);
             });
         });
     }
