@@ -3505,13 +3505,16 @@ export default class StrivenEditor {
                         })
                         .catch((err) => {
                             console.error(err);
+                            resolveImageInsert();
                         });
                 })
                 .catch((err) => {
                     console.error(err);
+                    resolveImageInsert();
                 });
         }).catch((err) => {
             console.error(err);
+            resolveImageInsert();
         });
     }
 
