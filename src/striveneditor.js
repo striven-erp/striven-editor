@@ -3401,6 +3401,47 @@ export default class StrivenEditor {
     }
 
     /**
+     * Ensures that the selection is within the body of the editor
+     * @param {*} contentEditableElement 
+     */
+    ensureSelectionInBody(contentEditableElement) {
+        if (contentEditableElement) {
+          const selection = window.getSelection();
+      
+          // Check if the contentEditableElement has focus and the selection is within it
+          if (document.activeElement !== contentEditableElement || !contentEditableElement.contains(selection.anchorNode)) {
+            contentEditableElement.focus(); // Ensure the element has focus
+      
+            const range = document.createRange();
+      
+            if (contentEditableElement.childNodes.length > 0) {
+              const lastChild = contentEditableElement.childNodes[contentEditableElement.childNodes.length - 1];
+      
+              if (lastChild.nodeType === Node.TEXT_NODE) {
+                range.setStart(lastChild, lastChild.length);
+                range.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(range);
+              } else {
+                // If the last child is an element node, set the cursor after it.
+                range.selectNodeContents(contentEditableElement);
+                range.collapse(false); // Collapse to the end
+                selection.removeAllRanges();
+                selection.addRange(range);
+              }
+      
+            } else {
+              // If contenteditable is empty.
+              range.selectNodeContents(contentEditableElement);
+              range.collapse(false);
+              selection.removeAllRanges();
+              selection.addRange(range);
+            }
+          }
+        }
+      }
+  
+    /**
      * Inserts a node into the editor
      * @param {*} node
      * @param {*} range
@@ -3422,6 +3463,9 @@ export default class StrivenEditor {
      */
     insertImages(files) {
         const se = this;
+        
+        console.log("Inserting images");
+        se.ensureSelectionInBody(se.body);
         const currentRange = se.getRange();
 
         return new Promise((resolve) => {
