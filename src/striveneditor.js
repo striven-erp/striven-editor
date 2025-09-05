@@ -46,6 +46,8 @@ export default class StrivenEditor {
             if (el.data_orig === undefined) {
                 el.data_orig = el.innerHTML;
             }
+            //reset toolbarclick
+            se.toolbarClick = false;
         });
 
         el.addEventListener('blur', function () {
