@@ -1067,8 +1067,14 @@ export default class StrivenEditor {
             se.editor.classList.add('se-focus');
 
             if (se.body.textContent.trim() === '') {
-                se.placeCaretAtEnd(se.body);
+                const selNode = document.createTextNode('');
+                se.body.append(selNode);
 
+                setTimeout(() => {
+                    se.placeCaretAtEnd(se.body);
+                    selNode.remove();    
+                }, 0);
+                                
             }
 
             if (se.scrollPosition && !se.browser.isEdge()) {
