@@ -1067,17 +1067,8 @@ export default class StrivenEditor {
             se.editor.classList.add('se-focus');
 
             if (se.body.textContent.trim() === '') {
-                const r = se.getRange();
+                se.placeCaretAtEnd(se.body);
 
-                if (r) {
-                    const selNode = document.createTextNode('');
-                    se.body.append(selNode);
-
-                    setTimeout(() => {
-                        se.getRange().selectNode(selNode);
-                        selNode.remove();
-                    }, 0);
-                }
             }
 
             if (se.scrollPosition && !se.browser.isEdge()) {
@@ -2130,6 +2121,27 @@ export default class StrivenEditor {
     }
 
     /**
+     * Places the caret at the end of the specified element. See https://stackoverflow.com/questions/4233265/contenteditable-set-caret-at-the-end-of-the-text-cross-browser
+     * @param {HTMLElement} el Element to place the caret at the end of
+     */
+     placeCaretAtEnd(el) {
+        if (typeof window.getSelection != "undefined"
+                && typeof document.createRange != "undefined") {
+            var range = document.createRange();
+            range.selectNodeContents(el);
+            range.collapse(false);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        } else if (typeof document.body.createTextRange != "undefined") {
+            var textRange = document.body.createTextRange();
+            textRange.moveToElementText(el);
+            textRange.collapse(false);
+            textRange.select();
+        }
+    }
+
+    /**
      * Get the range of the window
      * @returns {Range} Range of the window
      */
@@ -2137,11 +2149,11 @@ export default class StrivenEditor {
         try {
             const selection = window.getSelection();
             if (selection) {
-                return window.getSelection().getRangeAt(0);
+                return selection.getRangeAt(0);
             }
         } catch (e) {}
     }
-
+    
     /**
      * Gets the meta data from the metaUrl option
      * @param {String} url Url to fetch meta data from
@@ -3465,8 +3477,6 @@ export default class StrivenEditor {
      */
     insertImages(files) {
         const se = this;
-        
-        console.log("Inserting images");
         se.ensureSelectionInBody(se.body);
         const currentRange = se.getRange();
 
