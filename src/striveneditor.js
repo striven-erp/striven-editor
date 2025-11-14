@@ -33,6 +33,9 @@ import Pickr from '@simonwep/pickr/dist/pickr.es5.min';
 // Formatting
 import js_beautify from 'js-beautify';
 
+// Consts
+const MAX_FILES_UPLOAD = 25;
+
 /* Represents an instance of the Striven Editor */
 export default class StrivenEditor {
     /**
@@ -120,6 +123,8 @@ export default class StrivenEditor {
             // Allow File Upload
             options.fileUpload !== false && (se.options.fileUpload = true);
 
+            options.maxFiles = options.maxFiles || MAX_FILES_UPLOAD;
+
             // Configure Options with Minimal Enabled
             if (options.toolbarOptions && options.minimal) {
                 // Get custom options from toolbarOptions
@@ -139,6 +144,7 @@ export default class StrivenEditor {
                 toolbarOptions: DEFAULTOPTIONS,
                 activeOptionColor: ACTIVEOPTIONCOLOR,
                 fontNames: FONTNAMES,
+                maxFiles: MAX_FILES_UPLOAD,
                 fileUpload: true,
                 canTab: false
             };
@@ -928,7 +934,11 @@ export default class StrivenEditor {
             if (e.clipboardData.files && e.clipboardData.files.length > 0 ) {
                 e.preventDefault();
                 
-                se.insertImages(e.clipboardData.files).finally(() => {
+                se.insertImages(e.clipboardData.files)
+                .catch((ex) => {
+                    console.error(ex);
+                })
+                .finally(() => {
                     afterPaste();
                 });
 
@@ -1472,9 +1482,13 @@ export default class StrivenEditor {
             const files = e.target.files;
 
             // For each file, get the data url and insert the image
-            se.insertImages(files).then(() => {
+            se.insertImages(files)
+            .then(() => {
                 // Clear the inputs
                 clearImageMenuInputs();
+            })
+            .catch((ex) => {
+                console.error(ex);
             });
         };
 
@@ -1508,9 +1522,13 @@ export default class StrivenEditor {
 
             const files = e.dataTransfer.files;
             // For each file, get the data url and insert the image
-            se.insertImages(files).then(() => {
+            se.insertImages(files)
+            .then(() => {
                 // Clear the inputs
                 clearImageMenuInputs();
+            })
+            .catch((ex) => {
+                console.error(ex);
             });
         };
 
@@ -1784,7 +1802,15 @@ export default class StrivenEditor {
 
             if (e.dataTransfer.types.includes('Files')) {
                 if (e.dataTransfer.files.length) {
-                    [...e.dataTransfer.files].forEach((file) => se.attachFile(file));
+                    const files =[...e.dataTransfer.files];
+                    
+                    // Ensure there are no more than the max files allowed
+                    if (files.length + se.files.length > se.options.maxFiles) {
+                        alert(`Only ${se.options.maxFiles} files are allowed to upload in one batch.`);
+                        return;
+                    }
+
+                    files.forEach((file) => se.attachFile(file));
                 }
             }
         };
@@ -3301,7 +3327,15 @@ export default class StrivenEditor {
                 attachmentInput.style.display = 'none';
                 document.body.append(attachmentInput);
                 attachmentInput.onchange = (e) => {
-                    [...attachmentInput.files].forEach((file) => se.attachFile(file));
+                    const files = [...attachmentInput.files]
+                    
+                    // Ensure there are no more than the max files allowed
+                    if (files.length + se.files.length > se.options.maxFiles) {
+                        alert(`Only ${se.options.maxFiles} files are allowed to upload in one batch.`);
+                        return;
+                    }
+
+                    files.forEach((file) => se.attachFile(file));
                     attachmentInput.remove();
                 };
                 attachmentInput.click();
@@ -3482,11 +3516,20 @@ export default class StrivenEditor {
      * @returns
      */
     insertImages(files) {
+
         const se = this;
         se.ensureSelectionInBody(se.body);
         const currentRange = se.getRange();
 
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
+            // Check if files has more than 25 files
+            if (files.length > se.options.maxFiles) {
+                const errorMessage = `Only ${se.options.maxFiles} files are allowed to upload in one batch.`;
+                alert(errorMessage);
+                reject(errorMessage);
+                return;
+            }
+
             // Add busy class to striven editor
             se.editor.classList.add('se-image-uploading');
             se._isImageUploading = true;
